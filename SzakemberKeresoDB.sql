@@ -1,119 +1,120 @@
 CREATE TABLE `users` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `first_name` varchar(255),
-  `last_name` varchar(255),
-  `acces_type` varchar(255),
-  `email` varchar(255),
-  `phone` varchar(255),
+  `id` int(11) PRIMARY KEY AUTO_INCREMENT,
+  `first_name` varchar(100),
+  `last_name` varchar(100),
+  `acces_type` varchar(100),
+  `email` varchar(200),
+  `phone` varchar(12),
   `password` varchar(255),
-  `company_id` int,
-  `job_tag_id` int,
+  `company_id` int(11),
+  `job_tag_id` int(11),
   `status` int,
   `last_login_at` timestamp,
   `created_at` timestamp,
   `activated_at` timestamp,
   `updated_at` timestamp,
-  `address_id` int,
-  `deleted` int
+  `address_id` int(11),
+  `deleted` int(1)
 );
 
 CREATE TABLE `jobs` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `customer_id` int,
-  `worker_id` int,
-  `desc` varchar(255),
+  `id` int(11) PRIMARY KEY AUTO_INCREMENT,
+  `customer_id` int(11),
+  `worker_id` int(11),
+  `desc` text,
   `total` int,
   `status` int,
-  `worker_accepted` int,
-  `customer_accepted` int,
+  `worker_accepted` int(1),
+  `customer_accepted` int(1),
   `updated_at` timestamp,
-  `deleted` int
+  `deleted` int(1)
 );
 
 CREATE TABLE `companies` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(255),
+  `id` int(11) PRIMARY KEY AUTO_INCREMENT,
+  `name` varchar(200),
   `premise_address` varchar(255),
   `tax_number` varchar(255)
 );
 
 CREATE TABLE `ads` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `user_id` int,
-  `job_tag_id` int,
-  `desc` varchar(255),
-  `title` varchar(255),
-  `county_id` int,
+  `id` int(11) PRIMARY KEY AUTO_INCREMENT,
+  `user_id` int(11),
+  `job_tag_id` int(11),
+  `desc` text,
+  `county_id` int(11),
   `updated_at` timestamp,
-  `deleted` int
+  `deleted` int(1)
 );
 
 CREATE TABLE `counties` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(255)
+  `id` int(11) PRIMARY KEY AUTO_INCREMENT,
+  `name` varchar(100)
 );
 
 CREATE TABLE `cities` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `postal_code` int,
-  `city` varchar(255),
-  `county_id` int
+  `id` int(11) PRIMARY KEY AUTO_INCREMENT,
+  `postal_code` int(5),
+  `city` varchar(100),
+  `county_id` int(11)
 );
 
 CREATE TABLE `streets` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `street_name_id` int,
-  `city_id` int
+  `id` int(11) PRIMARY KEY AUTO_INCREMENT,
+  `street_name_id` int(11),
+  `city_id` int(11)
 );
 
 CREATE TABLE `addresses` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `number` varchar(255),
-  `staircase` varchar(255),
-  `floor` int,
-  `door` int,
-  `street_id` int
+  `id` int(11) PRIMARY KEY AUTO_INCREMENT,
+  `number` varchar(30),
+  `staircase` varchar(30),
+  `floor` int(4),
+  `door` int(8),
+  `street_id` int(11)
 );
 
 CREATE TABLE `street_names` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(255)
+  `id` int(11) PRIMARY KEY AUTO_INCREMENT,
+  `name` varchar(100)
 );
 
 CREATE TABLE `job_tags` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `name` varchar(255)
+  `id` int(11) PRIMARY KEY AUTO_INCREMENT,
+  `name` varchar(100)
 );
 
 CREATE TABLE `messages` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `sender_id` int,
-  `receiver_id` int,
-  `message` varchar(255),
-  `checked` int,
-  `sended_at` timestamp
+  `id` int(11) PRIMARY KEY AUTO_INCREMENT,
+  `sender_id` int(11),
+  `receiver_id` int(11),
+  `message` text,
+  `checked` int(1),
+  `sended_at` timestamp,
+  `deleted` int(1)
 );
 
 CREATE TABLE `ratings` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `ratinged_user_id` int,
-  `ratinger_user_id` int,
-  `desc` varchar(255),
-  `ratings_stars` int
+  `id` int(11) PRIMARY KEY AUTO_INCREMENT,
+  `ratinged_user_id` int(11),
+  `ratinger_user_id` int(11),
+  `desc` text,
+  `ratings_stars` int(2),
+  `status` int(1)
 );
 
 CREATE TABLE `favorites` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `user_id` int,
-  `ads_id` int
+  `id` int(11) PRIMARY KEY AUTO_INCREMENT,
+  `user_id` int(11),
+  `ads_id` int(11)
 );
 
 CREATE TABLE `images` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `id` int(11) PRIMARY KEY AUTO_INCREMENT,
   `url` varchar(255),
-  `title` varchar(255),
+  `title` varchar(100),
   `created_at` date,
-  `user_id` int
+  `user_id` int(11)
 );
 
 ALTER TABLE `ads` ADD FOREIGN KEY (`id`) REFERENCES `users` (`id`);
