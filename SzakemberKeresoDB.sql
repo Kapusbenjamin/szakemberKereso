@@ -44,6 +44,7 @@ CREATE TABLE `ads` (
   `desc` text,
   `county_id` int(11),
   `updated_at` timestamp,
+  `status` int(1),
   `deleted` int(1)
 );
 
