@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 05, 2023 at 04:32 PM
+-- Generation Time: Jan 05, 2023 at 05:04 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -205,6 +205,16 @@ CREATE TABLE `addresses` (
   `street_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `addresses`
+--
+
+INSERT INTO `addresses` (`id`, `number`, `staircase`, `floor`, `door`, `street_id`) VALUES
+(1, '12', NULL, NULL, NULL, 1),
+(2, '23', '1', 2, 3, 2),
+(3, '34', NULL, NULL, NULL, 3),
+(4, '56', NULL, NULL, NULL, 4);
+
 -- --------------------------------------------------------
 
 --
@@ -237,6 +247,14 @@ CREATE TABLE `cities` (
   `county_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `cities`
+--
+
+INSERT INTO `cities` (`id`, `postal_code`, `city`, `county_id`) VALUES
+(1, 7600, 'Pécs', 2),
+(2, 7759, 'Kisnyárád', 2);
+
 -- --------------------------------------------------------
 
 --
@@ -263,6 +281,32 @@ CREATE TABLE `counties` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `counties`
+--
+
+INSERT INTO `counties` (`id`, `name`) VALUES
+(1, 'Bács-Kiskun'),
+(2, 'Baranya'),
+(3, 'Békés'),
+(4, 'Borsod-Abaúj-Zemplén'),
+(5, 'Budapest'),
+(6, 'Csongrád-Csanád'),
+(7, 'Fejér'),
+(8, 'Győr-Moson-Sopron'),
+(9, 'Hajdú-Bihar'),
+(10, 'Heves'),
+(11, 'Jász-Nagykun-Szolnok'),
+(12, 'Komárom-Esztergom'),
+(13, 'Nógrád'),
+(14, 'Pest'),
+(15, 'Somogy'),
+(16, 'Szabolcs-Szatmár-Bereg'),
+(17, 'Tolna'),
+(18, 'Vas'),
+(19, 'Veszprém'),
+(20, 'Zala');
 
 -- --------------------------------------------------------
 
@@ -397,6 +441,16 @@ CREATE TABLE `streets` (
   `city_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `streets`
+--
+
+INSERT INTO `streets` (`id`, `street_name_id`, `city_id`) VALUES
+(1, 1, 1),
+(2, 2, 1),
+(3, 3, 1),
+(4, 4, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -408,6 +462,16 @@ CREATE TABLE `street_names` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `street_names`
+--
+
+INSERT INTO `street_names` (`id`, `name`) VALUES
+(1, 'József Attila utca'),
+(2, 'Petőfi utca'),
+(3, 'Ács utca'),
+(4, 'Ág utca');
 
 -- --------------------------------------------------------
 
@@ -434,6 +498,16 @@ CREATE TABLE `users` (
   `address_id` int(11) NOT NULL,
   `deleted` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `first_name`, `last_name`, `acces_type`, `email`, `phone`, `password`, `company_id`, `job_tag_id`, `status`, `last_login_at`, `created_at`, `activated_at`, `updated_at`, `address_id`, `deleted`) VALUES
+(1, 'Teszt', 'Ferenc', 0, 'tesztf@teszt-user.com', '+36202567896', '1234', NULL, NULL, -1, NULL, '2023-01-05 15:57:39', NULL, '2023-01-05 15:57:39', 1, 0),
+(2, 'Teszt', 'László', 1, 'tesztl@teszt-user.com', '+36202567894', '1234', 1, 2, 0, '2023-01-05 15:48:18', '2023-01-05 15:57:39', '2023-01-05 15:48:18', '2023-01-05 15:57:39', 2, 0),
+(3, 'Teszt', 'Izabella', 0, 'tesztiza@teszt-user.com', '+36302987764', '1234', NULL, NULL, 0, '2023-01-05 15:55:18', '2023-01-05 15:57:39', '2023-01-04 15:48:18', '2023-01-05 15:57:39', 3, 0),
+(4, 'Teszt', 'Admin', 2, 'teszta@teszt-user.com', '+36702753456', '1234', NULL, NULL, 0, '2023-01-06 15:48:18', '2023-01-05 15:57:39', '2023-01-01 15:48:18', '2023-01-05 15:57:39', 4, 0);
 
 --
 -- Indexes for dumped tables
@@ -531,7 +605,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `ads`
@@ -543,7 +617,7 @@ ALTER TABLE `ads`
 -- AUTO_INCREMENT for table `cities`
 --
 ALTER TABLE `cities`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `companies`
@@ -555,7 +629,7 @@ ALTER TABLE `companies`
 -- AUTO_INCREMENT for table `counties`
 --
 ALTER TABLE `counties`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `favorites`
@@ -597,19 +671,19 @@ ALTER TABLE `ratings`
 -- AUTO_INCREMENT for table `streets`
 --
 ALTER TABLE `streets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `street_names`
 --
 ALTER TABLE `street_names`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
