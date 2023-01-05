@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2023. Jan 03. 19:03
+-- Létrehozás ideje: 2023. Jan 05. 16:16
 -- Kiszolgáló verziója: 10.4.24-MariaDB
 -- PHP verzió: 7.4.29
 
@@ -22,6 +22,172 @@ SET time_zone = "+00:00";
 --
 CREATE DATABASE IF NOT EXISTS `szakemberkereso` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `szakemberkereso`;
+
+DELIMITER $$
+--
+-- Eljárások
+--
+DROP PROCEDURE IF EXISTS `acceptRating`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptRating` (IN `id_in` INT(11))   UPDATE `ratings`
+SET `ratings`.`status` = 1
+WHERE `ratings`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `addFavorite`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addFavorite` (IN `user_id_in` INT(11), IN `ads_id_in` INT(11))   INSERT INTO `favorites`
+(
+	`favorites`.`user_id`,
+    `favorites`.`ads_id`
+)
+VALUES
+(
+	user_id_in,
+    ads_id_in
+)$$
+
+DROP PROCEDURE IF EXISTS `addNewImage`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addNewImage` (IN `url_in` VARCHAR(255) CHARSET utf8, IN `title_in` VARCHAR(100) CHARSET utf8, IN `created_at_in` DATE, IN `user_id_in` INT(11))   INSERT INTO `images`
+(
+	`images`.`url`,
+    `images`.`title`,
+    `images`.`created_at`,
+    `images`.`user_id`
+)
+VALUES
+(
+	url_in,
+    title_in,
+    created_at_in,
+    user_id_in
+)$$
+
+DROP PROCEDURE IF EXISTS `checkMessage`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkMessage` (IN `sender_id_in` INT(11), IN `receiver_id_in` INT(11))   UPDATE `messages`
+SET `messages`.`checked` = 1
+WHERE `messages`.`sender_id` = sender_id_in 
+AND `messages`.`receiver_id` = receiver_id_in
+AND `messages`.`checked` = 0$$
+
+DROP PROCEDURE IF EXISTS `createCompany`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createCompany` (IN `name_in` VARCHAR(200) CHARSET utf8, IN `premise_address_in` VARCHAR(255) CHARSET utf8, IN `tax_number_in` VARCHAR(255) CHARSET utf8)   INSERT INTO `companies`
+(
+    `companies`.`name`, 
+    `companies`.`premise_address`, 
+    `companies`.`tax_number`
+)
+VALUES
+(
+    name_in,
+    premise_address_in,
+    tax_number_in
+)$$
+
+DROP PROCEDURE IF EXISTS `createMessage`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createMessage` (IN `sender_id_in` INT(11), IN `receiver_id_in` INT(11), IN `message_in` TEXT CHARSET utf8)   INSERT INTO `messages`
+(
+	`messages`.`sender_id`,
+    `messages`.`receiver_id`,
+    `messages`.`message`
+)
+VALUES
+(
+	sender_id_in,
+    receiver_id_in,
+    message_in
+)$$
+
+DROP PROCEDURE IF EXISTS `createRating`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createRating` (IN `ratinged_user_id_in` INT(11), IN `ratinger_user_id_in` INT(11), IN `desc_in` TEXT CHARSET utf8, IN `ratings_stars_in` INT(2))   INSERT INTO `ratings`
+(
+	`ratings`.`ratinged_user_id`,
+    `ratings`.`ratinger_user_id`,
+    `ratings`.`desc`,
+    `ratings`.`ratings_stars`
+)
+VALUES
+(
+	ratinged_user_id_in,
+    ratinger_user_id_in,
+    desc_in,
+    ratings_stars_in
+)$$
+
+DROP PROCEDURE IF EXISTS `deleteCompanyById`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCompanyById` (IN `id_in` INT(11))   UPDATE `companies`
+SET `companies`.`deleted` = 1
+WHERE `companies`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `deleteFavorite`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteFavorite` (IN `id_in` INT(11))   DELETE FROM `favorites`
+WHERE `favorites`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `deleteImage`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteImage` (IN `id_in` INT(11))   DELETE FROM `images`
+WHERE `images`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `getAllCompanies`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllCompanies` ()   SELECT * FROM `companies`$$
+
+DROP PROCEDURE IF EXISTS `getAllFavoritesByUserId`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllFavoritesByUserId` (IN `user_id_in` INT)   SELECT * FROM `favorites`
+WHERE `favorites`.`user_id` = user_id_in$$
+
+DROP PROCEDURE IF EXISTS `getAllJobTags`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllJobTags` ()   SELECT * FROM `job_tags`$$
+
+DROP PROCEDURE IF EXISTS `getAllMessages`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllMessages` ()   SELECT * FROM `messages`$$
+
+DROP PROCEDURE IF EXISTS `getAllMessagesBetweenUsers`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllMessagesBetweenUsers` (IN `user1_id_in` INT(11), IN `user2_id_in` INT(11))   SELECT * FROM `messages`
+WHERE (`messages`.`sender_id` = user1_id_in
+AND `messages`.`receiver_id` = user2_id_in)
+OR (`messages`.`sender_id` = user2_id_in
+AND `messages`.`receiver_id` = user1_id_in)
+ORDER BY `messages`.`sended_at` ASC$$
+
+DROP PROCEDURE IF EXISTS `getAllRatings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllRatings` ()   SELECT * FROM `ratings`$$
+
+DROP PROCEDURE IF EXISTS `getCompanyById`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCompanyById` (IN `id_in` INT(11))   SELECT * FROM `companies`
+WHERE `companies`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `getFavoriteById`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getFavoriteById` (IN `id_in` INT(11))   SELECT * FROM `favorites`
+WHERE `favorites`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `getImagesByUserId`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getImagesByUserId` (IN `user_id_in` INT(11))   SELECT * FROM `images`
+WHERE `images`.`user_id` = user_id_in$$
+
+DROP PROCEDURE IF EXISTS `getJobTagById`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getJobTagById` (IN `id_in` INT(11))   SELECT * FROM `job_tags`
+WHERE `job_tags`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `getRatingById`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getRatingById` (IN `id_in` INT(11))   SELECT * FROM `ratings`
+WHERE `ratings`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `getRatingByUserId`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getRatingByUserId` (IN `user_id_in` INT(11))   SELECT * FROM `ratings`
+WHERE `ratings`.`ratinged_user_id` = user_id_in
+OR `ratings`.`ratinger_user_id` = user_id_in$$
+
+DROP PROCEDURE IF EXISTS `updateCompanyById`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCompanyById` (IN `id_in` INT(11), IN `name_in` VARCHAR(200) CHARSET utf8, IN `premise_address_in` VARCHAR(255) CHARSET utf8, IN `tax_number_in` VARCHAR(255) CHARSET utf8)   UPDATE `companies`
+SET `companies`.`name` = name_in,
+	`companies`.`premise_address` = premise_address_in,
+    `companies`.`tax_number` = tax_number_in
+WHERE `companies`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `updateRatingById`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateRatingById` (IN `id_in` INT(11), IN `desc_in` TEXT CHARSET utf8, IN `ratings_stars_in` INT(2))   UPDATE `ratings`
+SET `ratings`.`desc` = desc_in,
+	`ratings`.`ratings_stars` = ratings_stars_in,
+    `ratings`.`status` = 0
+WHERE `ratings`.`id` = id_in$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
