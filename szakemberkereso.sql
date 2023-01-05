@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
--- Gép: 127.0.0.1
--- Létrehozás ideje: 2023. Jan 05. 16:16
--- Kiszolgáló verziója: 10.4.24-MariaDB
--- PHP verzió: 7.4.29
+-- Host: 127.0.0.1
+-- Generation Time: Jan 05, 2023 at 04:32 PM
+-- Server version: 10.4.22-MariaDB
+-- PHP Version: 8.0.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,22 +18,22 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Adatbázis: `szakemberkereso`
+-- Database: `szakemberkereso`
 --
 CREATE DATABASE IF NOT EXISTS `szakemberkereso` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `szakemberkereso`;
 
 DELIMITER $$
 --
--- Eljárások
+-- Procedures
 --
 DROP PROCEDURE IF EXISTS `acceptRating`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptRating` (IN `id_in` INT(11))   UPDATE `ratings`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptRating` (IN `id_in` INT(11))  UPDATE `ratings`
 SET `ratings`.`status` = 1
 WHERE `ratings`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `addFavorite`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addFavorite` (IN `user_id_in` INT(11), IN `ads_id_in` INT(11))   INSERT INTO `favorites`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addFavorite` (IN `user_id_in` INT(11), IN `ads_id_in` INT(11))  INSERT INTO `favorites`
 (
 	`favorites`.`user_id`,
     `favorites`.`ads_id`
@@ -45,7 +45,7 @@ VALUES
 )$$
 
 DROP PROCEDURE IF EXISTS `addNewImage`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addNewImage` (IN `url_in` VARCHAR(255) CHARSET utf8, IN `title_in` VARCHAR(100) CHARSET utf8, IN `created_at_in` DATE, IN `user_id_in` INT(11))   INSERT INTO `images`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addNewImage` (IN `url_in` VARCHAR(255) CHARSET utf8, IN `title_in` VARCHAR(100) CHARSET utf8, IN `created_at_in` DATE, IN `user_id_in` INT(11))  INSERT INTO `images`
 (
 	`images`.`url`,
     `images`.`title`,
@@ -61,14 +61,14 @@ VALUES
 )$$
 
 DROP PROCEDURE IF EXISTS `checkMessage`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkMessage` (IN `sender_id_in` INT(11), IN `receiver_id_in` INT(11))   UPDATE `messages`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkMessage` (IN `sender_id_in` INT(11), IN `receiver_id_in` INT(11))  UPDATE `messages`
 SET `messages`.`checked` = 1
 WHERE `messages`.`sender_id` = sender_id_in 
 AND `messages`.`receiver_id` = receiver_id_in
 AND `messages`.`checked` = 0$$
 
 DROP PROCEDURE IF EXISTS `createCompany`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createCompany` (IN `name_in` VARCHAR(200) CHARSET utf8, IN `premise_address_in` VARCHAR(255) CHARSET utf8, IN `tax_number_in` VARCHAR(255) CHARSET utf8)   INSERT INTO `companies`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createCompany` (IN `name_in` VARCHAR(200) CHARSET utf8, IN `premise_address_in` VARCHAR(255) CHARSET utf8, IN `tax_number_in` VARCHAR(255) CHARSET utf8)  INSERT INTO `companies`
 (
     `companies`.`name`, 
     `companies`.`premise_address`, 
@@ -82,7 +82,7 @@ VALUES
 )$$
 
 DROP PROCEDURE IF EXISTS `createMessage`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createMessage` (IN `sender_id_in` INT(11), IN `receiver_id_in` INT(11), IN `message_in` TEXT CHARSET utf8)   INSERT INTO `messages`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createMessage` (IN `sender_id_in` INT(11), IN `receiver_id_in` INT(11), IN `message_in` TEXT CHARSET utf8)  INSERT INTO `messages`
 (
 	`messages`.`sender_id`,
     `messages`.`receiver_id`,
@@ -96,7 +96,7 @@ VALUES
 )$$
 
 DROP PROCEDURE IF EXISTS `createRating`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createRating` (IN `ratinged_user_id_in` INT(11), IN `ratinger_user_id_in` INT(11), IN `desc_in` TEXT CHARSET utf8, IN `ratings_stars_in` INT(2))   INSERT INTO `ratings`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createRating` (IN `ratinged_user_id_in` INT(11), IN `ratinger_user_id_in` INT(11), IN `desc_in` TEXT CHARSET utf8, IN `ratings_stars_in` INT(2))  INSERT INTO `ratings`
 (
 	`ratings`.`ratinged_user_id`,
     `ratings`.`ratinger_user_id`,
@@ -112,33 +112,33 @@ VALUES
 )$$
 
 DROP PROCEDURE IF EXISTS `deleteCompanyById`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCompanyById` (IN `id_in` INT(11))   UPDATE `companies`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCompanyById` (IN `id_in` INT(11))  UPDATE `companies`
 SET `companies`.`deleted` = 1
 WHERE `companies`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `deleteFavorite`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteFavorite` (IN `id_in` INT(11))   DELETE FROM `favorites`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteFavorite` (IN `id_in` INT(11))  DELETE FROM `favorites`
 WHERE `favorites`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `deleteImage`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteImage` (IN `id_in` INT(11))   DELETE FROM `images`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteImage` (IN `id_in` INT(11))  DELETE FROM `images`
 WHERE `images`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `getAllCompanies`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllCompanies` ()   SELECT * FROM `companies`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllCompanies` ()  SELECT * FROM `companies`$$
 
 DROP PROCEDURE IF EXISTS `getAllFavoritesByUserId`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllFavoritesByUserId` (IN `user_id_in` INT)   SELECT * FROM `favorites`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllFavoritesByUserId` (IN `user_id_in` INT)  SELECT * FROM `favorites`
 WHERE `favorites`.`user_id` = user_id_in$$
 
 DROP PROCEDURE IF EXISTS `getAllJobTags`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllJobTags` ()   SELECT * FROM `job_tags`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllJobTags` ()  SELECT * FROM `job_tags`$$
 
 DROP PROCEDURE IF EXISTS `getAllMessages`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllMessages` ()   SELECT * FROM `messages`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllMessages` ()  SELECT * FROM `messages`$$
 
 DROP PROCEDURE IF EXISTS `getAllMessagesBetweenUsers`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllMessagesBetweenUsers` (IN `user1_id_in` INT(11), IN `user2_id_in` INT(11))   SELECT * FROM `messages`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllMessagesBetweenUsers` (IN `user1_id_in` INT(11), IN `user2_id_in` INT(11))  SELECT * FROM `messages`
 WHERE (`messages`.`sender_id` = user1_id_in
 AND `messages`.`receiver_id` = user2_id_in)
 OR (`messages`.`sender_id` = user2_id_in
@@ -146,42 +146,42 @@ AND `messages`.`receiver_id` = user1_id_in)
 ORDER BY `messages`.`sended_at` ASC$$
 
 DROP PROCEDURE IF EXISTS `getAllRatings`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllRatings` ()   SELECT * FROM `ratings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllRatings` ()  SELECT * FROM `ratings`$$
 
 DROP PROCEDURE IF EXISTS `getCompanyById`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getCompanyById` (IN `id_in` INT(11))   SELECT * FROM `companies`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCompanyById` (IN `id_in` INT(11))  SELECT * FROM `companies`
 WHERE `companies`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `getFavoriteById`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getFavoriteById` (IN `id_in` INT(11))   SELECT * FROM `favorites`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getFavoriteById` (IN `id_in` INT(11))  SELECT * FROM `favorites`
 WHERE `favorites`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `getImagesByUserId`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getImagesByUserId` (IN `user_id_in` INT(11))   SELECT * FROM `images`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getImagesByUserId` (IN `user_id_in` INT(11))  SELECT * FROM `images`
 WHERE `images`.`user_id` = user_id_in$$
 
 DROP PROCEDURE IF EXISTS `getJobTagById`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getJobTagById` (IN `id_in` INT(11))   SELECT * FROM `job_tags`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getJobTagById` (IN `id_in` INT(11))  SELECT * FROM `job_tags`
 WHERE `job_tags`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `getRatingById`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getRatingById` (IN `id_in` INT(11))   SELECT * FROM `ratings`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getRatingById` (IN `id_in` INT(11))  SELECT * FROM `ratings`
 WHERE `ratings`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `getRatingByUserId`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getRatingByUserId` (IN `user_id_in` INT(11))   SELECT * FROM `ratings`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getRatingByUserId` (IN `user_id_in` INT(11))  SELECT * FROM `ratings`
 WHERE `ratings`.`ratinged_user_id` = user_id_in
 OR `ratings`.`ratinger_user_id` = user_id_in$$
 
 DROP PROCEDURE IF EXISTS `updateCompanyById`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCompanyById` (IN `id_in` INT(11), IN `name_in` VARCHAR(200) CHARSET utf8, IN `premise_address_in` VARCHAR(255) CHARSET utf8, IN `tax_number_in` VARCHAR(255) CHARSET utf8)   UPDATE `companies`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCompanyById` (IN `id_in` INT(11), IN `name_in` VARCHAR(200) CHARSET utf8, IN `premise_address_in` VARCHAR(255) CHARSET utf8, IN `tax_number_in` VARCHAR(255) CHARSET utf8)  UPDATE `companies`
 SET `companies`.`name` = name_in,
 	`companies`.`premise_address` = premise_address_in,
     `companies`.`tax_number` = tax_number_in
 WHERE `companies`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `updateRatingById`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateRatingById` (IN `id_in` INT(11), IN `desc_in` TEXT CHARSET utf8, IN `ratings_stars_in` INT(2))   UPDATE `ratings`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateRatingById` (IN `id_in` INT(11), IN `desc_in` TEXT CHARSET utf8, IN `ratings_stars_in` INT(2))  UPDATE `ratings`
 SET `ratings`.`desc` = desc_in,
 	`ratings`.`ratings_stars` = ratings_stars_in,
     `ratings`.`status` = 0
@@ -192,7 +192,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `addresses`
+-- Table structure for table `addresses`
 --
 
 DROP TABLE IF EXISTS `addresses`;
@@ -208,7 +208,7 @@ CREATE TABLE `addresses` (
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `ads`
+-- Table structure for table `ads`
 --
 
 DROP TABLE IF EXISTS `ads`;
@@ -226,7 +226,7 @@ CREATE TABLE `ads` (
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `cities`
+-- Table structure for table `cities`
 --
 
 DROP TABLE IF EXISTS `cities`;
@@ -240,7 +240,7 @@ CREATE TABLE `cities` (
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `companies`
+-- Table structure for table `companies`
 --
 
 DROP TABLE IF EXISTS `companies`;
@@ -255,7 +255,7 @@ CREATE TABLE `companies` (
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `counties`
+-- Table structure for table `counties`
 --
 
 DROP TABLE IF EXISTS `counties`;
@@ -267,7 +267,7 @@ CREATE TABLE `counties` (
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `favorites`
+-- Table structure for table `favorites`
 --
 
 DROP TABLE IF EXISTS `favorites`;
@@ -280,7 +280,7 @@ CREATE TABLE `favorites` (
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `images`
+-- Table structure for table `images`
 --
 
 DROP TABLE IF EXISTS `images`;
@@ -295,7 +295,7 @@ CREATE TABLE `images` (
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `jobs`
+-- Table structure for table `jobs`
 --
 
 DROP TABLE IF EXISTS `jobs`;
@@ -315,7 +315,7 @@ CREATE TABLE `jobs` (
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `job_tags`
+-- Table structure for table `job_tags`
 --
 
 DROP TABLE IF EXISTS `job_tags`;
@@ -324,10 +324,38 @@ CREATE TABLE `job_tags` (
   `name` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `job_tags`
+--
+
+INSERT INTO `job_tags` (`id`, `name`) VALUES
+(1, 'Ács'),
+(2, 'Asztalos'),
+(3, 'Autószerelő'),
+(4, 'Bádogos'),
+(5, 'Biztonság-technika'),
+(6, 'Burkoló'),
+(7, 'Csőhálózat-szerelő'),
+(8, 'Festő-mázoló-tapétázó'),
+(9, 'Gáz-szerelő'),
+(10, 'Hő-és-hangszigetelő'),
+(11, 'Hűtő-klíma-hőszivattyú'),
+(12, 'Kazánszerelő'),
+(13, 'Kertész'),
+(14, 'Kőműves'),
+(15, 'Klíma-szerelő'),
+(16, 'Nyílászáró-szerelő'),
+(17, 'Szobafestő'),
+(18, 'Tetőfedő'),
+(19, 'Villany szerelő'),
+(20, 'Víz-szerelő'),
+(21, 'Vízkútfúró'),
+(22, 'Vízszigetelő');
+
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `messages`
+-- Table structure for table `messages`
 --
 
 DROP TABLE IF EXISTS `messages`;
@@ -343,7 +371,7 @@ CREATE TABLE `messages` (
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `ratings`
+-- Table structure for table `ratings`
 --
 
 DROP TABLE IF EXISTS `ratings`;
@@ -359,7 +387,7 @@ CREATE TABLE `ratings` (
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `streets`
+-- Table structure for table `streets`
 --
 
 DROP TABLE IF EXISTS `streets`;
@@ -372,7 +400,7 @@ CREATE TABLE `streets` (
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `street_names`
+-- Table structure for table `street_names`
 --
 
 DROP TABLE IF EXISTS `street_names`;
@@ -384,7 +412,7 @@ CREATE TABLE `street_names` (
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `users`
+-- Table structure for table `users`
 --
 
 DROP TABLE IF EXISTS `users`;
@@ -408,187 +436,187 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Indexek a kiírt táblákhoz
+-- Indexes for dumped tables
 --
 
 --
--- A tábla indexei `addresses`
+-- Indexes for table `addresses`
 --
 ALTER TABLE `addresses`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `ads`
+-- Indexes for table `ads`
 --
 ALTER TABLE `ads`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `cities`
+-- Indexes for table `cities`
 --
 ALTER TABLE `cities`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `companies`
+-- Indexes for table `companies`
 --
 ALTER TABLE `companies`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `counties`
+-- Indexes for table `counties`
 --
 ALTER TABLE `counties`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `favorites`
+-- Indexes for table `favorites`
 --
 ALTER TABLE `favorites`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `images`
+-- Indexes for table `images`
 --
 ALTER TABLE `images`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `jobs`
+-- Indexes for table `jobs`
 --
 ALTER TABLE `jobs`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `job_tags`
+-- Indexes for table `job_tags`
 --
 ALTER TABLE `job_tags`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `messages`
+-- Indexes for table `messages`
 --
 ALTER TABLE `messages`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `ratings`
+-- Indexes for table `ratings`
 --
 ALTER TABLE `ratings`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `streets`
+-- Indexes for table `streets`
 --
 ALTER TABLE `streets`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `street_names`
+-- Indexes for table `street_names`
 --
 ALTER TABLE `street_names`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- A kiírt táblák AUTO_INCREMENT értéke
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT a táblához `addresses`
+-- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT a táblához `ads`
+-- AUTO_INCREMENT for table `ads`
 --
 ALTER TABLE `ads`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT a táblához `cities`
+-- AUTO_INCREMENT for table `cities`
 --
 ALTER TABLE `cities`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT a táblához `companies`
+-- AUTO_INCREMENT for table `companies`
 --
 ALTER TABLE `companies`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT a táblához `counties`
+-- AUTO_INCREMENT for table `counties`
 --
 ALTER TABLE `counties`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT a táblához `favorites`
+-- AUTO_INCREMENT for table `favorites`
 --
 ALTER TABLE `favorites`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT a táblához `images`
+-- AUTO_INCREMENT for table `images`
 --
 ALTER TABLE `images`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT a táblához `jobs`
+-- AUTO_INCREMENT for table `jobs`
 --
 ALTER TABLE `jobs`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT a táblához `job_tags`
+-- AUTO_INCREMENT for table `job_tags`
 --
 ALTER TABLE `job_tags`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
--- AUTO_INCREMENT a táblához `messages`
+-- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT a táblához `ratings`
+-- AUTO_INCREMENT for table `ratings`
 --
 ALTER TABLE `ratings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT a táblához `streets`
+-- AUTO_INCREMENT for table `streets`
 --
 ALTER TABLE `streets`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT a táblához `street_names`
+-- AUTO_INCREMENT for table `street_names`
 --
 ALTER TABLE `street_names`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT a táblához `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- Megkötések a kiírt táblákhoz
+-- Constraints for dumped tables
 --
 
 --
--- Megkötések a táblához `ads`
+-- Constraints for table `ads`
 --
 ALTER TABLE `ads`
   ADD CONSTRAINT `ads_ibfk_1` FOREIGN KEY (`id`) REFERENCES `users` (`id`);

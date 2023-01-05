@@ -4,20 +4,20 @@ Autószerelő
 Bádogos
 Biztonság technika
 Burkoló
-Csőhálózat szerelő
+Csőhálózat-szerelő
 Festő-mázoló-tapétázó
-Gáz szerelő
-Hő- és hangszigetelő
+Gáz-szerelő
+Hő-és-hangszigetelő
 Hűtő-klíma-hőszivattyú
 Kazánszerelő
 Kertész
 Kőműves
-Klíma szerelő
-Nyílászáró szerelő
+Klíma-szerelő
+Nyílászáró-szerelő
 Szobafestő
 Tetőfedő
 Villany szerelő
-Víz szerelő
+Víz-szerelő
 Vízkútfúró
 Vízszigetelő
 
