@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 09, 2023 at 04:12 PM
+-- Generation Time: Jan 09, 2023 at 07:44 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -67,6 +67,30 @@ WHERE `messages`.`sender_id` = sender_id_in
 AND `messages`.`receiver_id` = receiver_id_in
 AND `messages`.`checked` = 0$$
 
+DROP PROCEDURE IF EXISTS `createAddress`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createAddress` (IN `county_id_in` INT(11), IN `zip_code_in` INT(5), IN `city_in` VARCHAR(255) CHARSET utf8, IN `street_in` VARCHAR(255) CHARSET utf8, IN `number_in` VARCHAR(30) CHARSET utf8, IN `staircase_in` VARCHAR(30) CHARSET utf8, IN `floor_in` INT(4), IN `door_in` INT(8))  INSERT INTO `addresses`
+(
+    `addresses`.`county_id`,
+    `addresses`.`zip_code`,
+    `addresses`.`city`,
+    `addresses`.`street`,
+    `addresses`.`number`,
+    `addresses`.`staircase`,
+    `addresses`.`floor`,
+    `addresses`.`door`
+)
+VALUES
+(
+	county_id_in,
+    zip_code_in,
+    city_in,
+    street_in,
+    number_in,
+    staircase_in,
+    floor_in,
+    door_in
+)$$
+
 DROP PROCEDURE IF EXISTS `createCompany`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `createCompany` (IN `name_in` VARCHAR(200) CHARSET utf8, IN `premise_address_in` VARCHAR(255) CHARSET utf8, IN `tax_number_in` VARCHAR(255) CHARSET utf8)  INSERT INTO `companies`
 (
@@ -111,9 +135,12 @@ VALUES
     ratings_stars_in
 )$$
 
+DROP PROCEDURE IF EXISTS `deleteAddressById`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAddressById` (IN `id_in` INT(11))  DELETE FROM `addresses`
+WHERE `addresses`.`id` = id_in$$
+
 DROP PROCEDURE IF EXISTS `deleteCompanyById`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCompanyById` (IN `id_in` INT(11))  UPDATE `companies`
-SET `companies`.`deleted` = 1
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCompanyById` (IN `id_in` INT(11))  DELETE FROM `companies`
 WHERE `companies`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `deleteFavorite`$$
@@ -124,8 +151,19 @@ DROP PROCEDURE IF EXISTS `deleteImage`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteImage` (IN `id_in` INT(11))  DELETE FROM `images`
 WHERE `images`.`id` = id_in$$
 
+DROP PROCEDURE IF EXISTS `deleteRatingById`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteRatingById` (IN `id_in` INT(11))  DELETE FROM `ratings`
+WHERE `ratings`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `getAddressById`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAddressById` (IN `id_in` INT(11))  SELECT * FROM `addresses`
+WHERE `addresses`.`id` = id_in$$
+
 DROP PROCEDURE IF EXISTS `getAllCompanies`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllCompanies` ()  SELECT * FROM `companies`$$
+
+DROP PROCEDURE IF EXISTS `getAllCounties`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllCounties` ()  SELECT * FROM `counties`$$
 
 DROP PROCEDURE IF EXISTS `getAllFavoritesByUserId`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllFavoritesByUserId` (IN `user_id_in` INT)  SELECT * FROM `favorites`
@@ -168,10 +206,25 @@ DROP PROCEDURE IF EXISTS `getRatingById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getRatingById` (IN `id_in` INT(11))  SELECT * FROM `ratings`
 WHERE `ratings`.`id` = id_in$$
 
-DROP PROCEDURE IF EXISTS `getRatingByUserId`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getRatingByUserId` (IN `user_id_in` INT(11))  SELECT * FROM `ratings`
-WHERE `ratings`.`ratinged_user_id` = user_id_in
-OR `ratings`.`ratinger_user_id` = user_id_in$$
+DROP PROCEDURE IF EXISTS `getRatingByRatinged`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getRatingByRatinged` (IN `user_id_in` INT(11))  SELECT * FROM `ratings`
+WHERE `ratings`.`ratinged_user_id` = user_id_in$$
+
+DROP PROCEDURE IF EXISTS `getRatingByRatinger`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getRatingByRatinger` (IN `user_id_in` INT(11))  SELECT * FROM `ratings`
+WHERE `ratings`.`ratinger_user_id` = user_id_in$$
+
+DROP PROCEDURE IF EXISTS `updateAddressById`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAddressById` (IN `id_in` INT(11), IN `county_id_in` INT(11), IN `zip_code_in` INT(5), IN `city_in` VARCHAR(255) CHARSET utf8, IN `street_in` VARCHAR(255) CHARSET utf8, IN `number_in` VARCHAR(30) CHARSET utf8, IN `staircase_in` VARCHAR(30) CHARSET utf8, IN `floor_in` INT(4), IN `door_in` INT(8))  UPDATE `addresses`
+SET `addresses`.`county_id` = county_id_in,
+	`addresses`.`zip_code` = zip_code_in,
+    `addresses`.`city` = city_in,
+    `addresses`.`street` = street_in,
+    `addresses`.`number` = number_in,
+    `addresses`.`staircase` = staircase_in,
+    `addresses`.`floor` = floor_in,
+    `addresses`.`door` = door_in
+WHERE `addresses`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `updateCompanyById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCompanyById` (IN `id_in` INT(11), IN `name_in` VARCHAR(200) CHARSET utf8, IN `premise_address_in` VARCHAR(255) CHARSET utf8, IN `tax_number_in` VARCHAR(255) CHARSET utf8)  UPDATE `companies`
@@ -216,7 +269,8 @@ INSERT INTO `addresses` (`id`, `county_id`, `zip_code`, `city`, `street`, `numbe
 (1, 2, 7600, 'Pécs', '48-as tér', '12', NULL, NULL, NULL),
 (2, 2, 7600, 'Pécs', 'Apafi utca', '23', '1', 2, 3),
 (3, 2, 7600, 'Pécs', 'Barbakán tér', '34', NULL, NULL, NULL),
-(4, 2, 7600, 'Pécs', 'Ág utca', '56', NULL, NULL, NULL);
+(4, 2, 7600, 'Pécs', 'Ág utca', '56', NULL, NULL, NULL),
+(5, 2, 7600, 'Pécs', 'Gólya utca', '11', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -247,8 +301,7 @@ CREATE TABLE `companies` (
   `id` int(11) NOT NULL,
   `name` varchar(200) NOT NULL,
   `premise_address` varchar(255) NOT NULL,
-  `tax_number` varchar(255) NOT NULL,
-  `deleted` int(1) NOT NULL DEFAULT 0
+  `tax_number` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -406,7 +459,9 @@ CREATE TABLE `ratings` (
   `ratinger_user_id` int(11) NOT NULL,
   `desc` text NOT NULL,
   `ratings_stars` int(2) NOT NULL DEFAULT 0,
-  `status` int(1) NOT NULL DEFAULT 0
+  `status` int(1) NOT NULL DEFAULT 0,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `deleted` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -523,7 +578,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `ads`
