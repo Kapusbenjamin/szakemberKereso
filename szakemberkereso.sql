@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 05, 2023 at 05:04 PM
+-- Generation Time: Jan 09, 2023 at 04:12 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -198,22 +198,25 @@ DELIMITER ;
 DROP TABLE IF EXISTS `addresses`;
 CREATE TABLE `addresses` (
   `id` int(11) NOT NULL,
+  `county_id` int(11) NOT NULL,
+  `zip_code` int(5) NOT NULL,
+  `city` varchar(255) NOT NULL,
+  `street` varchar(255) NOT NULL,
   `number` varchar(30) NOT NULL,
   `staircase` varchar(30) DEFAULT NULL,
   `floor` int(4) DEFAULT NULL,
-  `door` int(8) DEFAULT NULL,
-  `street_id` int(11) NOT NULL
+  `door` int(8) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `addresses`
 --
 
-INSERT INTO `addresses` (`id`, `number`, `staircase`, `floor`, `door`, `street_id`) VALUES
-(1, '12', NULL, NULL, NULL, 1),
-(2, '23', '1', 2, 3, 2),
-(3, '34', NULL, NULL, NULL, 3),
-(4, '56', NULL, NULL, NULL, 4);
+INSERT INTO `addresses` (`id`, `county_id`, `zip_code`, `city`, `street`, `number`, `staircase`, `floor`, `door`) VALUES
+(1, 2, 7600, 'Pécs', '48-as tér', '12', NULL, NULL, NULL),
+(2, 2, 7600, 'Pécs', 'Apafi utca', '23', '1', 2, 3),
+(3, 2, 7600, 'Pécs', 'Barbakán tér', '34', NULL, NULL, NULL),
+(4, 2, 7600, 'Pécs', 'Ág utca', '56', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -232,28 +235,6 @@ CREATE TABLE `ads` (
   `status` int(1) NOT NULL DEFAULT 0,
   `deleted` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `cities`
---
-
-DROP TABLE IF EXISTS `cities`;
-CREATE TABLE `cities` (
-  `id` int(11) NOT NULL,
-  `postal_code` int(5) NOT NULL,
-  `city` varchar(100) NOT NULL,
-  `county_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `cities`
---
-
-INSERT INTO `cities` (`id`, `postal_code`, `city`, `county_id`) VALUES
-(1, 7600, 'Pécs', 2),
-(2, 7759, 'Kisnyárád', 2);
 
 -- --------------------------------------------------------
 
@@ -431,51 +412,6 @@ CREATE TABLE `ratings` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `streets`
---
-
-DROP TABLE IF EXISTS `streets`;
-CREATE TABLE `streets` (
-  `id` int(11) NOT NULL,
-  `street_name_id` int(11) NOT NULL,
-  `city_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `streets`
---
-
-INSERT INTO `streets` (`id`, `street_name_id`, `city_id`) VALUES
-(1, 1, 1),
-(2, 2, 1),
-(3, 3, 1),
-(4, 4, 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `street_names`
---
-
-DROP TABLE IF EXISTS `street_names`;
-CREATE TABLE `street_names` (
-  `id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `street_names`
---
-
-INSERT INTO `street_names` (`id`, `name`) VALUES
-(1, 'József Attila utca'),
-(2, 'Petőfi utca'),
-(3, 'Ács utca'),
-(4, 'Ág utca');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `users`
 --
 
@@ -523,12 +459,6 @@ ALTER TABLE `addresses`
 -- Indexes for table `ads`
 --
 ALTER TABLE `ads`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `cities`
---
-ALTER TABLE `cities`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -580,18 +510,6 @@ ALTER TABLE `ratings`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `streets`
---
-ALTER TABLE `streets`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `street_names`
---
-ALTER TABLE `street_names`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -612,12 +530,6 @@ ALTER TABLE `addresses`
 --
 ALTER TABLE `ads`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `cities`
---
-ALTER TABLE `cities`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `companies`
@@ -666,18 +578,6 @@ ALTER TABLE `messages`
 --
 ALTER TABLE `ratings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `streets`
---
-ALTER TABLE `streets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `street_names`
---
-ALTER TABLE `street_names`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
