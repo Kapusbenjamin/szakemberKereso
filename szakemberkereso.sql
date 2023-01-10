@@ -3,10 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 10, 2023 at 03:51 PM
+-- Generation Time: Jan 10, 2023 at 04:28 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
-
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,8 +27,15 @@ DELIMITER $$
 --
 -- Procedures
 --
-DROP PROCEDURE IF EXISTS `a`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `a` ()   SELECT * FROM `users`$$
+DROP PROCEDURE IF EXISTS `acceptByCustomer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptByCustomer` (IN `id_in` INT(11))  UPDATE `jobs`
+SET `jobs`.`customer_accepted` = 1
+WHERE `jobs`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `acceptByWorker`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptByWorker` (IN `id_in` INT(11))  UPDATE `jobs`
+SET `jobs`.`worker_accepted` = 1
+WHERE `jobs`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `acceptRating`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptRating` (IN `id_in` INT(11))  UPDATE `ratings`
@@ -64,8 +70,10 @@ VALUES
     user_id_in
 )$$
 
-DROP PROCEDURE IF EXISTS `b`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `b` ()  SELECT * FROM addresses$$
+DROP PROCEDURE IF EXISTS `changeJobStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `changeJobStatus` (IN `id_in` INT(11))  UPDATE `jobs`
+SET `jobs`.`status` = 1
+WHERE `jobs`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `checkMessage`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkMessage` (IN `sender_id_in` INT(11), IN `receiver_id_in` INT(11))  UPDATE `messages`
@@ -158,6 +166,11 @@ DROP PROCEDURE IF EXISTS `deleteImage`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteImage` (IN `id_in` INT(11))  DELETE FROM `images`
 WHERE `images`.`id` = id_in$$
 
+DROP PROCEDURE IF EXISTS `deleteJob`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteJob` (IN `id_in` INT(11))  UPDATE `jobs`
+SET `jobs`.`deleted` = 1
+WHERE `jobs`.`id` = id_in$$
+
 DROP PROCEDURE IF EXISTS `deleteRatingById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteRatingById` (IN `id_in` INT(11))  DELETE FROM `ratings`
 WHERE `ratings`.`id` = id_in$$
@@ -175,6 +188,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllCounties` ()  SELECT * FROM `
 DROP PROCEDURE IF EXISTS `getAllFavoritesByUserId`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllFavoritesByUserId` (IN `user_id_in` INT)  SELECT * FROM `favorites`
 WHERE `favorites`.`user_id` = user_id_in$$
+
+DROP PROCEDURE IF EXISTS `getAllJobs`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllJobs` ()  SELECT * FROM `jobs`$$
 
 DROP PROCEDURE IF EXISTS `getAllJobTags`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllJobTags` ()  SELECT * FROM `job_tags`$$
@@ -390,7 +406,7 @@ CREATE TABLE `jobs` (
   `worker_id` int(11) NOT NULL,
   `desc` text NOT NULL,
   `total` int(11) NOT NULL,
-  `status` int(11) NOT NULL DEFAULT -1,
+  `status` int(11) NOT NULL DEFAULT 0,
   `worker_accepted` int(1) NOT NULL DEFAULT 0,
   `customer_accepted` int(1) NOT NULL DEFAULT 0,
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
