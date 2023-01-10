@@ -7,6 +7,7 @@
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -27,6 +28,9 @@ DELIMITER $$
 --
 -- Procedures
 --
+DROP PROCEDURE IF EXISTS `a`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `a` ()   SELECT * FROM `users`$$
+
 DROP PROCEDURE IF EXISTS `acceptRating`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptRating` (IN `id_in` INT(11))  UPDATE `ratings`
 SET `ratings`.`status` = 1
