@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2023. Jan 10. 14:54
+-- Létrehozás ideje: 2023. Jan 10. 15:51
 -- Kiszolgáló verziója: 10.4.27-MariaDB
 -- PHP verzió: 8.1.12
 
@@ -27,6 +27,9 @@ DELIMITER $$
 --
 -- Eljárások
 --
+DROP PROCEDURE IF EXISTS `a`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `a` ()   SELECT * FROM `users`$$
+
 DROP PROCEDURE IF EXISTS `acceptRating`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptRating` (IN `id_in` INT(11))   UPDATE `ratings`
 SET `ratings`.`status` = 1
