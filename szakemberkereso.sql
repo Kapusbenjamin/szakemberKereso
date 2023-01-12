@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 12, 2023 at 05:39 PM
+-- Generation Time: Jan 12, 2023 at 07:19 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -52,6 +52,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptRating` (IN `id_in` INT(11)) 
 SET `ratings`.`status` = 1
 WHERE `ratings`.`id` = id_in$$
 
+DROP PROCEDURE IF EXISTS `addCountyToAd`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addCountyToAd` (IN `ad_id_in` INT(11), IN `county_id_in` INT(11))  INSERT INTO `ads_counties`
+(
+    `ads_counties`.`ad_id`,
+    `ads_counties`.`county_id`
+)
+VALUE
+(
+    ad_id_in,
+    county_id_in
+)$$
+
 DROP PROCEDURE IF EXISTS `addFavorite`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addFavorite` (IN `user_id_in` INT(11), IN `ads_id_in` INT(11))  INSERT INTO `favorites`
 (
@@ -78,6 +90,18 @@ VALUES
     title_in,
     created_at_in,
     user_id_in
+)$$
+
+DROP PROCEDURE IF EXISTS `addNewJobToUser`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addNewJobToUser` (IN `user_id_in` INT(11), IN `job_tags_id_in` INT(11))  INSERT INTO `users_jobs`
+(
+    `users_jobs`.`user_id`,
+    `users_jobs`.`job_tag_id`
+)
+VALUE
+(
+    user_id_in,
+    job_tags_id_in
 )$$
 
 DROP PROCEDURE IF EXISTS `changeJobStatus`$$
@@ -165,18 +189,16 @@ VALUES
 )$$
 
 DROP PROCEDURE IF EXISTS `createNewAds`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createNewAds` (IN `user_id_in` INT(11), IN `job_tag_id_in` INT(11), IN `desc_in` TEXT CHARSET utf8, IN `county_id` INT(11))  INSERT INTO `ads`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createNewAds` (IN `user_id_in` INT(11), IN `job_tag_id` INT(11), IN `desc_in` TEXT CHARSET utf8)  INSERT INTO `ads`
 (
 	`ads`.`user_id`,
     `ads`.`job_tag_id`,
-    `ads`.`desc`,
-    `ads`.`county_id`
+    `ads`.`desc`
 )
 VALUES (
 	user_id_in,
     job_tag_id_in,
-    desc_in,
-    county_id
+    desc_in
 )$$
 
 DROP PROCEDURE IF EXISTS `createRating`$$
@@ -208,6 +230,10 @@ DROP PROCEDURE IF EXISTS `deleteCompanyById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCompanyById` (IN `id_in` INT(11))  DELETE FROM `companies`
 WHERE `companies`.`id` = id_in$$
 
+DROP PROCEDURE IF EXISTS `deleteCountyFromAd`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCountyFromAd` (IN `id_in` INT(11))  DELETE FROM `ads_counties`
+WHERE `ads_counties`.`id` = id_in$$
+
 DROP PROCEDURE IF EXISTS `deleteFavorite`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteFavorite` (IN `id_in` INT(11))  DELETE FROM `favorites`
 WHERE `favorites`.`id` = id_in$$
@@ -231,6 +257,10 @@ DROP PROCEDURE IF EXISTS `deleteUser`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUser` (IN `id_in` INT(11))  UPDATE `users`
 SET `users`.`deleted` = 1
 WHERE `users`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `deleteUserJob`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUserJob` (IN `id_in` INT(11))  DELETE FROM `users_jobs`
+WHERE `users_jobs`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `getAddressById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAddressById` (IN `id_in` INT(11))  SELECT * FROM `addresses`
@@ -264,6 +294,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllCompanies` ()  SELECT * FROM 
 DROP PROCEDURE IF EXISTS `getAllCounties`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllCounties` ()  SELECT * FROM `counties`$$
 
+DROP PROCEDURE IF EXISTS `getAllCountiesByAd`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllCountiesByAd` (IN `ad_id_in` INT(11))  SELECT * FROM `ads_counties`
+WHERE `ads_counties`.`ad_id` = ad_id_in$$
+
 DROP PROCEDURE IF EXISTS `getAllFavoritesByUserId`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllFavoritesByUserId` (IN `user_id_in` INT)  SELECT * FROM `favorites`
 WHERE `favorites`.`user_id` = user_id_in$$
@@ -278,6 +312,10 @@ DROP PROCEDURE IF EXISTS `getAllJobsByCustomer`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllJobsByCustomer` (IN `customer_id_in` INT(11))  SELECT * FROM `jobs`
 WHERE `jobs`.`deleted` != 1
 AND `jobs`.`customer_id` = customer_id_in$$
+
+DROP PROCEDURE IF EXISTS `getAllJobsByUser`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllJobsByUser` (IN `user_id_in` INT(11))  SELECT * FROM `users_jobs`
+WHERE `users_jobs`.`user_id` = user_id_in$$
 
 DROP PROCEDURE IF EXISTS `getAllJobsByWorker`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllJobsByWorker` (IN `worker_id_in` INT(11))  SELECT * FROM `jobs`
@@ -348,6 +386,14 @@ DROP PROCEDURE IF EXISTS `getRatingById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getRatingById` (IN `id_in` INT(11))  SELECT * FROM `ratings`
 WHERE `ratings`.`id` = id_in$$
 
+DROP PROCEDURE IF EXISTS `getRatingByRatinged`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getRatingByRatinged` (IN `user_id_in` INT(11))  SELECT * FROM `ratings`
+WHERE `ratings`.`ratinged_user_id` = user_id_in$$
+
+DROP PROCEDURE IF EXISTS `getRatingByRatinger`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getRatingByRatinger` (IN `user_id_in` INT(11))  SELECT * FROM `ratings`
+WHERE `ratings`.`ratinger_user_id` = user_id_in$$
+
 DROP PROCEDURE IF EXISTS `getUserById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserById` (IN `id_in` INT(11))  SELECT * FROM `users`
 WHERE `users`.`id` = id_in$$
@@ -370,9 +416,8 @@ SET `addresses`.`county_id` = county_id_in,
 WHERE `addresses`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `updateAds`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAds` (IN `id_in` INT(11), IN `desc_in` TEXT CHARSET utf8, IN `county_id_in` INT(11))  UPDATE `ads`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAds` (IN `id_in` INT(11), IN `desc_in` TEXT CHARSET utf8)  UPDATE `ads`
 SET `ads`.`desc` = desc_in,
-	`ads`.`county_id` = county_id_in,
     `ads`.`status` = 0
 WHERE `ads`.`id` = id_in$$
 
@@ -464,19 +509,6 @@ CREATE TABLE `ads` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `status` int(1) NOT NULL DEFAULT 0,
   `deleted` int(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `ads_counties`
---
-
-DROP TABLE IF EXISTS `ads_counties`;
-CREATE TABLE `ads_counties` (
-  `id` int(11) NOT NULL,
-  `ad_id` int(11) NOT NULL,
-  `county_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -689,19 +721,6 @@ INSERT INTO `users` (`id`, `first_name`, `last_name`, `acces_type`, `email`, `ph
 (3, 'Teszt', 'Izabella', 0, 'tesztiza@teszt-user.com', '+36302987764', '1234', NULL, 0, 0, '2023-01-05 15:55:18', '2023-01-05 15:57:39', '2023-01-04 15:48:18', '2023-01-05 15:57:39', 0),
 (4, 'Teszt', 'Admin', 2, 'teszta@teszt-user.com', '+36702753456', '1234', NULL, 0, 0, '2023-01-06 15:48:18', '2023-01-05 15:57:39', '2023-01-01 15:48:18', '2023-01-05 15:57:39', 0);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `users_jobs`
---
-
-DROP TABLE IF EXISTS `users_jobs`;
-CREATE TABLE `users_jobs` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `job_tag_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 --
 -- Indexes for dumped tables
 --
@@ -716,12 +735,6 @@ ALTER TABLE `addresses`
 -- Indexes for table `ads`
 --
 ALTER TABLE `ads`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `ads_counties`
---
-ALTER TABLE `ads_counties`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -779,12 +792,6 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `users_jobs`
---
-ALTER TABLE `users_jobs`
-  ADD PRIMARY KEY (`id`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -798,12 +805,6 @@ ALTER TABLE `addresses`
 -- AUTO_INCREMENT for table `ads`
 --
 ALTER TABLE `ads`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `ads_counties`
---
-ALTER TABLE `ads_counties`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -859,12 +860,6 @@ ALTER TABLE `ratings`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `users_jobs`
---
-ALTER TABLE `users_jobs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
