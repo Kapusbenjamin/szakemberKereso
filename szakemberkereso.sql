@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 10, 2023 at 04:28 PM
+-- Generation Time: Jan 12, 2023 at 05:39 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -27,6 +27,11 @@ DELIMITER $$
 --
 -- Procedures
 --
+DROP PROCEDURE IF EXISTS `acceptAds`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptAds` (IN `id_in` INT(11))  UPDATE `ads`
+SET `ads`.`status` = 1
+WHERE `ads`.`id` = id_in$$
+
 DROP PROCEDURE IF EXISTS `acceptByCustomer`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptByCustomer` (IN `id_in` INT(11))  UPDATE `jobs`
 SET `jobs`.`customer_accepted` = 1
@@ -36,6 +41,11 @@ DROP PROCEDURE IF EXISTS `acceptByWorker`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptByWorker` (IN `id_in` INT(11))  UPDATE `jobs`
 SET `jobs`.`worker_accepted` = 1
 WHERE `jobs`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `acceptImage`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptImage` (IN `id_in` INT(11))  UPDATE `images`
+SET `images`.`status` = 1
+WHERE `images`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `acceptRating`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptRating` (IN `id_in` INT(11))  UPDATE `ratings`
@@ -74,6 +84,11 @@ DROP PROCEDURE IF EXISTS `changeJobStatus`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `changeJobStatus` (IN `id_in` INT(11))  UPDATE `jobs`
 SET `jobs`.`status` = 1
 WHERE `jobs`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `changePassword`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `changePassword` (IN `id_in` INT(11), IN `password_in` VARCHAR(255) CHARSET utf8)  UPDATE `users`
+SET `users`.`password` = password_in
+WHERE `users`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `checkMessage`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkMessage` (IN `sender_id_in` INT(11), IN `receiver_id_in` INT(11))  UPDATE `messages`
@@ -120,6 +135,21 @@ VALUES
     tax_number_in
 )$$
 
+DROP PROCEDURE IF EXISTS `createJob`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createJob` (IN `customer_id_in` INT(11), IN `worker_id_in` INT(11), IN `desc_in` TEXT CHARSET utf8)  INSERT INTO `jobs`
+(
+   `jobs`.`customer_id`,
+   `jobs`.`worker_id`,
+   `jobs`.`desc`,
+   `jobs`.`customer_accepted` 
+)
+VALUES (
+	customer_id_in,
+    worker_id_in,
+    desc_in,
+    1
+)$$
+
 DROP PROCEDURE IF EXISTS `createMessage`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `createMessage` (IN `sender_id_in` INT(11), IN `receiver_id_in` INT(11), IN `message_in` TEXT CHARSET utf8)  INSERT INTO `messages`
 (
@@ -132,6 +162,21 @@ VALUES
 	sender_id_in,
     receiver_id_in,
     message_in
+)$$
+
+DROP PROCEDURE IF EXISTS `createNewAds`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createNewAds` (IN `user_id_in` INT(11), IN `job_tag_id_in` INT(11), IN `desc_in` TEXT CHARSET utf8, IN `county_id` INT(11))  INSERT INTO `ads`
+(
+	`ads`.`user_id`,
+    `ads`.`job_tag_id`,
+    `ads`.`desc`,
+    `ads`.`county_id`
+)
+VALUES (
+	user_id_in,
+    job_tag_id_in,
+    desc_in,
+    county_id
 )$$
 
 DROP PROCEDURE IF EXISTS `createRating`$$
@@ -154,6 +199,11 @@ DROP PROCEDURE IF EXISTS `deleteAddressById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAddressById` (IN `id_in` INT(11))  DELETE FROM `addresses`
 WHERE `addresses`.`id` = id_in$$
 
+DROP PROCEDURE IF EXISTS `deleteAds`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAds` (IN `id_in` INT(11))  UPDATE `ads`
+SET `ads`.`deleted` = 1
+WHERE `ads`.`id` = id_in$$
+
 DROP PROCEDURE IF EXISTS `deleteCompanyById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCompanyById` (IN `id_in` INT(11))  DELETE FROM `companies`
 WHERE `companies`.`id` = id_in$$
@@ -169,15 +219,44 @@ WHERE `images`.`id` = id_in$$
 DROP PROCEDURE IF EXISTS `deleteJob`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteJob` (IN `id_in` INT(11))  UPDATE `jobs`
 SET `jobs`.`deleted` = 1
-WHERE `jobs`.`id` = id_in$$
+WHERE `jobs`.`id` = id_in
+AND (`jobs`.`worker_accepted` != 1
+OR `jobs`.`customer_accepted` != 1)$$
 
 DROP PROCEDURE IF EXISTS `deleteRatingById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteRatingById` (IN `id_in` INT(11))  DELETE FROM `ratings`
 WHERE `ratings`.`id` = id_in$$
 
+DROP PROCEDURE IF EXISTS `deleteUser`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUser` (IN `id_in` INT(11))  UPDATE `users`
+SET `users`.`deleted` = 1
+WHERE `users`.`id` = id_in$$
+
 DROP PROCEDURE IF EXISTS `getAddressById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAddressById` (IN `id_in` INT(11))  SELECT * FROM `addresses`
 WHERE `addresses`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `getAdsById`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAdsById` (IN `id_in` INT(11))  SELECT * FROM `ads`
+WHERE `ads`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `getAllAcceptedAds`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllAcceptedAds` ()  SELECT * FROM `ads`
+WHERE `ads`.`deleted` != 1
+AND `ads`.`status` = 1$$
+
+DROP PROCEDURE IF EXISTS `getAllAcceptedImagesByUserId`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllAcceptedImagesByUserId` (IN `user_id_in` INT(11))  SELECT * FROM `images`
+WHERE `images`.`status` = 1
+AND `images`.`user_id` = user_id_in$$
+
+DROP PROCEDURE IF EXISTS `getAllAds`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllAds` ()  SELECT * FROM `ads`$$
+
+DROP PROCEDURE IF EXISTS `getAllAdsByUserId`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllAdsByUserId` (IN `user_id_in` INT(11))  SELECT * FROM `ads`
+WHERE `ads`.`deleted` != 1
+AND `ads`.`user_id` = user_id_in$$
 
 DROP PROCEDURE IF EXISTS `getAllCompanies`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllCompanies` ()  SELECT * FROM `companies`$$
@@ -189,8 +268,21 @@ DROP PROCEDURE IF EXISTS `getAllFavoritesByUserId`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllFavoritesByUserId` (IN `user_id_in` INT)  SELECT * FROM `favorites`
 WHERE `favorites`.`user_id` = user_id_in$$
 
+DROP PROCEDURE IF EXISTS `getAllImages`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllImages` ()  SELECT * FROM `images`$$
+
 DROP PROCEDURE IF EXISTS `getAllJobs`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllJobs` ()  SELECT * FROM `jobs`$$
+
+DROP PROCEDURE IF EXISTS `getAllJobsByCustomer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllJobsByCustomer` (IN `customer_id_in` INT(11))  SELECT * FROM `jobs`
+WHERE `jobs`.`deleted` != 1
+AND `jobs`.`customer_id` = customer_id_in$$
+
+DROP PROCEDURE IF EXISTS `getAllJobsByWorker`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllJobsByWorker` (IN `worker_id_in` INT(11))  SELECT * FROM `jobs`
+WHERE `jobs`.`deleted` != 1
+AND `jobs`.`worker_id` = worker_id_in$$
 
 DROP PROCEDURE IF EXISTS `getAllJobTags`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllJobTags` ()  SELECT * FROM `job_tags`$$
@@ -206,8 +298,35 @@ OR (`messages`.`sender_id` = user2_id_in
 AND `messages`.`receiver_id` = user1_id_in)
 ORDER BY `messages`.`sended_at` ASC$$
 
+DROP PROCEDURE IF EXISTS `getAllNonAcceptedAds`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllNonAcceptedAds` ()  SELECT * FROM `ads`
+WHERE `ads`.`status` = 0$$
+
+DROP PROCEDURE IF EXISTS `getAllNotAcceptedImages`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllNotAcceptedImages` ()  SELECT * FROM `images`
+WHERE `images`.`status` = 0$$
+
+DROP PROCEDURE IF EXISTS `getAllNotAcceptedRatings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllNotAcceptedRatings` ()  SELECT * FROM `ratings`
+WHERE `ratings`.`status` = 0$$
+
 DROP PROCEDURE IF EXISTS `getAllRatings`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllRatings` ()  SELECT * FROM `ratings`$$
+
+DROP PROCEDURE IF EXISTS `getAllRatingsByRatinged`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllRatingsByRatinged` (IN `user_id_in` INT(11))  SELECT * FROM `ratings`
+WHERE `ratings`.`ratinged_user_id` = user_id_in
+AND `ratings`.`status` = 1
+AND `ratings`.`deleted` != 1$$
+
+DROP PROCEDURE IF EXISTS `getAllRatingsByRatinger`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllRatingsByRatinger` (IN `user_id_in` INT(11))  SELECT * FROM `ratings`
+WHERE `ratings`.`ratinger_user_id` = user_id_in
+AND `ratings`.`status` = 1
+AND `ratings`.`deleted` != 1$$
+
+DROP PROCEDURE IF EXISTS `getAllUsers`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllUsers` ()  SELECT * FROM `users`$$
 
 DROP PROCEDURE IF EXISTS `getCompanyById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCompanyById` (IN `id_in` INT(11))  SELECT * FROM `companies`
@@ -229,13 +348,14 @@ DROP PROCEDURE IF EXISTS `getRatingById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getRatingById` (IN `id_in` INT(11))  SELECT * FROM `ratings`
 WHERE `ratings`.`id` = id_in$$
 
-DROP PROCEDURE IF EXISTS `getRatingByRatinged`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getRatingByRatinged` (IN `user_id_in` INT(11))  SELECT * FROM `ratings`
-WHERE `ratings`.`ratinged_user_id` = user_id_in$$
+DROP PROCEDURE IF EXISTS `getUserById`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserById` (IN `id_in` INT(11))  SELECT * FROM `users`
+WHERE `users`.`id` = id_in$$
 
-DROP PROCEDURE IF EXISTS `getRatingByRatinger`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getRatingByRatinger` (IN `user_id_in` INT(11))  SELECT * FROM `ratings`
-WHERE `ratings`.`ratinger_user_id` = user_id_in$$
+DROP PROCEDURE IF EXISTS `logoutUser`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `logoutUser` (IN `id_in` INT(11))  UPDATE `users`
+SET `users`.`status` = 0
+WHERE `users`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `updateAddressById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAddressById` (IN `id_in` INT(11), IN `county_id_in` INT(11), IN `zip_code_in` INT(5), IN `city_in` VARCHAR(255) CHARSET utf8, IN `street_in` VARCHAR(255) CHARSET utf8, IN `number_in` VARCHAR(30) CHARSET utf8, IN `staircase_in` VARCHAR(30) CHARSET utf8, IN `floor_in` INT(4), IN `door_in` INT(8))  UPDATE `addresses`
@@ -249,6 +369,13 @@ SET `addresses`.`county_id` = county_id_in,
     `addresses`.`door` = door_in
 WHERE `addresses`.`id` = id_in$$
 
+DROP PROCEDURE IF EXISTS `updateAds`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAds` (IN `id_in` INT(11), IN `desc_in` TEXT CHARSET utf8, IN `county_id_in` INT(11))  UPDATE `ads`
+SET `ads`.`desc` = desc_in,
+	`ads`.`county_id` = county_id_in,
+    `ads`.`status` = 0
+WHERE `ads`.`id` = id_in$$
+
 DROP PROCEDURE IF EXISTS `updateCompanyById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCompanyById` (IN `id_in` INT(11), IN `name_in` VARCHAR(200) CHARSET utf8, IN `premise_address_in` VARCHAR(255) CHARSET utf8, IN `tax_number_in` VARCHAR(255) CHARSET utf8)  UPDATE `companies`
 SET `companies`.`name` = name_in,
@@ -256,12 +383,39 @@ SET `companies`.`name` = name_in,
     `companies`.`tax_number` = tax_number_in
 WHERE `companies`.`id` = id_in$$
 
+DROP PROCEDURE IF EXISTS `updateJobByCustomer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateJobByCustomer` (IN `id_in` INT(11), IN `desc_in` TEXT CHARSET utf8)  UPDATE `jobs`
+SET `jobs`.`desc` = desc_in,
+	`jobs`.`customer_accepted` = 1,
+    `jobs`.`worker_accepted` = 0
+WHERE `jobs`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `updateJobByWorker`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateJobByWorker` (IN `id_in` INT(11), IN `total_in` INT(11))  UPDATE `jobs`
+SET `jobs`.`total` = total_in,
+	`jobs`.`worker_accepted` = 1,
+	`jobs`.`customer_accepted` = 0
+WHERE `jobs`.`id` = id_in$$
+
 DROP PROCEDURE IF EXISTS `updateRatingById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateRatingById` (IN `id_in` INT(11), IN `desc_in` TEXT CHARSET utf8, IN `ratings_stars_in` INT(2))  UPDATE `ratings`
 SET `ratings`.`desc` = desc_in,
 	`ratings`.`ratings_stars` = ratings_stars_in,
     `ratings`.`status` = 0
 WHERE `ratings`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `updateUser`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUser` (IN `id_in` INT(11), IN `first_name_in` VARCHAR(100) CHARSET utf8, IN `last_name_in` VARCHAR(100) CHARSET utf8, IN `email_in` VARCHAR(200) CHARSET utf8, IN `phone_in` VARCHAR(12) CHARSET utf8)  UPDATE `users`
+SET `users`.`first_name` = first_name_in,
+	`users`.`last_name` = last_name_in,
+	`users`.`email` = email_in,
+	`users`.`phone` = phone_in
+WHERE `users`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `validateEmail`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `validateEmail` (IN `id_in` INT(11))  UPDATE `users`
+SET `users`.`status` = 0
+WHERE `users`.`id` = id_in$$
 
 DELIMITER ;
 
@@ -307,10 +461,22 @@ CREATE TABLE `ads` (
   `user_id` int(11) NOT NULL,
   `job_tag_id` int(11) NOT NULL,
   `desc` text NOT NULL,
-  `county_id` int(11) NOT NULL,
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `status` int(1) NOT NULL DEFAULT 0,
   `deleted` int(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ads_counties`
+--
+
+DROP TABLE IF EXISTS `ads_counties`;
+CREATE TABLE `ads_counties` (
+  `id` int(11) NOT NULL,
+  `ad_id` int(11) NOT NULL,
+  `county_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -390,6 +556,7 @@ CREATE TABLE `images` (
   `url` varchar(255) NOT NULL,
   `title` varchar(100) NOT NULL,
   `created_at` date NOT NULL,
+  `status` int(1) NOT NULL DEFAULT 0,
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -405,7 +572,7 @@ CREATE TABLE `jobs` (
   `customer_id` int(11) NOT NULL,
   `worker_id` int(11) NOT NULL,
   `desc` text NOT NULL,
-  `total` int(11) NOT NULL,
+  `total` int(11) NOT NULL DEFAULT 0,
   `status` int(11) NOT NULL DEFAULT 0,
   `worker_accepted` int(1) NOT NULL DEFAULT 0,
   `customer_accepted` int(1) NOT NULL DEFAULT 0,
@@ -503,13 +670,12 @@ CREATE TABLE `users` (
   `phone` varchar(12) NOT NULL,
   `password` varchar(255) NOT NULL,
   `company_id` int(11) DEFAULT NULL,
-  `job_tag_id` int(11) DEFAULT NULL,
+  `address_id` int(11) NOT NULL,
   `status` int(11) NOT NULL DEFAULT -1,
   `last_login_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `activated_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `address_id` int(11) NOT NULL,
   `deleted` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -517,11 +683,24 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `first_name`, `last_name`, `acces_type`, `email`, `phone`, `password`, `company_id`, `job_tag_id`, `status`, `last_login_at`, `created_at`, `activated_at`, `updated_at`, `address_id`, `deleted`) VALUES
-(1, 'Teszt', 'Ferenc', 0, 'tesztf@teszt-user.com', '+36202567896', '1234', NULL, NULL, -1, NULL, '2023-01-05 15:57:39', NULL, '2023-01-05 15:57:39', 1, 0),
-(2, 'Teszt', 'László', 1, 'tesztl@teszt-user.com', '+36202567894', '1234', 1, 2, 0, '2023-01-05 15:48:18', '2023-01-05 15:57:39', '2023-01-05 15:48:18', '2023-01-05 15:57:39', 2, 0),
-(3, 'Teszt', 'Izabella', 0, 'tesztiza@teszt-user.com', '+36302987764', '1234', NULL, NULL, 0, '2023-01-05 15:55:18', '2023-01-05 15:57:39', '2023-01-04 15:48:18', '2023-01-05 15:57:39', 3, 0),
-(4, 'Teszt', 'Admin', 2, 'teszta@teszt-user.com', '+36702753456', '1234', NULL, NULL, 0, '2023-01-06 15:48:18', '2023-01-05 15:57:39', '2023-01-01 15:48:18', '2023-01-05 15:57:39', 4, 0);
+INSERT INTO `users` (`id`, `first_name`, `last_name`, `acces_type`, `email`, `phone`, `password`, `company_id`, `address_id`, `status`, `last_login_at`, `created_at`, `activated_at`, `updated_at`, `deleted`) VALUES
+(1, 'Teszt', 'Ferenc', 0, 'tesztf@teszt-user.com', '+36202567896', '1234', NULL, 0, -1, NULL, '2023-01-05 15:57:39', NULL, '2023-01-05 15:57:39', 0),
+(2, 'Teszt', 'László', 1, 'tesztl@teszt-user.com', '+36202567894', '1234', 1, 0, 0, '2023-01-05 15:48:18', '2023-01-05 15:57:39', '2023-01-05 15:48:18', '2023-01-05 15:57:39', 0),
+(3, 'Teszt', 'Izabella', 0, 'tesztiza@teszt-user.com', '+36302987764', '1234', NULL, 0, 0, '2023-01-05 15:55:18', '2023-01-05 15:57:39', '2023-01-04 15:48:18', '2023-01-05 15:57:39', 0),
+(4, 'Teszt', 'Admin', 2, 'teszta@teszt-user.com', '+36702753456', '1234', NULL, 0, 0, '2023-01-06 15:48:18', '2023-01-05 15:57:39', '2023-01-01 15:48:18', '2023-01-05 15:57:39', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users_jobs`
+--
+
+DROP TABLE IF EXISTS `users_jobs`;
+CREATE TABLE `users_jobs` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `job_tag_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Indexes for dumped tables
@@ -537,6 +716,12 @@ ALTER TABLE `addresses`
 -- Indexes for table `ads`
 --
 ALTER TABLE `ads`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `ads_counties`
+--
+ALTER TABLE `ads_counties`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -594,6 +779,12 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `users_jobs`
+--
+ALTER TABLE `users_jobs`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -607,6 +798,12 @@ ALTER TABLE `addresses`
 -- AUTO_INCREMENT for table `ads`
 --
 ALTER TABLE `ads`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `ads_counties`
+--
+ALTER TABLE `ads_counties`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -662,6 +859,12 @@ ALTER TABLE `ratings`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `users_jobs`
+--
+ALTER TABLE `users_jobs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
