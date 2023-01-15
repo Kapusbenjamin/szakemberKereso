@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 12, 2023 at 07:19 PM
+-- Generation Time: Jan 15, 2023 at 06:32 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -104,6 +104,11 @@ VALUE
     job_tags_id_in
 )$$
 
+DROP PROCEDURE IF EXISTS `changeAccess`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `changeAccess` (IN `user_id_in` INT(11))  UPDATE `users`
+SET `users`.`access_type` = 1
+WHERE `users`.`id` = user_id_in$$
+
 DROP PROCEDURE IF EXISTS `changeJobStatus`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `changeJobStatus` (IN `id_in` INT(11))  UPDATE `jobs`
 SET `jobs`.`status` = 1
@@ -146,18 +151,25 @@ VALUES
 )$$
 
 DROP PROCEDURE IF EXISTS `createCompany`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createCompany` (IN `name_in` VARCHAR(200) CHARSET utf8, IN `premise_address_in` VARCHAR(255) CHARSET utf8, IN `tax_number_in` VARCHAR(255) CHARSET utf8)  INSERT INTO `companies`
-(
-    `companies`.`name`, 
-    `companies`.`premise_address`, 
-    `companies`.`tax_number`
-)
-VALUES
-(
-    name_in,
-    premise_address_in,
-    tax_number_in
-)$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createCompany` (IN `company_name_in` VARCHAR(200) CHARSET utf8, IN `premise_county_id_in` INT(11), IN `premise_zip_code_in` INT(5), IN `premise_city_in` VARCHAR(255) CHARSET utf8, IN `premise_street_in` VARCHAR(255) CHARSET utf8, IN `premise_number_in` VARCHAR(30) CHARSET utf8, IN `premise_staircase_in` VARCHAR(30) CHARSET utf8, IN `premise_floor_in` INT(4), IN `premise_door_in` INT(8), IN `tax_number_in` VARCHAR(255) CHARSET utf8)  BEGIN
+   DECLARE company_address_id INT(11);
+    
+   CALL `createAddress`(premise_county_id_in, premise_zip_code_in, premise_city_in, premise_street_in, premise_number_in, premise_staircase_in, premise_floor_in, premise_door_in);
+   SELECT LAST_INSERT_ID() INTO company_address_id;
+   
+   INSERT INTO `companies`
+    (
+        `companies`.`name`, 
+        `companies`.`address_id`, 
+        `companies`.`tax_number`
+    )
+    VALUES
+    (
+        name_in,
+        company_address_id,
+        tax_number_in
+    );
+END$$
 
 DROP PROCEDURE IF EXISTS `createJob`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `createJob` (IN `customer_id_in` INT(11), IN `worker_id_in` INT(11), IN `desc_in` TEXT CHARSET utf8)  INSERT INTO `jobs`
@@ -189,17 +201,20 @@ VALUES
 )$$
 
 DROP PROCEDURE IF EXISTS `createNewAds`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createNewAds` (IN `user_id_in` INT(11), IN `job_tag_id` INT(11), IN `desc_in` TEXT CHARSET utf8)  INSERT INTO `ads`
-(
-	`ads`.`user_id`,
-    `ads`.`job_tag_id`,
-    `ads`.`desc`
-)
-VALUES (
-	user_id_in,
-    job_tag_id_in,
-    desc_in
-)$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createNewAds` (IN `user_id_in` INT(11), IN `job_tag_id` INT(11), IN `desc_in` TEXT CHARSET utf8, OUT `last_id_out` INT(11))  BEGIN
+	INSERT INTO `ads`
+	(
+		`ads`.`user_id`,
+    	`ads`.`job_tag_id`,
+    	`ads`.`desc`
+	)
+	VALUES (
+		user_id_in,
+    	job_tag_id_in,
+    	desc_in
+	);
+	SELECT LAST_INSERT_ID() INTO last_id_out;
+END$$
 
 DROP PROCEDURE IF EXISTS `createRating`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `createRating` (IN `ratinged_user_id_in` INT(11), IN `ratinger_user_id_in` INT(11), IN `desc_in` TEXT CHARSET utf8, IN `ratings_stars_in` INT(2))  INSERT INTO `ratings`
@@ -216,6 +231,66 @@ VALUES
     desc_in,
     ratings_stars_in
 )$$
+
+DROP PROCEDURE IF EXISTS `createUser`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createUser` (IN `first_name_in` VARCHAR(100) CHARSET utf8, IN `last_name_in` VARCHAR(100) CHARSET utf8, IN `email_in` VARCHAR(200) CHARSET utf8, IN `phone_in` VARCHAR(12) CHARSET utf8, IN `password_in` VARCHAR(255) CHARSET utf8, IN `county_id_in` INT(11), IN `zip_code_in` INT(5), IN `city_in` VARCHAR(255) CHARSET utf8, IN `street_in` VARCHAR(255) CHARSET utf8, IN `number_in` VARCHAR(30) CHARSET utf8, IN `staircase_in` VARCHAR(30) CHARSET utf8, IN `floor_in` INT(4), IN `door_in` INT(8))  BEGIN
+	DECLARE address_id INT(11);
+    
+    CALL `createAddress`(county_id_in, zip_code_in, city_in, street_in, number_in, staircase_in, floor_in, door_in);
+    SELECT LAST_INSERT_ID() INTO address_id;
+    
+	INSERT INTO `users`
+    (
+    	`users`.`first_name`,
+        `users`.`last_name`,
+        `users`.`email`,
+        `users`.`phone`,
+        `users`.`password`,
+        `users`.`address_id`
+    )
+    VALUES (
+    	first_name_in,
+        last_name_in,
+        email_in,
+        phone_in,
+        password_in,
+        address_id
+    );
+END$$
+
+DROP PROCEDURE IF EXISTS `createUserWorker`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createUserWorker` (IN `first_name_in` VARCHAR(100) CHARSET utf8, IN `last_name_in` VARCHAR(100) CHARSET utf8, IN `email_in` VARCHAR(200) CHARSET utf8, IN `phone_in` VARCHAR(12) CHARSET utf8, IN `password_in` VARCHAR(255) CHARSET utf8, IN `county_id_in` INT(11), IN `zip_code_in` INT(5), IN `city_in` VARCHAR(255) CHARSET utf8, IN `street_in` VARCHAR(255) CHARSET utf8, IN `number_in` VARCHAR(30) CHARSET utf8, IN `staircase_in` VARCHAR(30) CHARSET utf8, IN `floor_in` INT(4), IN `door_in` INT(8), IN `company_name_in` VARCHAR(200) CHARSET utf8, IN `premise_county_id_in` INT(11), IN `premise_zip_code_in` INT(5), IN `premise_city_in` VARCHAR(255) CHARSET utf8, IN `premise_street_in` VARCHAR(255) CHARSET utf8, IN `premise_number_in` VARCHAR(30) CHARSET utf8, IN `premise_staircase_in` VARCHAR(30) CHARSET utf8, IN `premise_floor_in` INT(4), IN `premise_door_in` INT(8), IN `tax_number_in` VARCHAR(255) CHARSET utf8)  BEGIN
+	DECLARE address_id INT(11);
+    DECLARE company_id INT(11);
+    
+    CALL `createAddress`(county_id_in, zip_code_in, city_in, street_in, number_in, staircase_in, floor_in, door_in);
+    SELECT LAST_INSERT_ID() INTO address_id;
+    
+    CALL `createCompany`(company_name_in, premise_county_id_in, premise_zip_code_in, premise_city_in, premise_street_in, premise_number_in, premise_staircase_in, premise_floor_in, premise_door_in, tax_number_in);
+    SELECT LAST_INSERT_ID() INTO company_id;
+    
+	INSERT INTO `users`
+    (
+    	`users`.`first_name`,
+        `users`.`last_name`,
+        `users`.`access_type`,
+        `users`.`email`,
+        `users`.`phone`,
+        `users`.`password`,
+        `users`.`company_id`,
+        `users`.`address_id`
+    )
+    VALUES (
+    	first_name_in,
+        last_name_in,
+        1,
+        email_in,
+        phone_in,
+        password_in,
+        company_id,
+        address_id
+    );
+END$$
 
 DROP PROCEDURE IF EXISTS `deleteAddressById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAddressById` (IN `id_in` INT(11))  DELETE FROM `addresses`
@@ -398,6 +473,23 @@ DROP PROCEDURE IF EXISTS `getUserById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserById` (IN `id_in` INT(11))  SELECT * FROM `users`
 WHERE `users`.`id` = id_in$$
 
+DROP PROCEDURE IF EXISTS `loginUser`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `loginUser` (IN `us_in` VARCHAR(200) CHARSET utf8, IN `psw_in` VARCHAR(255) CHARSET utf8)  BEGIN
+	DECLARE user_id INT(11) DEFAULT -1;
+
+	SELECT `users`.`id` INTO user_id  
+    FROM `users`
+    WHERE (`users`.`email` = us_in
+    OR `users`.`phone` = us_in)
+    AND `users`.`password` = psw_in
+    AND `users`.`deleted` != 1
+    AND `users`.`status` != -1;
+    
+    IF(user_id != -1)
+    	THEN CALL `getUserById`(user_id);
+    END IF;
+END$$
+
 DROP PROCEDURE IF EXISTS `logoutUser`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `logoutUser` (IN `id_in` INT(11))  UPDATE `users`
 SET `users`.`status` = 0
@@ -422,9 +514,8 @@ SET `ads`.`desc` = desc_in,
 WHERE `ads`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `updateCompanyById`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCompanyById` (IN `id_in` INT(11), IN `name_in` VARCHAR(200) CHARSET utf8, IN `premise_address_in` VARCHAR(255) CHARSET utf8, IN `tax_number_in` VARCHAR(255) CHARSET utf8)  UPDATE `companies`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCompanyById` (IN `id_in` INT(11), IN `name_in` VARCHAR(200) CHARSET utf8, IN `tax_number_in` VARCHAR(255) CHARSET utf8)  UPDATE `companies`
 SET `companies`.`name` = name_in,
-	`companies`.`premise_address` = premise_address_in,
     `companies`.`tax_number` = tax_number_in
 WHERE `companies`.`id` = id_in$$
 
@@ -492,7 +583,8 @@ INSERT INTO `addresses` (`id`, `county_id`, `zip_code`, `city`, `street`, `numbe
 (2, 2, 7600, 'Pécs', 'Apafi utca', '23', '1', 2, 3),
 (3, 2, 7600, 'Pécs', 'Barbakán tér', '34', NULL, NULL, NULL),
 (4, 2, 7600, 'Pécs', 'Ág utca', '56', NULL, NULL, NULL),
-(5, 2, 7600, 'Pécs', 'Gólya utca', '11', NULL, NULL, NULL);
+(5, 2, 7600, 'Pécs', 'Gólya utca', '11', NULL, NULL, NULL),
+(6, 5, 4532, 'Pécs', 'Petőfi', '13/A', 'Első', 2, 12);
 
 -- --------------------------------------------------------
 
@@ -514,6 +606,19 @@ CREATE TABLE `ads` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `ads_counties`
+--
+
+DROP TABLE IF EXISTS `ads_counties`;
+CREATE TABLE `ads_counties` (
+  `id` int(11) NOT NULL,
+  `ad_id` int(11) NOT NULL,
+  `county_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `companies`
 --
 
@@ -521,9 +626,16 @@ DROP TABLE IF EXISTS `companies`;
 CREATE TABLE `companies` (
   `id` int(11) NOT NULL,
   `name` varchar(200) NOT NULL,
-  `premise_address` varchar(255) NOT NULL,
+  `address_id` int(11) NOT NULL,
   `tax_number` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `companies`
+--
+
+INSERT INTO `companies` (`id`, `name`, `address_id`, `tax_number`) VALUES
+(1, 'ABC Kft.', 6, '123423543');
 
 -- --------------------------------------------------------
 
@@ -697,7 +809,7 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `first_name` varchar(100) NOT NULL,
   `last_name` varchar(100) NOT NULL,
-  `acces_type` int(1) NOT NULL DEFAULT 0,
+  `access_type` int(1) NOT NULL DEFAULT 0,
   `email` varchar(200) NOT NULL,
   `phone` varchar(12) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -715,11 +827,25 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `first_name`, `last_name`, `acces_type`, `email`, `phone`, `password`, `company_id`, `address_id`, `status`, `last_login_at`, `created_at`, `activated_at`, `updated_at`, `deleted`) VALUES
+INSERT INTO `users` (`id`, `first_name`, `last_name`, `access_type`, `email`, `phone`, `password`, `company_id`, `address_id`, `status`, `last_login_at`, `created_at`, `activated_at`, `updated_at`, `deleted`) VALUES
 (1, 'Teszt', 'Ferenc', 0, 'tesztf@teszt-user.com', '+36202567896', '1234', NULL, 0, -1, NULL, '2023-01-05 15:57:39', NULL, '2023-01-05 15:57:39', 0),
 (2, 'Teszt', 'László', 1, 'tesztl@teszt-user.com', '+36202567894', '1234', 1, 0, 0, '2023-01-05 15:48:18', '2023-01-05 15:57:39', '2023-01-05 15:48:18', '2023-01-05 15:57:39', 0),
 (3, 'Teszt', 'Izabella', 0, 'tesztiza@teszt-user.com', '+36302987764', '1234', NULL, 0, 0, '2023-01-05 15:55:18', '2023-01-05 15:57:39', '2023-01-04 15:48:18', '2023-01-05 15:57:39', 0),
-(4, 'Teszt', 'Admin', 2, 'teszta@teszt-user.com', '+36702753456', '1234', NULL, 0, 0, '2023-01-06 15:48:18', '2023-01-05 15:57:39', '2023-01-01 15:48:18', '2023-01-05 15:57:39', 0);
+(4, 'Teszt', 'Admin', 2, 'teszta@teszt-user.com', '+36702753456', '1234', NULL, 0, 0, '2023-01-06 15:48:18', '2023-01-05 15:57:39', '2023-01-01 15:48:18', '2023-01-05 15:57:39', 0),
+(5, 'a', 'b', 1, 'asd@sdg.com', '+123456', 'alma', 1, 6, -1, NULL, '2023-01-15 16:34:04', NULL, '2023-01-15 16:34:04', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users_jobs`
+--
+
+DROP TABLE IF EXISTS `users_jobs`;
+CREATE TABLE `users_jobs` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `job_tag_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Indexes for dumped tables
@@ -735,6 +861,12 @@ ALTER TABLE `addresses`
 -- Indexes for table `ads`
 --
 ALTER TABLE `ads`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `ads_counties`
+--
+ALTER TABLE `ads_counties`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -792,6 +924,12 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `users_jobs`
+--
+ALTER TABLE `users_jobs`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -799,7 +937,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `ads`
@@ -808,10 +946,16 @@ ALTER TABLE `ads`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `ads_counties`
+--
+ALTER TABLE `ads_counties`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `companies`
 --
 ALTER TABLE `companies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `counties`
@@ -859,7 +1003,13 @@ ALTER TABLE `ratings`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `users_jobs`
+--
+ALTER TABLE `users_jobs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
