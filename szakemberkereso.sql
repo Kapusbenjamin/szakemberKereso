@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 15, 2023 at 06:32 PM
+-- Generation Time: Jan 17, 2023 at 04:51 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -337,6 +337,22 @@ DROP PROCEDURE IF EXISTS `deleteUserJob`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUserJob` (IN `id_in` INT(11))  DELETE FROM `users_jobs`
 WHERE `users_jobs`.`id` = id_in$$
 
+DROP PROCEDURE IF EXISTS `filteringAds`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `filteringAds` (IN `county_id_in` INT(11), IN `job_tag_id_in` INT(11))  BEGIN
+	IF(county_id_in = NULL AND job_tag_id_in = NULL)
+    	THEN 
+      		CALL `getAllAcceptedAds`();
+ 	ELSEIF(county_id_in = NULL)
+    	THEN
+        	CALL `getJobFilteredAds`(job_tag_id_in);
+    ELSEIF(job_tag_id_in = NULL)
+    	THEN
+        	CALL `getCountyFilteredAds`(county_id_in);
+  	ELSE
+    	CALL `getFilteredAds`(county_id_in, job_tag_id_in);
+	END IF;
+END$$
+
 DROP PROCEDURE IF EXISTS `getAddressById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAddressById` (IN `id_in` INT(11))  SELECT * FROM `addresses`
 WHERE `addresses`.`id` = id_in$$
@@ -445,13 +461,36 @@ DROP PROCEDURE IF EXISTS `getCompanyById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCompanyById` (IN `id_in` INT(11))  SELECT * FROM `companies`
 WHERE `companies`.`id` = id_in$$
 
+DROP PROCEDURE IF EXISTS `getCountyFilteredAds`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCountyFilteredAds` (IN `county_id_in` INT(11))  SELECT * FROM `ads`
+INNER JOIN `ads_counties`
+ON `ads`.`id` = `ads_counties`.`ad_id`
+WHERE `ads_counties`.`county_id` = county_id_in
+AND `ads`.`status` = 1
+AND `ads`.`deleted` != 1$$
+
 DROP PROCEDURE IF EXISTS `getFavoriteById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getFavoriteById` (IN `id_in` INT(11))  SELECT * FROM `favorites`
 WHERE `favorites`.`id` = id_in$$
 
+DROP PROCEDURE IF EXISTS `getFilteredAds`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getFilteredAds` (IN `county_id_in` INT(11), IN `job_tag_id_in` INT(11))  SELECT * FROM `ads`
+INNER JOIN `ads_counties`
+ON `ads`.`id` = `ads_counties`.`ad_id`
+WHERE `ads_counties`.`county_id` = county_id_in
+AND `ads`.`job_tag_id` = job_tag_id_in
+AND `ads`.`status` = 1
+AND `ads`.`deleted` != 1$$
+
 DROP PROCEDURE IF EXISTS `getImagesByUserId`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getImagesByUserId` (IN `user_id_in` INT(11))  SELECT * FROM `images`
 WHERE `images`.`user_id` = user_id_in$$
+
+DROP PROCEDURE IF EXISTS `getJobFilteredAds`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getJobFilteredAds` (IN `job_tag_id_in` INT(11))  SELECT * FROM `ads`
+WHERE `ads`.`job_tag_id` = job_tag_id_in
+AND `ads`.`status` = 1
+AND `ads`.`deleted` != 1$$
 
 DROP PROCEDURE IF EXISTS `getJobTagById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getJobTagById` (IN `id_in` INT(11))  SELECT * FROM `job_tags`
@@ -486,7 +525,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `loginUser` (IN `us_in` VARCHAR(200)
     AND `users`.`status` != -1;
     
     IF(user_id != -1)
-    	THEN CALL `getUserById`(user_id);
+    	THEN 
+        	SELECT `users`.`id`, `users`.`first_name`, `users`.`last_name`, `users`.`access_type`
+        	FROM `users`
+            WHERE `users`.`id` = user_id;
     END IF;
 END$$
 
@@ -603,6 +645,14 @@ CREATE TABLE `ads` (
   `deleted` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `ads`
+--
+
+INSERT INTO `ads` (`id`, `user_id`, `job_tag_id`, `desc`, `updated_at`, `status`, `deleted`) VALUES
+(1, 2, 1, 'Valami', '2023-01-17 15:24:57', 1, 0),
+(2, 2, 3, 'Még valami', '2023-01-17 15:24:57', 1, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -614,6 +664,29 @@ CREATE TABLE `ads_counties` (
   `id` int(11) NOT NULL,
   `ad_id` int(11) NOT NULL,
   `county_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `ads_counties`
+--
+
+INSERT INTO `ads_counties` (`id`, `ad_id`, `county_id`) VALUES
+(1, 1, 2),
+(2, 1, 3),
+(3, 1, 5),
+(4, 2, 5);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `chats`
+--
+
+DROP TABLE IF EXISTS `chats`;
+CREATE TABLE `chats` (
+  `id` int(11) NOT NULL,
+  `sender_id` int(11) NOT NULL,
+  `receiver_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -773,6 +846,7 @@ INSERT INTO `job_tags` (`id`, `name`) VALUES
 DROP TABLE IF EXISTS `messages`;
 CREATE TABLE `messages` (
   `id` int(11) NOT NULL,
+  `chat_id` int(11) NOT NULL,
   `sender_id` int(11) NOT NULL,
   `receiver_id` int(11) NOT NULL,
   `message` text NOT NULL,
@@ -870,6 +944,12 @@ ALTER TABLE `ads_counties`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `chats`
+--
+ALTER TABLE `chats`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `companies`
 --
 ALTER TABLE `companies`
@@ -943,12 +1023,18 @@ ALTER TABLE `addresses`
 -- AUTO_INCREMENT for table `ads`
 --
 ALTER TABLE `ads`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `ads_counties`
 --
 ALTER TABLE `ads_counties`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `chats`
+--
+ALTER TABLE `chats`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
