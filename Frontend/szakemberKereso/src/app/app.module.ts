@@ -3,9 +3,12 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { LoginPageComponent } from './login-page/login-page.component';
-import { LoginFormComponent } from './login-page/login-form/login-form.component';
-import { RegistFormComponent } from './login-page/regist-form/regist-form.component';
+import { LoginPageComponent } from './_components/login-page/login-page.component';
+import { LoginFormComponent } from './_components/login-page/login-form/login-form.component';
+import { RegistFormComponent } from './_components/login-page/regist-form/regist-form.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
@@ -16,8 +19,10 @@ import { RegistFormComponent } from './login-page/regist-form/regist-form.compon
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
-  ],
+    AppRoutingModule,
+    ReactiveFormsModule,
+    HttpClientModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
