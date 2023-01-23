@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 17, 2023 at 04:51 PM
+-- Generation Time: Jan 23, 2023 at 03:46 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -149,6 +149,24 @@ VALUES
     floor_in,
     door_in
 )$$
+
+DROP PROCEDURE IF EXISTS `createChat`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createChat` (IN `sender_id_in` INT(11), IN `receiver_id_in` INT(11))  INSERT INTO `chats`
+(
+	`chats`.`sender_id`,
+    `chats`.`receiver_id`
+)
+SELECT * FROM 
+(SELECT sender_id_in, receiver_id_in)
+AS `values`
+WHERE NOT EXISTS (
+    SELECT `chats`.`sender_id`, `chats`.`receiver_id`
+    FROM `chats`
+    WHERE (`chats`.`sender_id` = sender_id_in
+   	OR `chats`.`receiver_id` = sender_id_in)
+    AND (`chats`.`sender_id` = receiver_id_in
+    OR `chats`.`receiver_id` = receiver_id_in)
+) LIMIT 1$$
 
 DROP PROCEDURE IF EXISTS `createCompany`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `createCompany` (IN `company_name_in` VARCHAR(200) CHARSET utf8, IN `premise_county_id_in` INT(11), IN `premise_zip_code_in` INT(5), IN `premise_city_in` VARCHAR(255) CHARSET utf8, IN `premise_street_in` VARCHAR(255) CHARSET utf8, IN `premise_number_in` VARCHAR(30) CHARSET utf8, IN `premise_staircase_in` VARCHAR(30) CHARSET utf8, IN `premise_floor_in` INT(4), IN `premise_door_in` INT(8), IN `tax_number_in` VARCHAR(255) CHARSET utf8)  BEGIN
@@ -378,6 +396,11 @@ DROP PROCEDURE IF EXISTS `getAllAdsByUserId`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllAdsByUserId` (IN `user_id_in` INT(11))  SELECT * FROM `ads`
 WHERE `ads`.`deleted` != 1
 AND `ads`.`user_id` = user_id_in$$
+
+DROP PROCEDURE IF EXISTS `getAllChatsByUserId`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllChatsByUserId` (IN `user_id_in` INT(11))  SELECT * FROM `chats`
+WHERE `chats`.`sender_id` = user_id_in
+OR `chats`.`receiver_id` = user_id_in$$
 
 DROP PROCEDURE IF EXISTS `getAllCompanies`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllCompanies` ()  SELECT * FROM `companies`$$
@@ -688,6 +711,15 @@ CREATE TABLE `chats` (
   `sender_id` int(11) NOT NULL,
   `receiver_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `chats`
+--
+
+INSERT INTO `chats` (`id`, `sender_id`, `receiver_id`) VALUES
+(1, 2, 3),
+(2, 3, 1),
+(3, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -1035,7 +1067,7 @@ ALTER TABLE `ads_counties`
 -- AUTO_INCREMENT for table `chats`
 --
 ALTER TABLE `chats`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `companies`
