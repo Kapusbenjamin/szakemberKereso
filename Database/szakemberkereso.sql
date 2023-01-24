@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 23, 2023 at 03:46 PM
+-- Generation Time: Jan 24, 2023 at 02:41 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -205,14 +205,16 @@ VALUES (
 )$$
 
 DROP PROCEDURE IF EXISTS `createMessage`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createMessage` (IN `sender_id_in` INT(11), IN `receiver_id_in` INT(11), IN `message_in` TEXT CHARSET utf8)  INSERT INTO `messages`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createMessage` (IN `sender_id_in` INT(11), IN `receiver_id_in` INT(11), IN `message_in` TEXT CHARSET utf8, IN `chat_id` INT(11))  INSERT INTO `messages`
 (
+    `messages`.`chat_id`,
 	`messages`.`sender_id`,
     `messages`.`receiver_id`,
     `messages`.`message`
 )
 VALUES
 (
+    chat_id,
 	sender_id_in,
     receiver_id_in,
     message_in
@@ -886,6 +888,13 @@ CREATE TABLE `messages` (
   `sended_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `messages`
+--
+
+INSERT INTO `messages` (`id`, `chat_id`, `sender_id`, `receiver_id`, `message`, `checked`, `sended_at`) VALUES
+(1, 3, 1, 2, 'Alma', 0, '2023-01-24 13:33:26');
+
 -- --------------------------------------------------------
 
 --
@@ -1109,7 +1118,7 @@ ALTER TABLE `job_tags`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `ratings`
