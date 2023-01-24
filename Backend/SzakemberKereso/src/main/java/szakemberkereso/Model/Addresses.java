@@ -8,15 +8,21 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.ParameterMode;
+import javax.persistence.Persistence;
+import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import szakemberkereso.Configuration.Database;
 
 /**
  *
@@ -186,6 +192,38 @@ public class Addresses implements Serializable {
     @Override
     public String toString() {
         return "szakemberkereso.Model.Addresses[ id=" + id + " ]";
+    }
+    
+    public Addresses getAddressById(Integer id){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try{
+            //Create SPQ and run it
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAddressById");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            
+            spq.setParameter("id_in", id);
+            
+            spq.execute();
+            return (Addresses) spq.getResultList().get(0);
+        }
+        catch(Exception ex){
+            //Handle database exceptions
+            if(ex.getMessage().equals("org.hibernate.exception.ConstraintViolationException: Error calling CallableStatement.getMoreResults")){
+                System.out.println("Some unique value is duplicate!");
+            }
+            System.out.println(ex.getMessage());
+            return null;
+        }
+        finally{
+            //clean up metods, and close connections
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
     }
     
 }
