@@ -5,6 +5,7 @@
 package szakemberkereso.Model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -88,13 +89,16 @@ public class Addresses implements Serializable {
         this.id = id;
     }
 
-    public Addresses(Integer id, int countyId, int zipCode, String city, String street, String number) {
+    public Addresses(Integer id, int countyId, int zipCode, String city, String street, String number, String staircase, Integer floor, Integer door) {
         this.id = id;
         this.countyId = countyId;
         this.zipCode = zipCode;
         this.city = city;
         this.street = street;
         this.number = number;
+        this.staircase = staircase;
+        this.floor = floor;
+        this.door = door;
     }
 
     public Integer getId() {
@@ -194,7 +198,7 @@ public class Addresses implements Serializable {
         return "szakemberkereso.Model.Addresses[ id=" + id + " ]";
     }
     
-    public Addresses getAddressById(Integer id){
+    public Object getAddressById(Integer id){
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -207,7 +211,8 @@ public class Addresses implements Serializable {
             spq.setParameter("id_in", id);
             
             spq.execute();
-            return (Addresses) spq.getResultList().get(0);
+            Object result = spq.getSingleResult();
+            return result;
         }
         catch(Exception ex){
             //Handle database exceptions
@@ -215,7 +220,7 @@ public class Addresses implements Serializable {
                 System.out.println("Some unique value is duplicate!");
             }
             System.out.println(ex.getMessage());
-            return null;
+            return ex.getMessage();
         }
         finally{
             //clean up metods, and close connections

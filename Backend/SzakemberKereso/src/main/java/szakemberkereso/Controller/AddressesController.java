@@ -4,6 +4,7 @@
  */
 package szakemberkereso.Controller;
 
+import io.swagger.annotations.ApiOperation;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
@@ -11,6 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import szakemberkereso.Model.Addresses;
@@ -57,9 +59,8 @@ public class AddressesController {
     
     @GET
     @Path("getAddressById/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response getAddressById(Integer id){
-        Addresses result = as.getAddressById(id);
+    public Response getAddressById(@PathParam("id") Integer id){
+        Object result = as.getAddressById(id);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     

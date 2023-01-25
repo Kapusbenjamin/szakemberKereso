@@ -15,8 +15,8 @@ public class AddressesService {
     
     Addresses a = new Addresses();
     
-    public Addresses getAddressById(Integer id){
-        Addresses result = a.getAddressById(id);
+    public Object getAddressById(Integer id){
+        Object result = a.getAddressById(id);
         return result;
     }
     
