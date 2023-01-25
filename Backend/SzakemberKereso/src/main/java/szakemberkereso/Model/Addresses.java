@@ -5,7 +5,7 @@
 package szakemberkereso.Model;
 
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -198,32 +198,38 @@ public class Addresses implements Serializable {
         return "szakemberkereso.Model.Addresses[ id=" + id + " ]";
     }
     
-    public Object getAddressById(Integer id){
+    public Addresses getAddressById(Integer id_in){
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
-        try{
-            //Create SPQ and run it
+        try {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("getAddressById");
             
             spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
             
-            spq.setParameter("id_in", id);
+            spq.setParameter("id_in", id_in);
             
             spq.execute();
-            Object result = spq.getSingleResult();
-            return result;
-        }
-        catch(Exception ex){
-            //Handle database exceptions
-            if(ex.getMessage().equals("org.hibernate.exception.ConstraintViolationException: Error calling CallableStatement.getMoreResults")){
-                System.out.println("Some unique value is duplicate!");
-            }
-            System.out.println(ex.getMessage());
-            return ex.getMessage();
+            List<Object[]> result = spq.getResultList();
+            Object[] r = result.get(0);
+            
+            Integer r_id = Integer.parseInt(r[0].toString());
+            Integer r_county_id = Integer.parseInt(r[1].toString());
+            Integer r_zip_code = Integer.parseInt(r[2].toString());
+            String r_city = r[3].toString();
+            String r_street = r[4].toString();
+            String r_number = r[5].toString();
+            String r_staircase = r[6].toString();
+            Integer r_floor = Integer.parseInt(r[7].toString());
+            Integer r_door = Integer.parseInt(r[8].toString());
+            
+            return new Addresses(r_id, r_county_id, r_zip_code, r_city, r_street, r_number, r_staircase, r_floor, r_door);
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new Addresses();
         }
         finally{
-            //clean up metods, and close connections
             em.clear();
             em.close();
             emf.close();

@@ -60,7 +60,7 @@ public class AddressesController {
     @GET
     @Path("getAddressById/{id}")
     public Response getAddressById(@PathParam("id") Integer id){
-        Object result = as.getAddressById(id);
+        Addresses result = as.getAddressById(id);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
