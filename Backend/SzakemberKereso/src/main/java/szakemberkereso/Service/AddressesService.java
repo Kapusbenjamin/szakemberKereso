@@ -13,10 +13,23 @@ import szakemberkereso.Model.Addresses;
  */
 public class AddressesService {
     
-    Addresses a = new Addresses();
-    
     public Addresses getAddressById(Integer id){
-        Addresses result = a.getAddressById(id);
+        Addresses result = Addresses.getAddressById(id);
+        return result;
+    }
+    
+    public String createAddress(Addresses a){
+        String result = Addresses.createAddress(a);
+        return result;
+    }
+    
+    public String updateAddressById(Addresses a){
+        String result = Addresses.updateAddressById(a);
+        return result;
+    }
+    
+    public Boolean deleteAddressById(Integer id){
+        Boolean result = Addresses.deleteAddressById(id);
         return result;
     }
     

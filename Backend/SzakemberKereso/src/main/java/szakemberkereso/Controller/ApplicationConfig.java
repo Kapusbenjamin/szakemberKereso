@@ -9,11 +9,11 @@ import javax.ws.rs.core.Application;
 
 /**
  *
- * @author asus
+ * @author Sharkz
  */
 @javax.ws.rs.ApplicationPath("webresources")
 public class ApplicationConfig extends Application {
-
+    
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> resources = new java.util.HashSet<>();
@@ -29,6 +29,7 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(szakemberkereso.Controller.AddressesController.class);
+        resources.add(szakemberkereso.Controller.UsersController.class);
     }
     
 }
