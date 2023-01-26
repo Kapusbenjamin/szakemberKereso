@@ -63,7 +63,7 @@ public class UsersController {
     @GET
     @Path("getUserById/{id}")
     public Response getUserById(@PathParam("id") Integer id){
-        String result = us.getUserById(id);
+        Users result = us.getUserById(id);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     

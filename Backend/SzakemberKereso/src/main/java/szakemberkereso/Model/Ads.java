@@ -74,9 +74,6 @@ public class Ads implements Serializable {
     @NotNull
     @Column(name = "deleted")
     private int deleted;
-    @JoinColumn(name = "id", referencedColumnName = "id", insertable = false, updatable = false)
-    @OneToOne(optional = false)
-    private Users users;
 
     public Ads() {
     }
@@ -149,14 +146,6 @@ public class Ads implements Serializable {
 
     public void setDeleted(int deleted) {
         this.deleted = deleted;
-    }
-
-    public Users getUsers() {
-        return users;
-    }
-
-    public void setUsers(Users users) {
-        this.users = users;
     }
 
     @Override

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 24, 2023 at 02:41 PM
+-- Generation Time: Jan 26, 2023 at 06:33 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -127,28 +127,33 @@ AND `messages`.`receiver_id` = receiver_id_in
 AND `messages`.`checked` = 0$$
 
 DROP PROCEDURE IF EXISTS `createAddress`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createAddress` (IN `county_id_in` INT(11), IN `zip_code_in` INT(5), IN `city_in` VARCHAR(255) CHARSET utf8, IN `street_in` VARCHAR(255) CHARSET utf8, IN `number_in` VARCHAR(30) CHARSET utf8, IN `staircase_in` VARCHAR(30) CHARSET utf8, IN `floor_in` INT(4), IN `door_in` INT(8))  INSERT INTO `addresses`
-(
-    `addresses`.`county_id`,
-    `addresses`.`zip_code`,
-    `addresses`.`city`,
-    `addresses`.`street`,
-    `addresses`.`number`,
-    `addresses`.`staircase`,
-    `addresses`.`floor`,
-    `addresses`.`door`
-)
-VALUES
-(
-	county_id_in,
-    zip_code_in,
-    city_in,
-    street_in,
-    number_in,
-    staircase_in,
-    floor_in,
-    door_in
-)$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createAddress` (IN `county_id_in` INT(11), IN `zip_code_in` INT(5), IN `city_in` VARCHAR(255) CHARSET utf8, IN `street_in` VARCHAR(255) CHARSET utf8, IN `number_in` VARCHAR(30) CHARSET utf8, IN `staircase_in` VARCHAR(30) CHARSET utf8, IN `floor_in` INT(4), IN `door_in` INT(8))  BEGIN
+	CALL `stringToNull`(staircase_in) ;
+    CALL `integerToNull`(floor_in) ;
+    CALL `integerToNull`(door_in);
+    INSERT INTO `addresses`
+    (
+        `addresses`.`county_id`,
+        `addresses`.`zip_code`,
+        `addresses`.`city`,
+        `addresses`.`street`,
+        `addresses`.`number`,
+        `addresses`.`staircase`,
+        `addresses`.`floor`,
+        `addresses`.`door`
+    )
+    VALUES
+    (
+        county_id_in,
+        zip_code_in,
+        city_in,
+        street_in,
+        number_in,
+        staircase_in,
+        floor_in,
+        door_in
+    );
+END$$
 
 DROP PROCEDURE IF EXISTS `createChat`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `createChat` (IN `sender_id_in` INT(11), IN `receiver_id_in` INT(11))  INSERT INTO `chats`
@@ -537,6 +542,11 @@ DROP PROCEDURE IF EXISTS `getUserById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserById` (IN `id_in` INT(11))  SELECT * FROM `users`
 WHERE `users`.`id` = id_in$$
 
+DROP PROCEDURE IF EXISTS `integerToNull`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `integerToNull` (INOUT `int_in` INT)  IF(int_in = -1)
+	THEN SET int_in = null;
+END IF$$
+
 DROP PROCEDURE IF EXISTS `loginUser`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `loginUser` (IN `us_in` VARCHAR(200) CHARSET utf8, IN `psw_in` VARCHAR(255) CHARSET utf8)  BEGIN
 	DECLARE user_id INT(11) DEFAULT -1;
@@ -562,17 +572,27 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `logoutUser` (IN `id_in` INT(11))  U
 SET `users`.`status` = 0
 WHERE `users`.`id` = id_in$$
 
+DROP PROCEDURE IF EXISTS `stringToNull`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `stringToNull` (INOUT `str_in` VARCHAR(255) CHARSET utf8)  IF(str_in = "")
+	THEN SET str_in = null;
+END IF$$
+
 DROP PROCEDURE IF EXISTS `updateAddressById`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAddressById` (IN `id_in` INT(11), IN `county_id_in` INT(11), IN `zip_code_in` INT(5), IN `city_in` VARCHAR(255) CHARSET utf8, IN `street_in` VARCHAR(255) CHARSET utf8, IN `number_in` VARCHAR(30) CHARSET utf8, IN `staircase_in` VARCHAR(30) CHARSET utf8, IN `floor_in` INT(4), IN `door_in` INT(8))  UPDATE `addresses`
-SET `addresses`.`county_id` = county_id_in,
-	`addresses`.`zip_code` = zip_code_in,
-    `addresses`.`city` = city_in,
-    `addresses`.`street` = street_in,
-    `addresses`.`number` = number_in,
-    `addresses`.`staircase` = staircase_in,
-    `addresses`.`floor` = floor_in,
-    `addresses`.`door` = door_in
-WHERE `addresses`.`id` = id_in$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAddressById` (IN `id_in` INT(11), IN `county_id_in` INT(11), IN `zip_code_in` INT(5), IN `city_in` VARCHAR(255) CHARSET utf8, IN `street_in` VARCHAR(255) CHARSET utf8, IN `number_in` VARCHAR(30) CHARSET utf8, IN `staircase_in` VARCHAR(30) CHARSET utf8, IN `floor_in` INT(4), IN `door_in` INT(8))  BEGIN
+	CALL `stringToNull`(staircase_in);
+    CALL `integerToNull`(floor_in);
+    CALL `integerToNull`(door_in);
+    UPDATE `addresses`
+    SET `addresses`.`county_id` = county_id_in,
+        `addresses`.`zip_code` = zip_code_in,
+        `addresses`.`city` = city_in,
+        `addresses`.`street` = street_in,
+        `addresses`.`number` = number_in,
+        `addresses`.`staircase` = staircase_in,
+        `addresses`.`floor` = floor_in,
+        `addresses`.`door` = door_in
+    WHERE `addresses`.`id` = id_in;
+END$$
 
 DROP PROCEDURE IF EXISTS `updateAds`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAds` (IN `id_in` INT(11), IN `desc_in` TEXT CHARSET utf8)  UPDATE `ads`
@@ -648,10 +668,11 @@ CREATE TABLE `addresses` (
 INSERT INTO `addresses` (`id`, `county_id`, `zip_code`, `city`, `street`, `number`, `staircase`, `floor`, `door`) VALUES
 (1, 2, 7600, 'Pécs', '48-as tér', '12', NULL, NULL, NULL),
 (2, 2, 7600, 'Pécs', 'Apafi utca', '23', '1', 2, 3),
-(3, 2, 7600, 'Pécs', 'Barbakán tér', '34', NULL, NULL, NULL),
+(3, 1, 4532, 'Budapest', 'A utca', '23/A', NULL, NULL, NULL),
 (4, 2, 7600, 'Pécs', 'Ág utca', '56', NULL, NULL, NULL),
-(5, 2, 7600, 'Pécs', 'Gólya utca', '11', NULL, NULL, NULL),
-(6, 5, 4532, 'Pécs', 'Petőfi', '13/A', 'Első', 2, 12);
+(6, 5, 4532, 'Pécs', 'Petőfi', '13/A', 'Első', 2, 12),
+(18, 4, 1111, 'Bp', 'AAAA utca', '56', NULL, NULL, NULL),
+(20, 1, 4532, 'Pécs', 'Petőfi', '13', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1058,7 +1079,7 @@ ALTER TABLE `users_jobs`
 -- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `ads`
@@ -1137,16 +1158,6 @@ ALTER TABLE `users`
 --
 ALTER TABLE `users_jobs`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `ads`
---
-ALTER TABLE `ads`
-  ADD CONSTRAINT `ads_ibfk_1` FOREIGN KEY (`id`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

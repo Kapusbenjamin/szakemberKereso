@@ -19,11 +19,27 @@ public class AddressesService {
     }
     
     public String createAddress(Addresses a){
+        //Business logic
+        if(a.getFloor() == null){
+            a.setFloor(-1);
+        }
+        if(a.getDoor() == null){
+            a.setDoor(-1);
+        }
+        
         String result = Addresses.createAddress(a);
         return result;
     }
     
     public String updateAddressById(Addresses a){
+        //Business logic
+        if(a.getFloor() == null){
+            a.setFloor(-1);
+        }
+        if(a.getDoor() == null){
+            a.setDoor(-1);
+        }
+        
         String result = Addresses.updateAddressById(a);
         return result;
     }

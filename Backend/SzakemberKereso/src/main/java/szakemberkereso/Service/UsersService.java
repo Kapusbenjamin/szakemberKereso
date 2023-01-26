@@ -12,8 +12,8 @@ import szakemberkereso.Model.Users;
  */
 public class UsersService {
     
-    public String getUserById(Integer id){
-        String result = Users.getUserById(id);
+    public Users getUserById(Integer id){
+        Users result = Users.getUserById(id);
         return result;
     }
     

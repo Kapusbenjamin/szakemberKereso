@@ -5,6 +5,7 @@
 package szakemberkereso.Model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -294,7 +295,7 @@ public class Users implements Serializable {
         return "szakemberkereso.Model.Users[ id=" + id + " ]";
     }
     
-    public static String getUserById(Integer id_in){
+    public static Users getUserById(Integer id_in){
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -319,19 +320,19 @@ public class Users implements Serializable {
             Integer r_company_id = r[7] != null ? Integer.parseInt(r[7].toString()) : null;
             Integer r_address_id = Integer.parseInt(r[8].toString());
             Integer r_status = Integer.parseInt(r[9].toString());
-            Date r_last_login_at = r[10] != null ? new Date(r[10].toString()) : null;
-            Date r_created_at = r[11] != null ? new Date(r[11].toString()) : null;
-            Date r_activated_at = r[12] != null ? new Date(r[12].toString()) : null;
-            Date r_updated_at = r[13] != null ? new Date(r[13].toString()) : null;
+            Date r_last_login_at = r[10] != null ? Timestamp.valueOf(r[10].toString()) : null;
+            Date r_created_at = Timestamp.valueOf(r[11].toString());
+            Date r_activated_at = r[12] != null ? Timestamp.valueOf(r[12].toString()) : null;
+            Date r_updated_at = Timestamp.valueOf(r[13].toString());
             Integer r_deleted = Integer.parseInt(r[14].toString());
             
             Users u = new Users(r_id, r_first_name, r_last_name, r_access_type, r_email, r_phone, r_password, r_company_id, r_address_id, r_status, r_last_login_at, r_created_at, r_activated_at, r_updated_at, r_deleted);
-            return "jo";
+            return u;
         } 
         catch (Exception e) {
             System.out.println(e.getMessage());
             //return new Users();
-            return e.getMessage();
+            return new Users();
         }
         finally{
             em.clear();
