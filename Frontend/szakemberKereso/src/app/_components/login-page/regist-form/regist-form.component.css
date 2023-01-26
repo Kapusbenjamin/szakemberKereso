@@ -123,3 +123,7 @@ body {
 .submit:active {
   background-color: #06b;
 }
+
+p{
+  color: white;
+}

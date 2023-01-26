@@ -8,6 +8,7 @@ import { LoginFormComponent } from './_components/login-page/login-form/login-fo
 import { RegistFormComponent } from './_components/login-page/regist-form/regist-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { MainPageComponent } from './_components/main-page/main-page.component';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { HttpClientModule } from '@angular/common/http';
     AppComponent,
     LoginPageComponent,
     LoginFormComponent,
-    RegistFormComponent
+    RegistFormComponent,
+    MainPageComponent
   ],
   imports: [
     BrowserModule,

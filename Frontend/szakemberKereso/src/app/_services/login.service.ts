@@ -5,9 +5,9 @@ import { Observable } from 'rxjs/internal/Observable';
 @Injectable({
   providedIn: 'root'
 })
-export class LoginServiceService {
+export default class LoginServiceService {
 
-  apiUrl = "";
+  apiUrl = "http://localhost:3000/";
 
   constructor(private http:HttpClient) { }
 
