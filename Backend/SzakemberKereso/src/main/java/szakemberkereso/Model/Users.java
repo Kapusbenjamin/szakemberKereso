@@ -6,6 +6,7 @@ package szakemberkereso.Model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -295,6 +296,26 @@ public class Users implements Serializable {
         return "szakemberkereso.Model.Users[ id=" + id + " ]";
     }
     
+    public static Users objectToUser(Object[] o){
+        Integer o_id = o[0] != null ? Integer.parseInt(o[0].toString()) : null;
+        String o_first_name = o[1].toString();
+        String o_last_name = o[2].toString();
+        Integer o_access_type = Integer.parseInt(o[3].toString());
+        String o_email = o[4].toString();
+        String o_phone = o[5].toString();
+        String o_password = o[6].toString();
+        Integer o_company_id = o[7] != null ? Integer.parseInt(o[7].toString()) : null;
+        Integer o_address_id = Integer.parseInt(o[8].toString());
+        Integer o_status = Integer.parseInt(o[9].toString());
+        Date o_last_login_at = o[10] != null ? Timestamp.valueOf(o[10].toString()) : null;
+        Date o_created_at = Timestamp.valueOf(o[11].toString());
+        Date o_activated_at = o[12] != null ? Timestamp.valueOf(o[12].toString()) : null;
+        Date o_updated_at = Timestamp.valueOf(o[13].toString());
+        Integer o_deleted = Integer.parseInt(o[14].toString());
+
+        return new Users(o_id, o_first_name, o_last_name, o_access_type, o_email, o_phone, o_password, o_company_id, o_address_id, o_status, o_last_login_at, o_created_at, o_activated_at, o_updated_at, o_deleted);
+    }
+    
     public static Users getUserById(Integer id_in){
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
@@ -307,6 +328,40 @@ public class Users implements Serializable {
             spq.setParameter("id_in", id_in);
             
             spq.execute();
+            
+            List<Object[]> result = spq.getResultList();
+            Object[] r = result.get(0);
+            Users u = Users.objectToUser(r);
+            
+            return u;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            //return new Users();
+            return new Users();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static Users loginUser(String us_in, String psw_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("loginUser");
+            
+            spq.registerStoredProcedureParameter("us_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("psw_in", String.class, ParameterMode.IN);
+            
+            spq.setParameter("us_in", us_in);
+            spq.setParameter("psw_in", psw_in);
+            
+            spq.execute();
+            
             List<Object[]> result = spq.getResultList();
             Object[] r = result.get(0);
             
@@ -314,25 +369,50 @@ public class Users implements Serializable {
             String r_first_name = r[1].toString();
             String r_last_name = r[2].toString();
             Integer r_access_type = Integer.parseInt(r[3].toString());
-            String r_email = r[4].toString();
-            String r_phone = r[5].toString();
-            String r_password = r[6].toString();
-            Integer r_company_id = r[7] != null ? Integer.parseInt(r[7].toString()) : null;
-            Integer r_address_id = Integer.parseInt(r[8].toString());
-            Integer r_status = Integer.parseInt(r[9].toString());
-            Date r_last_login_at = r[10] != null ? Timestamp.valueOf(r[10].toString()) : null;
-            Date r_created_at = Timestamp.valueOf(r[11].toString());
-            Date r_activated_at = r[12] != null ? Timestamp.valueOf(r[12].toString()) : null;
-            Date r_updated_at = Timestamp.valueOf(r[13].toString());
-            Integer r_deleted = Integer.parseInt(r[14].toString());
             
-            Users u = new Users(r_id, r_first_name, r_last_name, r_access_type, r_email, r_phone, r_password, r_company_id, r_address_id, r_status, r_last_login_at, r_created_at, r_activated_at, r_updated_at, r_deleted);
+            Users u = new Users();
+            u.setId(r_id);
+            u.setFirstName(r_first_name);
+            u.setLastName(r_last_name);
+            u.setAccessType(r_access_type);
+            
             return u;
         } 
         catch (Exception e) {
             System.out.println(e.getMessage());
             //return new Users();
             return new Users();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static List<Users> getAllUsers(){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        List<Users> users = new ArrayList<>();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllUsers");
+            spq.execute();
+            
+            List<Object[]> result = spq.getResultList();
+           
+            for(Object[] r : result){
+                Users u = Users.objectToUser(r);
+                users.add(u);
+            }
+            
+            return users;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            //return new Users();
+            return users;
         }
         finally{
             em.clear();

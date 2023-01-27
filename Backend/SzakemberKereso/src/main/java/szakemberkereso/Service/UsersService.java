@@ -4,6 +4,7 @@
  */
 package szakemberkereso.Service;
 
+import java.util.List;
 import szakemberkereso.Model.Users;
 
 /**
@@ -14,6 +15,16 @@ public class UsersService {
     
     public Users getUserById(Integer id){
         Users result = Users.getUserById(id);
+        return result;
+    }
+    
+    public Users loginUser(String us, String psw){
+        Users result = Users.loginUser(us, psw);
+        return result;
+    }
+    
+    public List<Users> getAllUsers(){
+        List<Users> result = Users.getAllUsers();
         return result;
     }
     

@@ -4,6 +4,7 @@
  */
 package szakemberkereso.Controller;
 
+import java.util.List;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
@@ -14,6 +15,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import szakemberkereso.Model.Addresses;
@@ -64,6 +66,20 @@ public class UsersController {
     @Path("getUserById/{id}")
     public Response getUserById(@PathParam("id") Integer id){
         Users result = us.getUserById(id);
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
+    @POST
+    @Path("loginUser")
+    public Response loginUser(String email_phone, String password){
+        Users result = us.loginUser(email_phone, password);
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
+    @GET
+    @Path("getAllUsers")
+    public Response getAllUsers(){
+        List<Users> result = us.getAllUsers();
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
