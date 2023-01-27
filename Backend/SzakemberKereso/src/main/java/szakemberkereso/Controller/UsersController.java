@@ -17,6 +17,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import szakemberkereso.Model.Addresses;
 import szakemberkereso.Model.Users;
@@ -71,8 +72,33 @@ public class UsersController {
     
     @POST
     @Path("loginUser")
-    public Response loginUser(String email_phone, String password){
-        Users result = us.loginUser(email_phone, password);
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response loginUser(Users user){
+        Users result = us.loginUser(user.getEmail(), user.getPhone(), user.getPassword());
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
+    @POST
+    @Path("logoutUser")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response logoutUser(Users user){
+        Boolean result = us.logoutUser(user.getId());
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
+    @POST
+    @Path("deleteUser/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteUser(@PathParam("id") Integer id){
+        Boolean result = us.deleteUser(id);
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
+    @POST
+    @Path("changeAccess/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response changeAccess(@PathParam("id") Integer id){
+        Boolean result = us.changeAccess(id);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     

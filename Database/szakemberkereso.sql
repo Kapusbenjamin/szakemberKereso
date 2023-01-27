@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 26, 2023 at 06:33 PM
+-- Generation Time: Jan 27, 2023 at 12:33 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -561,6 +561,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `loginUser` (IN `us_in` VARCHAR(200)
     
     IF(user_id != -1)
     	THEN 
+        	UPDATE `users`
+            SET `users`.`status` = 1,
+            	`users`.`last_login_at` = CURRENT_TIMESTAMP()
+            WHERE `users`.`id` = user_id;
         	SELECT `users`.`id`, `users`.`first_name`, `users`.`last_name`, `users`.`access_type`
         	FROM `users`
             WHERE `users`.`id` = user_id;
@@ -965,10 +969,10 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `access_type`, `email`, `phone`, `password`, `company_id`, `address_id`, `status`, `last_login_at`, `created_at`, `activated_at`, `updated_at`, `deleted`) VALUES
 (1, 'Teszt', 'Ferenc', 0, 'tesztf@teszt-user.com', '+36202567896', '1234', NULL, 0, -1, NULL, '2023-01-05 15:57:39', NULL, '2023-01-05 15:57:39', 0),
-(2, 'Teszt', 'László', 1, 'tesztl@teszt-user.com', '+36202567894', '1234', 1, 0, 0, '2023-01-05 15:48:18', '2023-01-05 15:57:39', '2023-01-05 15:48:18', '2023-01-05 15:57:39', 0),
-(3, 'Teszt', 'Izabella', 0, 'tesztiza@teszt-user.com', '+36302987764', '1234', NULL, 0, 0, '2023-01-05 15:55:18', '2023-01-05 15:57:39', '2023-01-04 15:48:18', '2023-01-05 15:57:39', 0),
+(2, 'Teszt', 'László', 1, 'tesztl@teszt-user.com', '+36202567894', '1234', 1, 0, 0, '2023-01-27 10:35:06', '2023-01-05 15:57:39', '2023-01-05 15:48:18', '2023-01-27 10:35:31', 0),
+(3, 'Teszt', 'Izabella', 1, 'tesztiza@teszt-user.com', '+36302987764', '1234', NULL, 0, 0, '2023-01-05 15:55:18', '2023-01-05 15:57:39', '2023-01-04 15:48:18', '2023-01-27 11:31:13', 0),
 (4, 'Teszt', 'Admin', 2, 'teszta@teszt-user.com', '+36702753456', '1234', NULL, 0, 0, '2023-01-06 15:48:18', '2023-01-05 15:57:39', '2023-01-01 15:48:18', '2023-01-05 15:57:39', 0),
-(5, 'a', 'b', 1, 'asd@sdg.com', '+123456', 'alma', 1, 6, -1, NULL, '2023-01-15 16:34:04', NULL, '2023-01-15 16:34:04', 0);
+(5, 'a', 'b', 1, 'asd@sdg.com', '+123456', 'alma', 1, 6, -1, NULL, '2023-01-15 16:34:04', NULL, '2023-01-27 10:42:55', 1);
 
 -- --------------------------------------------------------
 

@@ -18,8 +18,28 @@ public class UsersService {
         return result;
     }
     
-    public Users loginUser(String us, String psw){
+    public Users loginUser(String email, String phone, String psw){
+        //Business logic
+        String us = email;
+        if(email == null){
+            us = phone;
+        }
         Users result = Users.loginUser(us, psw);
+        return result;
+    }
+    
+    public Boolean logoutUser(Integer id){
+        Boolean result = Users.logoutUser(id);
+        return result;
+    }
+    
+    public Boolean deleteUser(Integer id){
+        Boolean result = Users.deleteUser(id);
+        return result;
+    }
+    
+    public Boolean changeAccess(Integer id){
+        Boolean result = Users.changeAccess(id);
         return result;
     }
     
