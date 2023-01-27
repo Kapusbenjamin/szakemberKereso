@@ -20,17 +20,16 @@
     <select name="county" id="county" >
       <option *ngFor="let county of counties" value={{county.id}}>{{county.countyName}}</option>
     </select>
-    <select name="city" id="city" >
-      <option *ngFor="let city of cities" value={{city.city}}>{{city.city}}</option>
-    </select>
+
+    <!-- search dropdown -->
+      <app-search-dropdown [options]="cities"></app-search-dropdown>
+    <!-- search dropdown -->
+
     <div *ngFor="let field of addressFields" class="input-container ic2">
       <input id={{field.display}} class="input" type="text" placeholder=" " formControlName={{field.key}}/>
       <div class="cut"></div>
       <label for={{field.display}} class="placeholder">{{field.display}}</label>
     </div>
-    <!-- search dropdown -->
-
-    <!-- search dropdown -->
   </div>
 
   <button type="text" class="submit" (click)="regist()">Regisztráció</button>
