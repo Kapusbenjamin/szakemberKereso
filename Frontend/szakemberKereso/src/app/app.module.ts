@@ -9,6 +9,13 @@ import { RegistFormComponent } from './_components/login-page/regist-form/regist
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MainPageComponent } from './_components/main-page/main-page.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SearchDropdownComponent } from './_components/search-dropdown/search-dropdown.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 
 @NgModule({
@@ -17,13 +24,20 @@ import { MainPageComponent } from './_components/main-page/main-page.component';
     LoginPageComponent,
     LoginFormComponent,
     RegistFormComponent,
-    MainPageComponent
+    MainPageComponent,
+    SearchDropdownComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatAutocompleteModule,
+    MatDialogModule
     ],
   providers: [],
   bootstrap: [AppComponent]

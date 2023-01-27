@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Observable } from 'rxjs/internal/Observable';
 import { City } from 'src/app/_model/City';
 import { County } from 'src/app/_model/County';
 import { Field } from 'src/app/_model/Field';
@@ -20,7 +21,6 @@ export class RegistFormComponent implements OnInit {
     {key:'telNumber', display:'Tel. number'},
   ];
   addressFields:Field[] = [
-    {key:'city', display:'Város'},
     {key:'zipCode', display:'Zip code'},
     {key:'streetName', display:'Street Name'},
     {key:'number', display:'House number'},
@@ -30,8 +30,6 @@ export class RegistFormComponent implements OnInit {
   ];
   counties:County[] = [];
   cities:City[] = [];
-
-
 
   // User: Firstname, Lastname, Email, Tel. number, password;
   // address: megye, város, irányítószám, utca, házszám, (lépcsőház, emelet, ajtó); https://stackblitz.com/edit/angular-searchable-dropdown?file=src%2Fapp%2Fhello.component.ts
@@ -82,7 +80,6 @@ export class RegistFormComponent implements OnInit {
   loadCities(){
     this.http.getAllCities().subscribe((response)=>{
       this.cities = response.sort(this.compare);
-      console.log(this.cities);
     });
   }
 
