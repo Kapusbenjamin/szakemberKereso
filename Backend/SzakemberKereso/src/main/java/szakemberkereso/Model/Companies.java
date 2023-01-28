@@ -54,6 +54,9 @@ public class Companies implements Serializable {
     @Column(name = "tax_number")
     private String taxNumber;
 
+    //address adatokhoz (id miatt)
+    private Addresses address;
+    
     public Companies() {
     }
 
@@ -98,6 +101,14 @@ public class Companies implements Serializable {
 
     public void setTaxNumber(String taxNumber) {
         this.taxNumber = taxNumber;
+    }
+
+    public Addresses getAddress() {
+        return address;
+    }
+
+    public void setAddress(Addresses address) {
+        this.address = address;
     }
 
     @Override

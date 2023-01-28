@@ -105,6 +105,11 @@ public class Users implements Serializable {
     @NotNull
     @Column(name = "status")
     private int status;
+    @Column(name = "token")
+    private String token;
+    @Column(name = "token_expired_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date tokenExpiredAt;
     @Column(name = "last_login_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLoginAt;
@@ -126,6 +131,10 @@ public class Users implements Serializable {
     @Column(name = "deleted")
     private int deleted;
 
+    //user létrehozásánál az address és cég adatokhoz (mivel csak address_id van)
+    private Addresses address;
+    private Companies company;
+    
     public Users() {
     }
 
@@ -133,7 +142,7 @@ public class Users implements Serializable {
         this.id = id;
     }
 
-    public Users(Integer id, String firstName, String lastName, int accessType, String email, String phone, String password, Integer companyId, int addressId, int status, Date lastLoginAt, Date createdAt, Date activatedAt, Date updatedAt, int deleted) {
+    public Users(Integer id, String firstName, String lastName, int accessType, String email, String phone, String password, Integer companyId, int addressId, int status, String token, Date tokenExpiredAt, Date lastLoginAt, Date createdAt, Date activatedAt, Date updatedAt, int deleted) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -144,6 +153,8 @@ public class Users implements Serializable {
         this.companyId = companyId;
         this.addressId = addressId;
         this.status = status;
+        this.token = token;
+        this.tokenExpiredAt = tokenExpiredAt;
         this.lastLoginAt = lastLoginAt;
         this.createdAt = createdAt;
         this.activatedAt = activatedAt;
@@ -231,6 +242,22 @@ public class Users implements Serializable {
         this.status = status;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Date getTokenExpiredAt() {
+        return tokenExpiredAt;
+    }
+
+    public void setTokenExpiredAt(Date tokenExpiredAt) {
+        this.tokenExpiredAt = tokenExpiredAt;
+    }
+
     public Date getLastLoginAt() {
         return lastLoginAt;
     }
@@ -271,6 +298,22 @@ public class Users implements Serializable {
         this.deleted = deleted;
     }
 
+    public Addresses getAddress() {
+        return address;
+    }
+
+    public void setAddress(Addresses address) {
+        this.address = address;
+    }
+
+    public Companies getCompany() {
+        return company;
+    }
+
+    public void setCompany(Companies company) {
+        this.company = company;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -307,13 +350,15 @@ public class Users implements Serializable {
         Integer o_company_id = o[7] != null ? Integer.parseInt(o[7].toString()) : null;
         Integer o_address_id = Integer.parseInt(o[8].toString());
         Integer o_status = Integer.parseInt(o[9].toString());
-        Date o_last_login_at = o[10] != null ? Timestamp.valueOf(o[10].toString()) : null;
-        Date o_created_at = Timestamp.valueOf(o[11].toString());
-        Date o_activated_at = o[12] != null ? Timestamp.valueOf(o[12].toString()) : null;
-        Date o_updated_at = Timestamp.valueOf(o[13].toString());
-        Integer o_deleted = Integer.parseInt(o[14].toString());
+        String o_token = o[10] != null ? o[10].toString() : null;
+        Date o_token_expired_at = o[11] != null ? Timestamp.valueOf(o[11].toString()) : null;
+        Date o_last_login_at = o[12] != null ? Timestamp.valueOf(o[12].toString()) : null;
+        Date o_created_at = Timestamp.valueOf(o[13].toString());
+        Date o_activated_at = o[14] != null ? Timestamp.valueOf(o[14].toString()) : null;
+        Date o_updated_at = Timestamp.valueOf(o[15].toString());
+        Integer o_deleted = Integer.parseInt(o[16].toString());
 
-        return new Users(o_id, o_first_name, o_last_name, o_access_type, o_email, o_phone, o_password, o_company_id, o_address_id, o_status, o_last_login_at, o_created_at, o_activated_at, o_updated_at, o_deleted);
+        return new Users(o_id, o_first_name, o_last_name, o_access_type, o_email, o_phone, o_password, o_company_id, o_address_id, o_status, o_token, o_token_expired_at, o_last_login_at, o_created_at, o_activated_at, o_updated_at, o_deleted);
     }
     
     public static Users getUserById(Integer id_in){
@@ -502,88 +547,214 @@ public class Users implements Serializable {
         }
     }
     
-//    public static String createAddress(Addresses a){
-//        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
-//        EntityManager em = emf.createEntityManager();
-//        
-//        try {            
-//            StoredProcedureQuery spq = em.createStoredProcedureQuery("createAddress");
-//            
-//            spq.registerStoredProcedureParameter("county_id_in", Integer.class, ParameterMode.IN);
-//            spq.registerStoredProcedureParameter("zip_code_in", Integer.class, ParameterMode.IN);
-//            spq.registerStoredProcedureParameter("city_in", String.class, ParameterMode.IN);
-//            spq.registerStoredProcedureParameter("street_in", String.class, ParameterMode.IN);
-//            spq.registerStoredProcedureParameter("number_in", String.class, ParameterMode.IN);
-//            spq.registerStoredProcedureParameter("staircase_in", String.class, ParameterMode.IN);
-//            spq.registerStoredProcedureParameter("floor_in", Integer.class, ParameterMode.IN);
-//            spq.registerStoredProcedureParameter("door_in", Integer.class, ParameterMode.IN);
-//
-//            spq.setParameter("county_id_in", a.getCountyId());
-//            spq.setParameter("zip_code_in", a.getZipCode());
-//            spq.setParameter("city_in", a.getCity());
-//            spq.setParameter("street_in", a.getStreet());
-//            spq.setParameter("number_in", a.getNumber());
-//            spq.setParameter("staircase_in", a.getStaircase());
-//            spq.setParameter("floor_in", a.getFloor());
-//            spq.setParameter("door_in", a.getDoor());
-//
-//            spq.execute();
-//            return "Sikeresen létrejött az address";
-//        } 
-//        catch (Exception e) {
-//            System.out.println(e.getMessage());
-//            return "HIBA: " + e.getMessage();
-//        }
-//        finally{
-//            em.clear();
-//            em.close();
-//            emf.close();
-//        }
-//        
-//    }
-//    
-//    public static String updateAddressById(Addresses a){
-//        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
-//        EntityManager em = emf.createEntityManager();
-//        
-//        try {            
-//            StoredProcedureQuery spq = em.createStoredProcedureQuery("updateAddressById");
-//            
-//            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
-//            spq.registerStoredProcedureParameter("county_id_in", Integer.class, ParameterMode.IN);
-//            spq.registerStoredProcedureParameter("zip_code_in", Integer.class, ParameterMode.IN);
-//            spq.registerStoredProcedureParameter("city_in", String.class, ParameterMode.IN);
-//            spq.registerStoredProcedureParameter("street_in", String.class, ParameterMode.IN);
-//            spq.registerStoredProcedureParameter("number_in", String.class, ParameterMode.IN);
-//            spq.registerStoredProcedureParameter("staircase_in", String.class, ParameterMode.IN);
-//            spq.registerStoredProcedureParameter("floor_in", Integer.class, ParameterMode.IN);
-//            spq.registerStoredProcedureParameter("door_in", Integer.class, ParameterMode.IN);
-//
-//            spq.setParameter("id_in", a.getId());
-//            spq.setParameter("county_id_in", a.getCountyId());
-//            spq.setParameter("zip_code_in", a.getZipCode());
-//            spq.setParameter("city_in", a.getCity());
-//            spq.setParameter("street_in", a.getStreet());
-//            spq.setParameter("number_in", a.getNumber());
-//            spq.setParameter("staircase_in", a.getStaircase());
-//            spq.setParameter("floor_in", a.getFloor());
-//            spq.setParameter("door_in", a.getDoor());
-//
-//            spq.execute();
-//            return "Sikeresen módosult az address";
-//        } 
-//        catch (Exception e) {
-//            System.out.println(e.getMessage());
-//            return "HIBA: " + e.getMessage();
-//        }
-//        finally{
-//            em.clear();
-//            em.close();
-//            emf.close();
-//        }
-//        
-//    }
-//    
+    public static String createUser(Users user){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("createUser");
+            
+            spq.registerStoredProcedureParameter("first_name_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("last_name_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("email_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("phone_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("password_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("county_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("zip_code_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("city_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("street_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("number_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("staircase_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("floor_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("door_in", Integer.class, ParameterMode.IN);
+
+            spq.setParameter("first_name_in", user.getFirstName());
+            spq.setParameter("last_name_in", user.getLastName());
+            spq.setParameter("email_in", user.getEmail());
+            spq.setParameter("phone_in", user.getPhone());
+            spq.setParameter("password_in", user.getPassword());
+            spq.setParameter("county_id_in", user.getAddress().getCountyId());
+            spq.setParameter("zip_code_in", user.getAddress().getZipCode());
+            spq.setParameter("city_in", user.getAddress().getCity());
+            spq.setParameter("street_in", user.getAddress().getStreet());
+            spq.setParameter("number_in", user.getAddress().getNumber());
+            spq.setParameter("staircase_in", user.getAddress().getStaircase());
+            spq.setParameter("floor_in", user.getAddress().getFloor());
+            spq.setParameter("door_in", user.getAddress().getDoor());
+
+            spq.execute();
+            return "Sikeresen létrejött a user";
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "HIBA: " + e.getMessage();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+    
+    public static String createUserWorker(Users user){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("createUserWorker");
+            
+            spq.registerStoredProcedureParameter("first_name_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("last_name_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("email_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("phone_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("password_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("county_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("zip_code_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("city_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("street_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("number_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("staircase_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("floor_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("door_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("company_name_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("premise_county_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("premise_zip_code_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("premise_city_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("premise_street_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("premise_number_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("premise_staircase_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("premise_floor_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("premise_door_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("tax_number_in", String.class, ParameterMode.IN);
+
+            spq.setParameter("first_name_in", user.getFirstName());
+            spq.setParameter("last_name_in", user.getLastName());
+            spq.setParameter("email_in", user.getEmail());
+            spq.setParameter("phone_in", user.getPhone());
+            spq.setParameter("password_in", user.getPassword());
+            spq.setParameter("county_id_in", user.getAddress().getCountyId());
+            spq.setParameter("zip_code_in", user.getAddress().getZipCode());
+            spq.setParameter("city_in", user.getAddress().getCity());
+            spq.setParameter("street_in", user.getAddress().getStreet());
+            spq.setParameter("number_in", user.getAddress().getNumber());
+            spq.setParameter("staircase_in", user.getAddress().getStaircase());
+            spq.setParameter("floor_in", user.getAddress().getFloor());
+            spq.setParameter("door_in", user.getAddress().getDoor());
+            spq.setParameter("company_name_in", user.getCompany().getName());
+            spq.setParameter("premise_county_id_in", user.getCompany().getAddress().getCountyId());
+            spq.setParameter("premise_zip_code_in", user.getCompany().getAddress().getZipCode());
+            spq.setParameter("premise_city_in", user.getCompany().getAddress().getCity());
+            spq.setParameter("premise_street_in", user.getCompany().getAddress().getStreet());
+            spq.setParameter("premise_number_in", user.getCompany().getAddress().getNumber());
+            spq.setParameter("premise_staircase_in", user.getCompany().getAddress().getStaircase());
+            spq.setParameter("premise_floor_in", user.getCompany().getAddress().getFloor());
+            spq.setParameter("premise_door_in", user.getCompany().getAddress().getDoor());
+            spq.setParameter("tax_number_in", user.getCompany().getTaxNumber());
+            
+            spq.execute();
+            return "Sikeresen létrejött a workeruser";
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "HIBA: " + e.getMessage();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+    
+    public static String updateUser(Users user){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("updateUser");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("first_name_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("last_name_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("email_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("phone_in", String.class, ParameterMode.IN);
+
+            spq.setParameter("id_in", user.getId());
+            spq.setParameter("first_name_in", user.getFirstName());
+            spq.setParameter("last_name_in", user.getLastName());
+            spq.setParameter("email_in", user.getEmail());
+            spq.setParameter("phone_in", user.getPhone());
+
+            spq.execute();
+            return "Sikeresen módosult a user";
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "HIBA: " + e.getMessage();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+    
+    public static String changePassword(Users user){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("changePassword");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("password_in", String.class, ParameterMode.IN);
+
+            spq.setParameter("id_in", user.getId());
+            spq.setParameter("password_in", user.getPassword());
+
+            spq.execute();
+            return "Sikeresen módosult a user jelszava";
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "HIBA: " + e.getMessage();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+    
+    public static String validateEmailByToken(Users user){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("validateEmailByToken");
+            
+            spq.registerStoredProcedureParameter("token_in", String.class, ParameterMode.IN);
+
+            spq.setParameter("token_in", user.getToken());
+
+            spq.execute();
+            return "Sikeresen aktiválta a user-t és email-t";
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "HIBA: " + e.getMessage();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+    
 //    public static Boolean deleteAddressById(Integer id_in){
 //        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
 //        EntityManager em = emf.createEntityManager();

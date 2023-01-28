@@ -48,16 +48,62 @@ public class UsersService {
         return result;
     }
     
-//    public String createAddress(Addresses a){
-//        String result = Addresses.createAddress(a);
-//        return result;
-//    }
-//    
-//    public String updateAddressById(Addresses a){
-//        String result = Addresses.updateAddressById(a);
-//        return result;
-//    }
-//    
+    public String createUser(Users user){
+        //Business logic
+        if(user.getAddress().getStaircase() == null){
+            user.getAddress().setStaircase("");
+        }
+        if(user.getAddress().getFloor() == null){
+            user.getAddress().setFloor(-1);
+        }
+        if(user.getAddress().getDoor() == null){
+            user.getAddress().setDoor(-1);
+        }
+        
+        String result = Users.createUser(user);
+        return result;
+    }
+    
+    public String createUserWorker(Users user){
+        //Business logic
+        if(user.getAddress().getStaircase() == null){
+            user.getAddress().setStaircase("");
+        }
+        if(user.getAddress().getFloor() == null){
+            user.getAddress().setFloor(-1);
+        }
+        if(user.getAddress().getDoor() == null){
+            user.getAddress().setDoor(-1);
+        }
+        if(user.getCompany().getAddress().getStaircase() == null){
+            user.getCompany().getAddress().setStaircase("");
+        }
+        if(user.getCompany().getAddress().getFloor() == null){
+            user.getCompany().getAddress().setFloor(-1);
+        }
+        if(user.getCompany().getAddress().getDoor() == null){
+            user.getCompany().getAddress().setDoor(-1);
+        }
+        
+        String result = Users.createUserWorker(user);
+        return result;
+    }
+    
+    public String updateUser(Users user){
+        String result = Users.updateUser(user);
+        return result;
+    }
+    
+    public String changePassword(Users user){
+        String result = Users.changePassword(user);
+        return result;
+    }
+    
+    public String validateEmailByToken(Users user){
+        String result = Users.validateEmailByToken(user);
+        return result;
+    }
+    
 //    public Boolean deleteAddressById(Integer id){
 //        Boolean result = Addresses.deleteAddressById(id);
 //        return result;

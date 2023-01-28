@@ -20,6 +20,9 @@ public class AddressesService {
     
     public String createAddress(Addresses a){
         //Business logic
+        if(a.getStaircase() == null){
+            a.setStaircase("");
+        }
         if(a.getFloor() == null){
             a.setFloor(-1);
         }
@@ -33,6 +36,9 @@ public class AddressesService {
     
     public String updateAddressById(Addresses a){
         //Business logic
+        if(a.getStaircase() == null){
+            a.setStaircase("");
+        }
         if(a.getFloor() == null){
             a.setFloor(-1);
         }

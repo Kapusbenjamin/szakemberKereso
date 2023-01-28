@@ -109,22 +109,46 @@ public class UsersController {
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
-//    @POST
-//    @Path("createAddress")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public Response createAddress(Addresses address){
-//        String result = as.createAddress(address);
-//        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
-//    }
-//    
-//    @POST
-//    @Path("updateAddressById")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public Response updateAddressById(Addresses address){
-//        String result = as.updateAddressById(address);
-//        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
-//    }
-//    
+    @POST
+    @Path("createUser")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createUser(Users user){
+        String result = us.createUser(user);
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
+    @POST
+    @Path("createUserWorker")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createUserWorker(Users user){
+        String result = us.createUserWorker(user);
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
+    @POST
+    @Path("updateUser")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateUser(Users user){
+        String result = us.updateUser(user);
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
+    @POST
+    @Path("changePassword")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response changePassword(Users user){
+        String result = us.changePassword(user);
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
+    @POST
+    @Path("validateEmailByToken")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response validateEmailByToken(Users user){
+        String result = us.validateEmailByToken(user);
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
 //    @DELETE
 //    @Path("deleteAddressById/{id}")
 //    public Response deleteAddressById(@PathParam("id") Integer id){
