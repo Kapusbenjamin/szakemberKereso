@@ -1,8 +1,9 @@
+import { InvokeFunctionExpr } from '@angular/compiler';
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { AbstractControl, FormControl } from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import { City } from 'src/app/_model/City';
+import { DropDown } from 'src/app/_model/DropDown';
 
 @Component({
   selector: 'app-search-dropdown',
@@ -10,29 +11,27 @@ import { City } from 'src/app/_model/City';
   styleUrls: ['./search-dropdown.component.css']
 })
 export class SearchDropdownComponent implements OnInit {
-  myControl = new FormControl<string | any>('');
-  @Input() options!: City[];
+  @Input() name!:string;
+  @Input() control!: FormControl;
+  @Input() options!: DropDown[];
   filteredOptions!: Observable<any[]>;
 
   ngOnInit() {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
+    this.filteredOptions = this.control.valueChanges.pipe(
       startWith(''),
       map(value => {
-        const city = typeof value === 'string' ? value : value?.city;
-        return city ? this._filter(city as string) : this.options.slice();
+        const name = typeof value === 'string' ? value : value?.name;
+        return name ? this._filter(name as string) : this.options.slice();
       }),
     );
   }
 
-  displayFn(user: any): string {
-    return user && user.city ? user.city : '';
+  displayFn(item: DropDown): string {
+    return item && item.name ? item.name : '';
   }
 
   private _filter(name: string): any[] {
     const filterValue = name.toLowerCase();
-
-    console.log(this.options)
-
-    return this.options.filter(option => option.city.toLowerCase().includes(filterValue));
+    return this.options.filter(option => option.name.toLowerCase().includes(filterValue));
   }
 }
