@@ -17,12 +17,9 @@
   <div>
     <p>Address</p>
     <p>Megye</p>
-    <select name="county" id="county" >
-      <option *ngFor="let county of counties" value={{county.id}}>{{county.countyName}}</option>
-    </select>
-
     <!-- search dropdown -->
-      <app-search-dropdown [options]="cities"></app-search-dropdown>
+      <app-search-dropdown [options]="counties" name="Megye" [control]="registForm.controls['county']" ></app-search-dropdown>
+      <app-search-dropdown [options]="citiesNames" name="Város" [control]="registForm.controls['city']"></app-search-dropdown>
     <!-- search dropdown -->
 
     <div *ngFor="let field of addressFields" class="input-container ic2">

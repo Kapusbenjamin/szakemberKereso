@@ -11,6 +11,7 @@ export class HttpService {
 
   apiUrl: string = 'http://localhost:3000/';
   cityApiUrl: string = ''
+  streetApiUrl: string = '';
 
   constructor(private http:HttpClient) { }
 
@@ -20,6 +21,10 @@ export class HttpService {
 
   getAllCities(): Observable<City[]>{
     return this.http.get<City[]>(`${this.apiUrl}cities`);
+  }
+
+  getAllStreetsByCity(city: string){
+    return this.http.get(``);
   }
 
 }
