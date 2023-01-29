@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 27, 2023 at 12:33 PM
+-- Generation Time: Jan 29, 2023 at 11:28 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -93,16 +93,27 @@ VALUES
 )$$
 
 DROP PROCEDURE IF EXISTS `addNewJobToUser`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addNewJobToUser` (IN `user_id_in` INT(11), IN `job_tags_id_in` INT(11))  INSERT INTO `users_jobs`
-(
-    `users_jobs`.`user_id`,
-    `users_jobs`.`job_tag_id`
-)
-VALUE
-(
-    user_id_in,
-    job_tags_id_in
-)$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addNewJobToUser` (IN `user_id_in` INT(11), IN `job_tag_id_in` INT(11))  BEGIN
+	DECLARE db int;
+
+	SELECT COUNT(*) INTO db FROM `users_jobs`
+    WHERE `users_jobs`.`user_id` = user_id_in
+    AND `users_jobs`.`job_tag_id` =job_tag_id_in;
+    
+    IF(db = 0)
+    	THEN
+            INSERT INTO `users_jobs`
+            (
+                `users_jobs`.`user_id`,
+                `users_jobs`.`job_tag_id`
+            )
+            VALUE
+            (
+                user_id_in,
+                job_tag_id_in
+            );
+ 	END IF;
+END$$
 
 DROP PROCEDURE IF EXISTS `changeAccess`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `changeAccess` (IN `user_id_in` INT(11))  UPDATE `users`
@@ -188,7 +199,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createCompany` (IN `company_name_in
     )
     VALUES
     (
-        name_in,
+        company_name_in,
         company_address_id,
         tax_number_in
     );
@@ -359,8 +370,9 @@ SET `users`.`deleted` = 1
 WHERE `users`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `deleteUserJob`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUserJob` (IN `id_in` INT(11))  DELETE FROM `users_jobs`
-WHERE `users_jobs`.`id` = id_in$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUserJob` (IN `user_id_in` INT(11), IN `job_tag_id_in` INT(11))  DELETE FROM `users_jobs`
+WHERE `users_jobs`.`user_id` = user_id_in
+AND `users_jobs`.`job_tag_id` = job_tag_id_in$$
 
 DROP PROCEDURE IF EXISTS `filteringAds`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `filteringAds` (IN `county_id_in` INT(11), IN `job_tag_id_in` INT(11))  BEGIN
@@ -435,7 +447,9 @@ WHERE `jobs`.`deleted` != 1
 AND `jobs`.`customer_id` = customer_id_in$$
 
 DROP PROCEDURE IF EXISTS `getAllJobsByUser`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllJobsByUser` (IN `user_id_in` INT(11))  SELECT * FROM `users_jobs`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllJobsByUser` (IN `user_id_in` INT(11))  SELECT `job_tags`.`id`, `job_tags`.`name` FROM `job_tags`
+INNER JOIN `users_jobs`
+ON `users_jobs`.`job_tag_id` = `job_tags`.`id`
 WHERE `users_jobs`.`user_id` = user_id_in$$
 
 DROP PROCEDURE IF EXISTS `getAllJobsByWorker`$$
@@ -639,10 +653,13 @@ SET `users`.`first_name` = first_name_in,
 	`users`.`phone` = phone_in
 WHERE `users`.`id` = id_in$$
 
-DROP PROCEDURE IF EXISTS `validateEmail`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `validateEmail` (IN `id_in` INT(11))  UPDATE `users`
-SET `users`.`status` = 0
-WHERE `users`.`id` = id_in$$
+DROP PROCEDURE IF EXISTS `validateEmailByToken`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `validateEmailByToken` (IN `token_in` VARCHAR(255) CHARSET utf8)  UPDATE `users`
+SET `users`.`status` = 0,
+	`users`.`token` = null,
+    `users`.`token_expired_at` = null
+WHERE `users`.`token` = token_in
+AND `users`.`token_expired_at` > NOW()$$
 
 DELIMITER ;
 
@@ -675,8 +692,8 @@ INSERT INTO `addresses` (`id`, `county_id`, `zip_code`, `city`, `street`, `numbe
 (3, 1, 4532, 'Budapest', 'A utca', '23/A', NULL, NULL, NULL),
 (4, 2, 7600, 'Pécs', 'Ág utca', '56', NULL, NULL, NULL),
 (6, 5, 4532, 'Pécs', 'Petőfi', '13/A', 'Első', 2, 12),
-(18, 4, 1111, 'Bp', 'AAAA utca', '56', NULL, NULL, NULL),
-(20, 1, 4532, 'Pécs', 'Petőfi', '13', NULL, NULL, NULL);
+(39, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
+(40, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -767,7 +784,8 @@ CREATE TABLE `companies` (
 --
 
 INSERT INTO `companies` (`id`, `name`, `address_id`, `tax_number`) VALUES
-(1, 'ABC Kft.', 6, '123423543');
+(1, 'ABC Kft.', 6, '123423543'),
+(3, 'A kft.', 40, '2132165465');
 
 -- --------------------------------------------------------
 
@@ -956,6 +974,8 @@ CREATE TABLE `users` (
   `company_id` int(11) DEFAULT NULL,
   `address_id` int(11) NOT NULL,
   `status` int(11) NOT NULL DEFAULT -1,
+  `token` varchar(255) DEFAULT NULL,
+  `token_expired_at` timestamp NULL DEFAULT NULL,
   `last_login_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `activated_at` timestamp NULL DEFAULT NULL,
@@ -967,12 +987,12 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `first_name`, `last_name`, `access_type`, `email`, `phone`, `password`, `company_id`, `address_id`, `status`, `last_login_at`, `created_at`, `activated_at`, `updated_at`, `deleted`) VALUES
-(1, 'Teszt', 'Ferenc', 0, 'tesztf@teszt-user.com', '+36202567896', '1234', NULL, 0, -1, NULL, '2023-01-05 15:57:39', NULL, '2023-01-05 15:57:39', 0),
-(2, 'Teszt', 'László', 1, 'tesztl@teszt-user.com', '+36202567894', '1234', 1, 0, 0, '2023-01-27 10:35:06', '2023-01-05 15:57:39', '2023-01-05 15:48:18', '2023-01-27 10:35:31', 0),
-(3, 'Teszt', 'Izabella', 1, 'tesztiza@teszt-user.com', '+36302987764', '1234', NULL, 0, 0, '2023-01-05 15:55:18', '2023-01-05 15:57:39', '2023-01-04 15:48:18', '2023-01-27 11:31:13', 0),
-(4, 'Teszt', 'Admin', 2, 'teszta@teszt-user.com', '+36702753456', '1234', NULL, 0, 0, '2023-01-06 15:48:18', '2023-01-05 15:57:39', '2023-01-01 15:48:18', '2023-01-05 15:57:39', 0),
-(5, 'a', 'b', 1, 'asd@sdg.com', '+123456', 'alma', 1, 6, -1, NULL, '2023-01-15 16:34:04', NULL, '2023-01-27 10:42:55', 1);
+INSERT INTO `users` (`id`, `first_name`, `last_name`, `access_type`, `email`, `phone`, `password`, `company_id`, `address_id`, `status`, `token`, `token_expired_at`, `last_login_at`, `created_at`, `activated_at`, `updated_at`, `deleted`) VALUES
+(1, 'Teszt', 'Ferenc', 0, 'tesztf@teszt-user.com', '+36202567896', '1234', NULL, 0, -1, NULL, NULL, NULL, '2023-01-05 15:57:39', NULL, '2023-01-05 15:57:39', 0),
+(2, 'Teszt', 'László', 1, 'tesztl@teszt-user.com', '+36202567894', '1234', 1, 0, 0, NULL, NULL, '2023-01-27 10:35:06', '2023-01-05 15:57:39', '2023-01-05 15:48:18', '2023-01-27 10:35:31', 0),
+(3, 'Teszt', 'Izabella', 1, 'tesztiza@teszt-user.com', '+36302987764', '1234', NULL, 0, 0, NULL, NULL, '2023-01-05 15:55:18', '2023-01-05 15:57:39', '2023-01-04 15:48:18', '2023-01-27 11:31:13', 0),
+(4, 'Teszt', 'Admin', 2, 'teszta@teszt-user.com', '+36702753456', '1234', NULL, 0, 0, NULL, NULL, '2023-01-06 15:48:18', '2023-01-05 15:57:39', '2023-01-01 15:48:18', '2023-01-05 15:57:39', 0),
+(8, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', 'jelszo123', 3, 39, -1, NULL, NULL, NULL, '2023-01-28 15:00:51', NULL, '2023-01-28 15:00:51', 0);
 
 -- --------------------------------------------------------
 
@@ -986,6 +1006,14 @@ CREATE TABLE `users_jobs` (
   `user_id` int(11) NOT NULL,
   `job_tag_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `users_jobs`
+--
+
+INSERT INTO `users_jobs` (`id`, `user_id`, `job_tag_id`) VALUES
+(2, 4, 1),
+(3, 4, 5);
 
 --
 -- Indexes for dumped tables
@@ -1083,7 +1111,7 @@ ALTER TABLE `users_jobs`
 -- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `ads`
@@ -1107,7 +1135,7 @@ ALTER TABLE `chats`
 -- AUTO_INCREMENT for table `companies`
 --
 ALTER TABLE `companies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `counties`
@@ -1155,13 +1183,13 @@ ALTER TABLE `ratings`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `users_jobs`
 --
 ALTER TABLE `users_jobs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

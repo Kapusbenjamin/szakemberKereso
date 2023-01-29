@@ -755,30 +755,4 @@ public class Users implements Serializable {
         
     }
     
-//    public static Boolean deleteAddressById(Integer id_in){
-//        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
-//        EntityManager em = emf.createEntityManager();
-//        
-//        try {            
-//            StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteAddressById");
-//            
-//            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
-//
-//            spq.setParameter("id_in", id_in);
-//
-//            spq.execute();
-//            return true;
-//        } 
-//        catch (Exception e) {
-//            System.out.println(e.getMessage());
-//            return false;
-//        }
-//        finally{
-//            em.clear();
-//            em.close();
-//            emf.close();
-//        }
-//        
-//    }
-    
 }

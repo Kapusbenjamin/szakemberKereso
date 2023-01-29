@@ -5,17 +5,25 @@
 package szakemberkereso.Model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.ParameterMode;
+import javax.persistence.Persistence;
+import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+import szakemberkereso.Configuration.Database;
 
 /**
  *
@@ -106,6 +114,100 @@ public class UsersJobs implements Serializable {
     @Override
     public String toString() {
         return "szakemberkereso.Model.UsersJobs[ id=" + id + " ]";
+    }
+    
+    public static String addNewJobToUser(UsersJobs user_job){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("addNewJobToUser");
+            
+            spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("job_tag_id_in", Integer.class, ParameterMode.IN);
+
+            spq.setParameter("user_id_in", user_job.getUserId());
+            spq.setParameter("job_tag_id_in", user_job.getJobTagId());
+
+            spq.execute();
+            return "Sikeresen hozzáadta a userhez a szakmát";
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "HIBA: " + e.getMessage();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+
+    public static String deleteUserJob(UsersJobs user_job){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteUserJob");
+            
+            spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("job_tag_id_in", Integer.class, ParameterMode.IN);
+
+            spq.setParameter("user_id_in", user_job.getUserId());
+            spq.setParameter("job_tag_id_in", user_job.getJobTagId());
+
+            spq.execute();
+            return "Sikeresen törölte a userhez tartozó szakmát";
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "HIBA: " + e.getMessage();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+    
+    public static List<JobTags> getAllJobsByUser(Integer user_id_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllJobsByUser");
+            
+            spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
+
+            spq.setParameter("user_id_in", user_id_in);
+
+            spq.execute();
+            
+            List<Object[]> result = spq.getResultList();
+            List<JobTags> job_tags = new ArrayList<>();
+            
+            for(Object[] job_tag : result){
+                Integer job_tag_id = Integer.parseInt(job_tag[0].toString());
+                String job_tag_name = job_tag[1].toString();
+                
+                JobTags jt = new JobTags(job_tag_id, job_tag_name);
+                job_tags.add(jt);
+            }
+            
+            return job_tags;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
     }
     
 }
