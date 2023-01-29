@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 29, 2023 at 11:28 AM
+-- Generation Time: Jan 29, 2023 at 05:18 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -137,6 +137,22 @@ WHERE `messages`.`sender_id` = sender_id_in
 AND `messages`.`receiver_id` = receiver_id_in
 AND `messages`.`checked` = 0$$
 
+DROP PROCEDURE IF EXISTS `createAd`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createAd` (IN `user_id_in` INT(11), IN `job_tag_id_in` INT(11), IN `desc_in` TEXT CHARSET utf8, OUT `last_id_out` INT(11))  BEGIN
+	INSERT INTO `ads`
+	(
+		`ads`.`user_id`,
+    	`ads`.`job_tag_id`,
+    	`ads`.`description`
+	)
+	VALUES (
+		user_id_in,
+    	job_tag_id_in,
+    	desc_in
+	);
+	SELECT LAST_INSERT_ID() INTO last_id_out;
+END$$
+
 DROP PROCEDURE IF EXISTS `createAddress`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `createAddress` (IN `county_id_in` INT(11), IN `zip_code_in` INT(5), IN `city_in` VARCHAR(255) CHARSET utf8, IN `street_in` VARCHAR(255) CHARSET utf8, IN `number_in` VARCHAR(30) CHARSET utf8, IN `staircase_in` VARCHAR(30) CHARSET utf8, IN `floor_in` INT(4), IN `door_in` INT(8))  BEGIN
 	CALL `stringToNull`(staircase_in) ;
@@ -236,22 +252,6 @@ VALUES
     message_in
 )$$
 
-DROP PROCEDURE IF EXISTS `createNewAds`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createNewAds` (IN `user_id_in` INT(11), IN `job_tag_id` INT(11), IN `desc_in` TEXT CHARSET utf8, OUT `last_id_out` INT(11))  BEGIN
-	INSERT INTO `ads`
-	(
-		`ads`.`user_id`,
-    	`ads`.`job_tag_id`,
-    	`ads`.`desc`
-	)
-	VALUES (
-		user_id_in,
-    	job_tag_id_in,
-    	desc_in
-	);
-	SELECT LAST_INSERT_ID() INTO last_id_out;
-END$$
-
 DROP PROCEDURE IF EXISTS `createRating`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `createRating` (IN `ratinged_user_id_in` INT(11), IN `ratinger_user_id_in` INT(11), IN `desc_in` TEXT CHARSET utf8, IN `ratings_stars_in` INT(2))  INSERT INTO `ratings`
 (
@@ -328,14 +328,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createUserWorker` (IN `first_name_i
     );
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteAd`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAd` (IN `id_in` INT(11))  UPDATE `ads`
+SET `ads`.`deleted` = 1
+WHERE `ads`.`id` = id_in$$
+
 DROP PROCEDURE IF EXISTS `deleteAddressById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAddressById` (IN `id_in` INT(11))  DELETE FROM `addresses`
 WHERE `addresses`.`id` = id_in$$
-
-DROP PROCEDURE IF EXISTS `deleteAds`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAds` (IN `id_in` INT(11))  UPDATE `ads`
-SET `ads`.`deleted` = 1
-WHERE `ads`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `deleteCompanyById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCompanyById` (IN `id_in` INT(11))  DELETE FROM `companies`
@@ -473,7 +473,8 @@ ORDER BY `messages`.`sended_at` ASC$$
 
 DROP PROCEDURE IF EXISTS `getAllNonAcceptedAds`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllNonAcceptedAds` ()  SELECT * FROM `ads`
-WHERE `ads`.`status` = 0$$
+WHERE `ads`.`status` = 0
+AND `ads`.`deleted` != 1$$
 
 DROP PROCEDURE IF EXISTS `getAllNotAcceptedImages`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllNotAcceptedImages` ()  SELECT * FROM `images`
@@ -595,6 +596,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `stringToNull` (INOUT `str_in` VARCH
 	THEN SET str_in = null;
 END IF$$
 
+DROP PROCEDURE IF EXISTS `updateAd`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAd` (IN `id_in` INT(11), IN `desc_in` TEXT CHARSET utf8)  UPDATE `ads`
+SET `ads`.`description` = desc_in,
+    `ads`.`status` = 0
+WHERE `ads`.`id` = id_in$$
+
 DROP PROCEDURE IF EXISTS `updateAddressById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAddressById` (IN `id_in` INT(11), IN `county_id_in` INT(11), IN `zip_code_in` INT(5), IN `city_in` VARCHAR(255) CHARSET utf8, IN `street_in` VARCHAR(255) CHARSET utf8, IN `number_in` VARCHAR(30) CHARSET utf8, IN `staircase_in` VARCHAR(30) CHARSET utf8, IN `floor_in` INT(4), IN `door_in` INT(8))  BEGIN
 	CALL `stringToNull`(staircase_in);
@@ -611,12 +618,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAddressById` (IN `id_in` INT(
         `addresses`.`door` = door_in
     WHERE `addresses`.`id` = id_in;
 END$$
-
-DROP PROCEDURE IF EXISTS `updateAds`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAds` (IN `id_in` INT(11), IN `desc_in` TEXT CHARSET utf8)  UPDATE `ads`
-SET `ads`.`desc` = desc_in,
-    `ads`.`status` = 0
-WHERE `ads`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `updateCompanyById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCompanyById` (IN `id_in` INT(11), IN `name_in` VARCHAR(200) CHARSET utf8, IN `tax_number_in` VARCHAR(255) CHARSET utf8)  UPDATE `companies`
@@ -706,7 +707,7 @@ CREATE TABLE `ads` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `job_tag_id` int(11) NOT NULL,
-  `desc` text NOT NULL,
+  `description` text NOT NULL,
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `status` int(1) NOT NULL DEFAULT 0,
   `deleted` int(1) NOT NULL DEFAULT 0
@@ -716,9 +717,14 @@ CREATE TABLE `ads` (
 -- Dumping data for table `ads`
 --
 
-INSERT INTO `ads` (`id`, `user_id`, `job_tag_id`, `desc`, `updated_at`, `status`, `deleted`) VALUES
+INSERT INTO `ads` (`id`, `user_id`, `job_tag_id`, `description`, `updated_at`, `status`, `deleted`) VALUES
 (1, 2, 1, 'Valami', '2023-01-17 15:24:57', 1, 0),
-(2, 2, 3, 'Még valami', '2023-01-17 15:24:57', 1, 0);
+(2, 2, 3, 'aaaaaaaaaaaaa', '2023-01-29 15:29:20', 0, 0),
+(3, 2, 5, 'asfddsgfs', '2023-01-29 16:10:55', 1, 0),
+(4, 2, 5, 'Semmi', '2023-01-29 14:53:19', 0, 0),
+(5, 4, 1, 'a', '2023-01-29 15:10:45', 0, 0),
+(6, 2, 5, 'Semmi', '2023-01-29 15:42:46', 1, 0),
+(7, 2, 5, 'aaaaaaaaaaaaa', '2023-01-29 15:42:30', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -1117,7 +1123,7 @@ ALTER TABLE `addresses`
 -- AUTO_INCREMENT for table `ads`
 --
 ALTER TABLE `ads`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `ads_counties`
