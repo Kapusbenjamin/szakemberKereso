@@ -28,8 +28,8 @@ export class RegistFormComponent implements OnInit {
     {key:'floor', display:'Floor'},
     {key:'door', display:'Door'},
   ];
-  counties:DropDown[] = [];
-  citiesNames:DropDown[] = [];
+  counties:string[] = [];
+  citiesNames:string[] = [];
 
   // User: Firstname, Lastname, Email, Tel. number, password;
   // address: megye, város, irányítószám, utca, házszám, (lépcsőház, emelet, ajtó); https://stackblitz.com/edit/angular-searchable-dropdown?file=src%2Fapp%2Fhello.component.ts
@@ -67,27 +67,19 @@ export class RegistFormComponent implements OnInit {
   loadCounties(){
     this.http.getAllCounties().subscribe((response:County[])=>{
       response.forEach((county:County)=>{
-        this.counties.push({value: county.id, name: county.countyName})
+        if(county.countyName != "Budapest"){
+          this.counties.push(county.countyName)
+        }
       });
     });
   }
 
   loadCities(){
     this.http.getAllCities().subscribe((response)=>{
-      response.forEach((city:City, index: number)=>{
-        this.citiesNames.push({value: index, name: city.city})
+      response.forEach((city:City)=>{
+        this.citiesNames.push(city.city)
       });
     });
   }
-
-  // compare( a: City, b :City ) {
-  //   if ( a.city < b.city ){
-  //     return -1;
-  //   }
-  //   if ( a.city > b.city ){
-  //     return 1;
-  //   }
-  //   return 0;
-  // }
 
 }
