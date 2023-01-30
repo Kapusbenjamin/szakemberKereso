@@ -1,1 +1,3 @@
 /Backend/SzakemberKereso/target/
+/Backend/SzakemberKereso/src/main/resources/*
+Backend/SzakemberKereso/src/main/resources/META-INF/persistence.xml
