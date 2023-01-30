@@ -4,7 +4,6 @@
  */
 package szakemberkereso.Controller;
 
-import io.swagger.annotations.ApiOperation;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;

@@ -30,6 +30,7 @@ public class ApplicationConfig extends Application {
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(szakemberkereso.Controller.AddressesController.class);
         resources.add(szakemberkereso.Controller.AdsController.class);
+        resources.add(szakemberkereso.Controller.AdsCountiesController.class);
         resources.add(szakemberkereso.Controller.UsersController.class);
         resources.add(szakemberkereso.Controller.UsersJobsController.class);
     }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 29, 2023 at 05:18 PM
+-- Generation Time: Jan 30, 2023 at 04:53 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -252,6 +252,22 @@ VALUES
     message_in
 )$$
 
+DROP PROCEDURE IF EXISTS `createNewAds`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createNewAds` (IN `user_id_in` INT(11), IN `job_tag_id` INT(11), IN `desc_in` TEXT CHARSET utf8, OUT `last_id_out` INT(11))  BEGIN
+	INSERT INTO `ads`
+	(
+		`ads`.`user_id`,
+    	`ads`.`job_tag_id`,
+    	`ads`.`desc`
+	)
+	VALUES (
+		user_id_in,
+    	job_tag_id_in,
+    	desc_in
+	);
+	SELECT LAST_INSERT_ID() INTO last_id_out;
+END$$
+
 DROP PROCEDURE IF EXISTS `createRating`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `createRating` (IN `ratinged_user_id_in` INT(11), IN `ratinger_user_id_in` INT(11), IN `desc_in` TEXT CHARSET utf8, IN `ratings_stars_in` INT(2))  INSERT INTO `ratings`
 (
@@ -428,7 +444,10 @@ DROP PROCEDURE IF EXISTS `getAllCounties`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllCounties` ()  SELECT * FROM `counties`$$
 
 DROP PROCEDURE IF EXISTS `getAllCountiesByAd`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllCountiesByAd` (IN `ad_id_in` INT(11))  SELECT * FROM `ads_counties`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllCountiesByAd` (IN `ad_id_in` INT(11))  SELECT `counties`.`id`, `counties`.`name`
+FROM `ads_counties`
+INNER JOIN `counties`
+ON `ads_counties`.`county_id` = `counties`.`id`
 WHERE `ads_counties`.`ad_id` = ad_id_in$$
 
 DROP PROCEDURE IF EXISTS `getAllFavoritesByUserId`$$
@@ -619,6 +638,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAddressById` (IN `id_in` INT(
     WHERE `addresses`.`id` = id_in;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateAds`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAds` (IN `id_in` INT(11), IN `desc_in` TEXT CHARSET utf8)  UPDATE `ads`
+SET `ads`.`desc` = desc_in,
+    `ads`.`status` = 0
+WHERE `ads`.`id` = id_in$$
+
 DROP PROCEDURE IF EXISTS `updateCompanyById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCompanyById` (IN `id_in` INT(11), IN `name_in` VARCHAR(200) CHARSET utf8, IN `tax_number_in` VARCHAR(255) CHARSET utf8)  UPDATE `companies`
 SET `companies`.`name` = name_in,
@@ -652,6 +677,11 @@ SET `users`.`first_name` = first_name_in,
 	`users`.`last_name` = last_name_in,
 	`users`.`email` = email_in,
 	`users`.`phone` = phone_in
+WHERE `users`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `validateEmail`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `validateEmail` (IN `id_in` INT(11))  UPDATE `users`
+SET `users`.`status` = 0
 WHERE `users`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `validateEmailByToken`$$
