@@ -5,17 +5,25 @@
 package szakemberkereso.Model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.ParameterMode;
+import javax.persistence.Persistence;
+import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+import szakemberkereso.Configuration.Database;
 
 /**
  *
@@ -107,5 +115,100 @@ public class AdsCounties implements Serializable {
     public String toString() {
         return "szakemberkereso.Model.AdsCounties[ id=" + id + " ]";
     }
+    
+//    public static String addNewJobToUser(UsersJobs user_job){
+//        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+//        EntityManager em = emf.createEntityManager();
+//        
+//        try {            
+//            StoredProcedureQuery spq = em.createStoredProcedureQuery("addNewJobToUser");
+//            
+//            spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
+//            spq.registerStoredProcedureParameter("job_tag_id_in", Integer.class, ParameterMode.IN);
+//
+//            spq.setParameter("user_id_in", user_job.getUserId());
+//            spq.setParameter("job_tag_id_in", user_job.getJobTagId());
+//
+//            spq.execute();
+//            return "Sikeresen hozzáadta a userhez a szakmát";
+//        } 
+//        catch (Exception e) {
+//            System.out.println(e.getMessage());
+//            return "HIBA: " + e.getMessage();
+//        }
+//        finally{
+//            em.clear();
+//            em.close();
+//            emf.close();
+//        }
+//        
+//    }
+//
+//    public static String deleteCountyFromAd(AdsCounties ad_county){
+//        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+//        EntityManager em = emf.createEntityManager();
+//        
+//        try {            
+//            StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteCountyFromAd");
+//            
+//            spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
+//            spq.registerStoredProcedureParameter("job_tag_id_in", Integer.class, ParameterMode.IN);
+//
+//            spq.setParameter("user_id_in", user_job.getUserId());
+//            spq.setParameter("job_tag_id_in", user_job.getJobTagId());
+//
+//            spq.execute();
+//            return "Sikeresen törölte a hirdetéshez tartozó megyét";
+//        } 
+//        catch (Exception e) {
+//            System.out.println(e.getMessage());
+//            return "HIBA: " + e.getMessage();
+//        }
+//        finally{
+//            em.clear();
+//            em.close();
+//            emf.close();
+//        }
+//        
+//    }
+    
+    public static List<Counties> getAllCountiesByAd(Integer ad_id_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllCountiesByAd");
+            
+            spq.registerStoredProcedureParameter("ad_id_in", Integer.class, ParameterMode.IN);
+
+            spq.setParameter("ad_id_in", ad_id_in);
+
+            spq.execute();
+            
+            List<Object[]> result = spq.getResultList();
+            List<Counties> counties = new ArrayList<>();
+            
+            for(Object[] county : result){
+                Integer county_id = Integer.parseInt(county[0].toString());
+                String county_name = county[1].toString();
+                
+                Counties c = new Counties(county_id, county_name);
+                counties.add(c);
+            }
+            
+            return counties;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+    
     
 }
