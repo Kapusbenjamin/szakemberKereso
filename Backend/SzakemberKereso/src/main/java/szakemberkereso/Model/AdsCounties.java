@@ -116,61 +116,61 @@ public class AdsCounties implements Serializable {
         return "szakemberkereso.Model.AdsCounties[ id=" + id + " ]";
     }
     
-//    public static String addNewJobToUser(UsersJobs user_job){
-//        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
-//        EntityManager em = emf.createEntityManager();
-//        
-//        try {            
-//            StoredProcedureQuery spq = em.createStoredProcedureQuery("addNewJobToUser");
-//            
-//            spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
-//            spq.registerStoredProcedureParameter("job_tag_id_in", Integer.class, ParameterMode.IN);
-//
-//            spq.setParameter("user_id_in", user_job.getUserId());
-//            spq.setParameter("job_tag_id_in", user_job.getJobTagId());
-//
-//            spq.execute();
-//            return "Sikeresen hozzáadta a userhez a szakmát";
-//        } 
-//        catch (Exception e) {
-//            System.out.println(e.getMessage());
-//            return "HIBA: " + e.getMessage();
-//        }
-//        finally{
-//            em.clear();
-//            em.close();
-//            emf.close();
-//        }
-//        
-//    }
-//
-//    public static String deleteCountyFromAd(AdsCounties ad_county){
-//        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
-//        EntityManager em = emf.createEntityManager();
-//        
-//        try {            
-//            StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteCountyFromAd");
-//            
-//            spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
-//            spq.registerStoredProcedureParameter("job_tag_id_in", Integer.class, ParameterMode.IN);
-//
-//            spq.setParameter("user_id_in", user_job.getUserId());
-//            spq.setParameter("job_tag_id_in", user_job.getJobTagId());
-//
-//            spq.execute();
-//            return "Sikeresen törölte a hirdetéshez tartozó megyét";
-//        } 
-//        catch (Exception e) {
-//            System.out.println(e.getMessage());
-//            return "HIBA: " + e.getMessage();
-//        }
-//        finally{
-//            em.clear();
-//            em.close();
-//            emf.close();
-//        }
-//        
-//    }
+    public static String addNewCountyToAd(AdsCounties ad_county){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("addNewCountyToAd");
+            
+            spq.registerStoredProcedureParameter("ad_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("county_id_in", Integer.class, ParameterMode.IN);
+
+            spq.setParameter("ad_id_in", ad_county.getAdId());
+            spq.setParameter("county_id_in", ad_county.getCountyId());
+
+            spq.execute();
+            return "Sikeresen hozzáadta a hirdetéshez a megyét";
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "HIBA: " + e.getMessage();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+
+    public static String deleteCountyFromAd(AdsCounties ad_county){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteCountyFromAd");
+            
+            spq.registerStoredProcedureParameter("ad_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("county_id_in", Integer.class, ParameterMode.IN);
+
+            spq.setParameter("ad_id_in", ad_county.getAdId());
+            spq.setParameter("county_id_in", ad_county.getCountyId());
+
+            spq.execute();
+            return "Sikeresen törölte a hirdetéshez tartozó megyét";
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "HIBA: " + e.getMessage();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
     
     public static List<Counties> getAllCountiesByAd(Integer ad_id_in){
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());

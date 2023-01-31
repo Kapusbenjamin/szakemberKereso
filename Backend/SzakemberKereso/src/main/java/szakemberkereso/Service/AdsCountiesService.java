@@ -13,16 +13,16 @@ import szakemberkereso.Model.Counties;
  * @author Sharkz
  */
 public class AdsCountiesService {
+        
+    public String addNewCountyToAd(AdsCounties ad_county){
+        String result = AdsCounties.addNewCountyToAd(ad_county);
+        return result;
+    }
     
-//    public String addNewJobToUser(UsersJobs user_job){
-//        String result = UsersJobs.addNewJobToUser(user_job);
-//        return result;
-//    }
-//    
-//    public String deleteUserJob(UsersJobs user_job){
-//        String result = UsersJobs.deleteUserJob(user_job);
-//        return result;
-//    }
+    public String deleteCountyFromAd(AdsCounties ad_county){
+        String result = AdsCounties.deleteCountyFromAd(ad_county);
+        return result;
+    }
     
     public List<Counties> getAllCountiesByAd(Integer ad_id_in){
         List<Counties> result = AdsCounties.getAllCountiesByAd(ad_id_in);

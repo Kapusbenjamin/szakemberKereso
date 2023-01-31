@@ -9,12 +9,15 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import szakemberkereso.Model.AdsCounties;
 import szakemberkereso.Model.Counties;
 import szakemberkereso.Service.AdsCountiesService;
 
@@ -57,22 +60,22 @@ public class AdsCountiesController {
     public void putJson(String content) {
     }
     
-//    @POST
-//    @Path("addNewJobToUser")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public Response addNewJobToUser(UsersJobs user_job){
-//        String result = ujs.addNewJobToUser(user_job);
-//        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
-//    }
-//    
-//    @DELETE
-//    @Path("deleteUserJob")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public Response deleteUserJob(UsersJobs user_job){
-//        String result = ujs.deleteUserJob(user_job);
-//        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
-//    }
-//    
+    @POST
+    @Path("addNewCountyToAd")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addNewCountyToAd(AdsCounties ad_county){
+        String result = acs.addNewCountyToAd(ad_county);
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
+    @DELETE
+    @Path("deleteCountyFromAd")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteCountyFromAd(AdsCounties ad_county){
+        String result = acs.deleteCountyFromAd(ad_county);
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
     @GET
     @Path("getAllCountiesByAd/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
