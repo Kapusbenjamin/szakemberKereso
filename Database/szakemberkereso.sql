@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 30, 2023 at 04:53 PM
+-- Generation Time: Jan 31, 2023 at 04:34 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -52,18 +52,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptRating` (IN `id_in` INT(11)) 
 SET `ratings`.`status` = 1
 WHERE `ratings`.`id` = id_in$$
 
-DROP PROCEDURE IF EXISTS `addCountyToAd`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addCountyToAd` (IN `ad_id_in` INT(11), IN `county_id_in` INT(11))  INSERT INTO `ads_counties`
-(
-    `ads_counties`.`ad_id`,
-    `ads_counties`.`county_id`
-)
-VALUE
-(
-    ad_id_in,
-    county_id_in
-)$$
-
 DROP PROCEDURE IF EXISTS `addFavorite`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addFavorite` (IN `user_id_in` INT(11), IN `ads_id_in` INT(11))  INSERT INTO `favorites`
 (
@@ -74,6 +62,18 @@ VALUES
 (
 	user_id_in,
     ads_id_in
+)$$
+
+DROP PROCEDURE IF EXISTS `addNewCountyToAd`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addNewCountyToAd` (IN `ad_id_in` INT(11), IN `county_id_in` INT(11))  INSERT INTO `ads_counties`
+(
+    `ads_counties`.`ad_id`,
+    `ads_counties`.`county_id`
+)
+VALUE
+(
+    ad_id_in,
+    county_id_in
 )$$
 
 DROP PROCEDURE IF EXISTS `addNewImage`$$
@@ -358,8 +358,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCompanyById` (IN `id_in` INT(
 WHERE `companies`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `deleteCountyFromAd`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCountyFromAd` (IN `id_in` INT(11))  DELETE FROM `ads_counties`
-WHERE `ads_counties`.`id` = id_in$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCountyFromAd` (IN `ad_id_in` INT(11), IN `county_id_in` INT(11))  DELETE FROM `ads_counties`
+WHERE `ads_counties`.`ad_id` = ad_id_in
+AND `ads_counties`.`county_id` = county_id_in$$
 
 DROP PROCEDURE IF EXISTS `deleteFavorite`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteFavorite` (IN `id_in` INT(11))  DELETE FROM `favorites`
@@ -776,8 +777,8 @@ CREATE TABLE `ads_counties` (
 INSERT INTO `ads_counties` (`id`, `ad_id`, `county_id`) VALUES
 (1, 1, 2),
 (2, 1, 3),
-(3, 1, 5),
-(4, 2, 5);
+(4, 2, 5),
+(5, 2, 5);
 
 -- --------------------------------------------------------
 
@@ -1159,7 +1160,7 @@ ALTER TABLE `ads`
 -- AUTO_INCREMENT for table `ads_counties`
 --
 ALTER TABLE `ads_counties`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `chats`
