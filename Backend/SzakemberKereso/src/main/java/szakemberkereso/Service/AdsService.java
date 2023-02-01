@@ -48,6 +48,11 @@ public class AdsService {
         return result;
     }
     
+    public List<Ads> filteringAds(Ads ad){
+        List<Ads> result = Ads.filteringAds(ad);
+        return result;
+    }
+    
     public Ads getAdsById(Integer id){
         Ads result = Ads.getAdsById(id);
         return result;

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 31, 2023 at 04:34 PM
+-- Generation Time: Feb 01, 2023 at 06:55 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -51,6 +51,18 @@ DROP PROCEDURE IF EXISTS `acceptRating`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptRating` (IN `id_in` INT(11))  UPDATE `ratings`
 SET `ratings`.`status` = 1
 WHERE `ratings`.`id` = id_in$$
+
+DROP PROCEDURE IF EXISTS `addCountyToAd`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addCountyToAd` (IN `ad_id_in` INT(11), IN `county_id_in` INT(11))  INSERT INTO `ads_counties`
+(
+    `ads_counties`.`ad_id`,
+    `ads_counties`.`county_id`
+)
+VALUE
+(
+    ad_id_in,
+    county_id_in
+)$$
 
 DROP PROCEDURE IF EXISTS `addFavorite`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addFavorite` (IN `user_id_in` INT(11), IN `ads_id_in` INT(11))  INSERT INTO `favorites`
@@ -391,22 +403,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUserJob` (IN `user_id_in` INT
 WHERE `users_jobs`.`user_id` = user_id_in
 AND `users_jobs`.`job_tag_id` = job_tag_id_in$$
 
-DROP PROCEDURE IF EXISTS `filteringAds`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `filteringAds` (IN `county_id_in` INT(11), IN `job_tag_id_in` INT(11))  BEGIN
-	IF(county_id_in = NULL AND job_tag_id_in = NULL)
-    	THEN 
-      		CALL `getAllAcceptedAds`();
- 	ELSEIF(county_id_in = NULL)
-    	THEN
-        	CALL `getJobFilteredAds`(job_tag_id_in);
-    ELSEIF(job_tag_id_in = NULL)
-    	THEN
-        	CALL `getCountyFilteredAds`(county_id_in);
-  	ELSE
-    	CALL `getFilteredAds`(county_id_in, job_tag_id_in);
-	END IF;
-END$$
-
 DROP PROCEDURE IF EXISTS `getAddressById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAddressById` (IN `id_in` INT(11))  SELECT * FROM `addresses`
 WHERE `addresses`.`id` = id_in$$
@@ -527,7 +523,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getCompanyById` (IN `id_in` INT(11)
 WHERE `companies`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `getCountyFilteredAds`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getCountyFilteredAds` (IN `county_id_in` INT(11))  SELECT * FROM `ads`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCountyFilteredAds` (IN `county_id_in` INT(11))  SELECT `ads`.`id`, `ads`.`user_id`, `ads`.`job_tag_id`, `ads`.`description`, `ads`.`updated_at`, `ads`.`status`, `ads`.`deleted` FROM `ads`
 INNER JOIN `ads_counties`
 ON `ads`.`id` = `ads_counties`.`ad_id`
 WHERE `ads_counties`.`county_id` = county_id_in
@@ -539,7 +535,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getFavoriteById` (IN `id_in` INT(11
 WHERE `favorites`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `getFilteredAds`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getFilteredAds` (IN `county_id_in` INT(11), IN `job_tag_id_in` INT(11))  SELECT * FROM `ads`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getFilteredAds` (IN `county_id_in` INT(11), IN `job_tag_id_in` INT(11))  SELECT `ads`.`id`, `ads`.`user_id`, `ads`.`job_tag_id`, `ads`.`description`, `ads`.`updated_at`, `ads`.`status`, `ads`.`deleted` FROM `ads`
 INNER JOIN `ads_counties`
 ON `ads`.`id` = `ads_counties`.`ad_id`
 WHERE `ads_counties`.`county_id` = county_id_in
@@ -750,10 +746,10 @@ CREATE TABLE `ads` (
 
 INSERT INTO `ads` (`id`, `user_id`, `job_tag_id`, `description`, `updated_at`, `status`, `deleted`) VALUES
 (1, 2, 1, 'Valami', '2023-01-17 15:24:57', 1, 0),
-(2, 2, 3, 'aaaaaaaaaaaaa', '2023-01-29 15:29:20', 0, 0),
+(2, 2, 3, 'aaaaaaaaaaaaa', '2023-02-01 17:45:46', 1, 0),
 (3, 2, 5, 'asfddsgfs', '2023-01-29 16:10:55', 1, 0),
 (4, 2, 5, 'Semmi', '2023-01-29 14:53:19', 0, 0),
-(5, 4, 1, 'a', '2023-01-29 15:10:45', 0, 0),
+(5, 4, 1, 'a', '2023-02-01 17:46:21', 1, 0),
 (6, 2, 5, 'Semmi', '2023-01-29 15:42:46', 1, 0),
 (7, 2, 5, 'aaaaaaaaaaaaa', '2023-01-29 15:42:30', 1, 1);
 
@@ -777,7 +773,6 @@ CREATE TABLE `ads_counties` (
 INSERT INTO `ads_counties` (`id`, `ad_id`, `county_id`) VALUES
 (1, 1, 2),
 (2, 1, 3),
-(4, 2, 5),
 (5, 2, 5);
 
 -- --------------------------------------------------------

@@ -109,6 +109,13 @@ public class AdsController {
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
+    @POST
+    @Path("filteringAds")
+    public Response filteringAds(Ads ad){
+        List<Ads> result = as.filteringAds(ad);
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
     @GET
     @Path("getAdsById/{id}")
     public Response getAdsById(@PathParam("id") Integer id){

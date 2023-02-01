@@ -48,11 +48,11 @@ public class AdsCounties implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "ad_id")
-    private int adId;
+    private Integer adId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "county_id")
-    private int countyId;
+    private Integer countyId;
 
     public AdsCounties() {
     }
@@ -61,7 +61,7 @@ public class AdsCounties implements Serializable {
         this.id = id;
     }
 
-    public AdsCounties(Integer id, int adId, int countyId) {
+    public AdsCounties(Integer id, Integer adId, Integer countyId) {
         this.id = id;
         this.adId = adId;
         this.countyId = countyId;
@@ -75,19 +75,19 @@ public class AdsCounties implements Serializable {
         this.id = id;
     }
 
-    public int getAdId() {
+    public Integer getAdId() {
         return adId;
     }
 
-    public void setAdId(int adId) {
+    public void setAdId(Integer adId) {
         this.adId = adId;
     }
 
-    public int getCountyId() {
+    public Integer getCountyId() {
         return countyId;
     }
 
-    public void setCountyId(int countyId) {
+    public void setCountyId(Integer countyId) {
         this.countyId = countyId;
     }
 

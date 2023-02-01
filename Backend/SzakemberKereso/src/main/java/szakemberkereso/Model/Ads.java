@@ -61,7 +61,7 @@ public class Ads implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "job_tag_id")
-    private int jobTagId;
+    private Integer jobTagId;
     @Basic(optional = false)
     @NotNull
     @Lob
@@ -82,6 +82,8 @@ public class Ads implements Serializable {
     @Column(name = "deleted")
     private int deleted;
 
+    private Integer countyId;
+    
     public Ads() {
     }
 
@@ -89,7 +91,7 @@ public class Ads implements Serializable {
         this.id = id;
     }
 
-    public Ads(Integer id, int userId, int jobTagId, String description, Date updatedAt, int status, int deleted) {
+    public Ads(Integer id, int userId, Integer jobTagId, String description, Date updatedAt, int status, int deleted) {
         this.id = id;
         this.userId = userId;
         this.jobTagId = jobTagId;
@@ -115,11 +117,11 @@ public class Ads implements Serializable {
         this.userId = userId;
     }
 
-    public int getJobTagId() {
+    public Integer getJobTagId() {
         return jobTagId;
     }
 
-    public void setJobTagId(int jobTagId) {
+    public void setJobTagId(Integer jobTagId) {
         this.jobTagId = jobTagId;
     }
 
@@ -153,6 +155,14 @@ public class Ads implements Serializable {
 
     public void setDeleted(int deleted) {
         this.deleted = deleted;
+    }
+
+    public Integer getCountyId() {
+        return countyId;
+    }
+
+    public void setCountyId(Integer countyId) {
+        this.countyId = countyId;
     }
 
     @Override
@@ -407,6 +417,64 @@ public class Ads implements Serializable {
             
             spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
             spq.setParameter("user_id_in", user_id_in);
+            
+            spq.execute();
+            
+            List<Object[]> result = spq.getResultList();
+            List<Ads> ads = new ArrayList<>();
+            
+            for(Object[] o : result){
+                Ads ad = Ads.objectToAd(o);
+                ads.add(ad);
+            }
+            
+            return ads;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+    
+    public static List<Ads> filteringAds(Ads ad_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        String[] eljarasNevek = {"getAllAcceptedAds", "getJobFilteredAds", "getCountyFilteredAds", "getFilteredAds"};
+        Integer eljarasSzama;
+        //eldönteni melyik eljárást érdemes meghívni
+        if(ad_in.getJobTagId() != null && ad_in.getCountyId() != null){
+            eljarasSzama = 3;
+        }
+        else if(ad_in.getJobTagId() == null && ad_in.getCountyId() == null){
+            eljarasSzama = 0;
+        }
+        else if(ad_in.getJobTagId() != null){
+            eljarasSzama = 1;
+        }
+        else{
+            eljarasSzama = 2;
+        }
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery(eljarasNevek[eljarasSzama]);
+            
+            if(eljarasSzama != 0){
+                if(eljarasSzama == 3 || eljarasSzama == 2){
+                    spq.registerStoredProcedureParameter("county_id_in", Integer.class, ParameterMode.IN);
+                    spq.setParameter("county_id_in", ad_in.getCountyId());
+                }
+                if(eljarasSzama == 3 || eljarasSzama == 1){
+                    spq.registerStoredProcedureParameter("job_tag_id_in", Integer.class, ParameterMode.IN);
+                    spq.setParameter("job_tag_id_in", ad_in.getJobTagId());
+                }
+            }
             
             spq.execute();
             
