@@ -3,7 +3,6 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs/internal/Observable';
 import { City } from 'src/app/_model/City';
 import { County } from 'src/app/_model/County';
-import { DropDown } from 'src/app/_model/DropDown';
 import { Field } from 'src/app/_model/Field';
 import { HttpService } from 'src/app/_services/http.service';
 

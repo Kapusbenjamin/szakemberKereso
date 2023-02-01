@@ -5,8 +5,12 @@
 }
 
 body{
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(87, 80, 80);
 }
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.form[_ngcontent-egb-c51]{
+  background-color: gray;
+}

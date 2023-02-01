@@ -3,7 +3,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormControl } from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import { DropDown } from 'src/app/_model/DropDown';
 
 @Component({
   selector: 'app-search-dropdown',

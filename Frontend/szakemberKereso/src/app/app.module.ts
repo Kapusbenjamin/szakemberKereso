@@ -16,6 +16,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { InputComponent } from './_components/input/input.component';
+import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
 
 
 @NgModule({
@@ -25,7 +27,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     LoginFormComponent,
     RegistFormComponent,
     MainPageComponent,
-    SearchDropdownComponent
+    SearchDropdownComponent,
+    InputComponent
   ],
   imports: [
     BrowserModule,
@@ -37,9 +40,11 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatInputModule,
     MatSelectModule,
     MatAutocompleteModule,
-    MatDialogModule
-    ],
-  providers: [],
+    MatDialogModule,
+  ],
+  providers: [
+    {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
