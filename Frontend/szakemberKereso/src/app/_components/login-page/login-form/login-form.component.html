@@ -1,7 +1,23 @@
-<form class="form" [formGroup]="loginForm">
-<app-input [control]="loginForm.controls['emailNumber']" type="email" name="Email / Telefonszám">
-  <mat-error *ngIf="loginForm.hasError('required')">Teszt</mat-error>
-</app-input>
-<app-input [control]="loginForm.controls['password']" type="password" name="Jelszó"></app-input>
-  <button type="text" class="submit" (click)="login()">Bejelentkezés</button>
-</form>
+<div class="container">
+  <div class="">
+    <h2>Jelentkezz be</h2>
+  </div>
+  <form class="form" [formGroup]="loginForm">
+    <div class="erroredInput">
+    <app-input [control]="loginForm.controls['emailNumber']" type="text" name="Email / Telefonszám"></app-input>
+    <mat-error *ngIf="loginForm.controls['emailNumber'].hasError('required')
+     && loginForm.controls['emailNumber'].touched">
+      Mező kitöltése kötelező</mat-error>
+    <mat-error *ngIf="loginForm.controls['emailNumber'].hasError('email')">
+      Valós e-mail címet adjon meg</mat-error>
+  </div>
+  <div class="erroredInput">
+    <app-input [control]="loginForm.controls['password']" type="password" name="Jelszó"></app-input>
+    <mat-error *ngIf="loginForm.controls['password'].hasError('required')
+     && loginForm.controls['password'].touched">
+     Mező kitöltése kötelező</mat-error>
+    </div>
+    <button mat-raised-button color="primary" (click)="login()">Bejelentkezés</button>
+  </form>
+  <a routerLink="/regist">Regisztráció</a>
+</div>

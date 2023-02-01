@@ -4,13 +4,34 @@
   box-sizing: border-box;
 }
 
-body{
-  background-color: rgb(87, 80, 80);
+html, body { height: 100vh; }
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: rgb(48, 101, 83);
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.container{
+  margin: auto;
+  border-radius: 20px;
+  width: 320px;
+  min-height: 500px;
+  padding: 20px;
+  background-color: rgba(120, 121, 222, 0.54);
+}
 
-.form[_ngcontent-egb-c51]{
-  background-color: gray;
+.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb{
+  background-color: blue;
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-bar{
+  background-color: rgb(96, 96, 242);
+}
+
+.erroredInput{
+  margin-bottom: 10px;
+}
+
+mat-error{
+  margin-top: -15px;
 }

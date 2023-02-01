@@ -1,4 +1,7 @@
+import { FormControl } from "@angular/forms";
+
 export interface Field{
-  key :string,
-  display:string
+  control :FormControl,
+  name: string,
+  type: string
 }
