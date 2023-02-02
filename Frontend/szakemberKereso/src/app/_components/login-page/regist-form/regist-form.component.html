@@ -5,31 +5,70 @@
     <hr>
     <p>User</p>
     <!-- User -->
-    <div *ngFor="let field of fields" class="input-container ic2">
+    <div *ngFor="let field of fields">
       <app-input [control]="field.control" [type]="field.type" [name]="field.name"></app-input>
       <mat-error *ngIf="field.control.hasError('required') && field.control.touched">Mező kitöltése kötelező</mat-error>
     </div>
     <!-- password -->
     <!-- Address -->
-    <p>Address</p>
-    <p>Megye</p>
+    <p>Cím</p>
     <!-- search dropdown -->
-    <app-search-dropdown [options]="counties" name="Megye" [control]="registForm.controls['county']" ></app-search-dropdown>
-    <mat-error *ngIf="registForm.controls['county'].hasError('required') && registForm.controls['county'].touched">Mező kitöltése kötelező</mat-error>
-    <app-search-dropdown [options]="citiesNames" name="Város" [control]="registForm.controls['city']"></app-search-dropdown>
-    <mat-error *ngIf="registForm.controls['city'].hasError('required') && registForm.controls['city'].touched">Mező kitöltése kötelező</mat-error>
-    <app-search-dropdown [options]="streetsNames" name="Utca" [control]="registForm.controls['streetName']"></app-search-dropdown>
-    <mat-error *ngIf="registForm.controls['streetName'].hasError('required') && registForm.controls['streetName'].touched">Mező kitöltése kötelező</mat-error>
+      <div class="dropdown">
+        <app-search-dropdown [options]="counties" name="Megye" [control]="registForm.controls['county']" ></app-search-dropdown>
+        <mat-error *ngIf="registForm.controls['county'].hasError('required') &&
+        registForm.controls['county'].touched">Mező kitöltése kötelező</mat-error>
+      </div>
+    <div class="dropdown">
+      <app-search-dropdown [options]="citiesNames" name="Város" [control]="registForm.controls['city']"></app-search-dropdown>
+      <mat-error *ngIf="registForm.controls['city'].hasError('required') &&
+      registForm.controls['city'].touched">Mező kitöltése kötelező</mat-error>
+    </div>
+    <div class="dropdown">
+      <app-search-dropdown [options]="streetsNames" name="Utca" [control]="registForm.controls['streetName']"></app-search-dropdown>
+      <mat-error *ngIf="registForm.controls['streetName'].hasError('required') &&
+      registForm.controls['streetName'].touched">Mező kitöltése kötelező</mat-error>
+    </div>
     <!-- search dropdown -->
 
-    <div *ngFor="let field of addressFields" class="input-container ic2">
+    <div *ngFor="let field of addressFields">
       <app-input [control]="field.control" [type]="field.type" [name]="field.name"></app-input>
       <mat-error *ngIf="field.control.hasError('required') && field.control.touched">Mező kitöltése kötelező</mat-error>
     </div>
 
-  <mat-slide-toggle (click)="professionalSlide()">Regisztrálás szakemberként</mat-slide-toggle>
-  <div *ngIf="professional">
-    Foglalkozás:
+    <mat-slide-toggle (click)="professionalSlide()">Regisztrálás szakemberként</mat-slide-toggle>
+    <div *ngIf="professional">
+      <div class="dropdown">
+        <app-search-dropdown [options]="professions" name="Foglalkozás" [control]="registForm.controls['profession']"></app-search-dropdown>
+        <mat-error *ngIf="registForm.controls['profession'].hasError('required') &&
+         registForm.controls['profession'].touched">Mező kitöltése kötelező</mat-error>
+      </div>
+      <mat-slide-toggle (click)="companySlide()">Cég regisztálása</mat-slide-toggle>
+      <div *ngIf="company" class="company">
+          <div *ngFor="let field of companyFields">
+            <app-input [control]="field.control" [type]="field.type" [name]="field.name"></app-input>
+            <mat-error *ngIf="field.control.hasError('required') && field.control.touched">Mező kitöltése kötelező</mat-error>
+          </div>
+          <p>Cég Telephely</p>
+          <div class="dropdown">
+            <app-search-dropdown [options]="counties" name="Megye" [control]="registForm.controls['companyCounty']" ></app-search-dropdown>
+            <mat-error *ngIf="registForm.controls['companyCounty'].hasError('required') &&
+             registForm.controls['companyCounty'].touched">Mező kitöltése kötelező</mat-error>
+          </div>
+          <div class="dropdown">
+            <app-search-dropdown [options]="citiesNames" name="Város" [control]="registForm.controls['companyCity']"></app-search-dropdown>
+            <mat-error *ngIf="registForm.controls['companyCity'].hasError('required') &&
+             registForm.controls['companyCity'].touched">Mező kitöltése kötelező</mat-error>
+          </div>
+          <div class="dropdown">
+            <app-search-dropdown [options]="streetsNames" name="Utca" [control]="registForm.controls['companyStreetName']"></app-search-dropdown>
+            <mat-error *ngIf="registForm.controls['companyStreetName'].hasError('required') &&
+             registForm.controls['companyStreetName'].touched">Mező kitöltése kötelező</mat-error>
+          </div>
+          <div *ngFor="let field of companyAddressFields">
+            <app-input [control]="field.control" [type]="field.type" [name]="field.name"></app-input>
+            <mat-error *ngIf="field.control.hasError('required') && field.control.touched">Mező kitöltése kötelező</mat-error>
+          </div>
+      </div>
   </div>
   <p>*-gal jelölt mezők kitöltése kötelező</p>
   <button mat-raised-button color="primary" (click)="regist()" [disabled]="false">Regisztráció</button>

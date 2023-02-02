@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { City } from '../_model/City';
 import { County } from '../_model/County';
+import { Profession } from '../_model/Profession';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,10 @@ export class HttpService {
 
   getAllStreetsByCity(city: string){
     return this.http.get(``);
+  }
+
+  getAllProfessions():Observable<Profession[]>{
+    return this.http.get<Profession[]>(`${this.apiUrl}professions`)
   }
 
 }

@@ -21,6 +21,30 @@
     {"id":19,	"countyName": "Veszprém"},
     {"id":20,	"countyName": "Zala"}
   ],
+  "professions":[
+    {"id":1,	"profession": "Ács"},
+    {"id":2,	"profession": "Asztalos"},
+    {"id":3,	"profession": "Autószerelő"},
+    {"id":4,	"profession": "Bádogos"},
+    {"id":5,	"profession": "Biztonság-technika"},
+    {"id":6,	"profession": "Burkoló"},
+    {"id":7,	"profession": "Csőhálózat-szerelő"},
+    {"id":8,	"profession": "Festő-mázoló-tapétázó"},
+    {"id":9,	"profession": "Gáz-szerelő"},
+    {"id":10,	"profession": "Hő-és-hangszigetelő"},
+    {"id":11,	"profession": "Hűtő-klíma-hőszivattyú"},
+    {"id":12,	"profession": "Kazánszerelő"},
+    {"id":13,	"profession": "Kertész"},
+    {"id":14,	"profession": "Kőműves"},
+    {"id":15,	"profession": "Klíma-szerelő"},
+    {"id":16,	"profession": "Nyílászáró-szerelő"},
+    {"id":17,	"profession": "Szobafestő"},
+    {"id":18,	"profession": "Tetőfedő"},
+    {"id":19,	"profession": "Villany szerelő"},
+    {"id":20,	"profession": "Víz-szerelő"},
+    {"id":21,	"profession": "Vízkútfúró"},
+    {"id":22,	"profession": "Vízszigetelő"}
+  ],
   "cities":[
     {
       "city": "Budapest",
