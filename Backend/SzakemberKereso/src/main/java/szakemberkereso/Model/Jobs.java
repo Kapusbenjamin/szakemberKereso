@@ -5,22 +5,31 @@
 package szakemberkereso.Model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.ParameterMode;
+import javax.persistence.Persistence;
+import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import szakemberkereso.Configuration.Database;
 
 /**
  *
@@ -32,12 +41,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Jobs.findAll", query = "SELECT j FROM Jobs j"),
     @NamedQuery(name = "Jobs.findById", query = "SELECT j FROM Jobs j WHERE j.id = :id"),
-    @NamedQuery(name = "Jobs.findByCustomerId", query = "SELECT j FROM Jobs j WHERE j.customerId = :customerId"),
-    @NamedQuery(name = "Jobs.findByWorkerId", query = "SELECT j FROM Jobs j WHERE j.workerId = :workerId"),
     @NamedQuery(name = "Jobs.findByTotal", query = "SELECT j FROM Jobs j WHERE j.total = :total"),
     @NamedQuery(name = "Jobs.findByStatus", query = "SELECT j FROM Jobs j WHERE j.status = :status"),
-    @NamedQuery(name = "Jobs.findByWorkerAccepted", query = "SELECT j FROM Jobs j WHERE j.workerAccepted = :workerAccepted"),
+    @NamedQuery(name = "Jobs.findByCustomerId", query = "SELECT j FROM Jobs j WHERE j.customerId = :customerId"),
+    @NamedQuery(name = "Jobs.findByWorkerId", query = "SELECT j FROM Jobs j WHERE j.workerId = :workerId"),
     @NamedQuery(name = "Jobs.findByCustomerAccepted", query = "SELECT j FROM Jobs j WHERE j.customerAccepted = :customerAccepted"),
+    @NamedQuery(name = "Jobs.findByWorkerAccepted", query = "SELECT j FROM Jobs j WHERE j.workerAccepted = :workerAccepted"),
     @NamedQuery(name = "Jobs.findByUpdatedAt", query = "SELECT j FROM Jobs j WHERE j.updatedAt = :updatedAt"),
     @NamedQuery(name = "Jobs.findByDeleted", query = "SELECT j FROM Jobs j WHERE j.deleted = :deleted")})
 public class Jobs implements Serializable {
@@ -50,18 +59,10 @@ public class Jobs implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "customer_id")
-    private int customerId;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "worker_id")
-    private int workerId;
-    @Basic(optional = false)
-    @NotNull
     @Lob
     @Size(min = 1, max = 65535)
-    @Column(name = "desc")
-    private String desc;
+    @Column(name = "description")
+    private String description;
     @Basic(optional = false)
     @NotNull
     @Column(name = "total")
@@ -72,12 +73,20 @@ public class Jobs implements Serializable {
     private int status;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "worker_accepted")
-    private int workerAccepted;
+    @Column(name = "customer_id")
+    private int customerId;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "worker_id")
+    private int workerId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "customer_accepted")
     private int customerAccepted;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "worker_accepted")
+    private int workerAccepted;
     @Basic(optional = false)
     @NotNull
     @Column(name = "updated_at")
@@ -95,15 +104,15 @@ public class Jobs implements Serializable {
         this.id = id;
     }
 
-    public Jobs(Integer id, int customerId, int workerId, String desc, int total, int status, int workerAccepted, int customerAccepted, Date updatedAt, int deleted) {
+    public Jobs(Integer id, String description, int total, int status, int customerId, int workerId, int customerAccepted, int workerAccepted, Date updatedAt, int deleted) {
         this.id = id;
-        this.customerId = customerId;
-        this.workerId = workerId;
-        this.desc = desc;
+        this.description = description;
         this.total = total;
         this.status = status;
-        this.workerAccepted = workerAccepted;
+        this.customerId = customerId;
+        this.workerId = workerId;
         this.customerAccepted = customerAccepted;
+        this.workerAccepted = workerAccepted;
         this.updatedAt = updatedAt;
         this.deleted = deleted;
     }
@@ -116,28 +125,12 @@ public class Jobs implements Serializable {
         this.id = id;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public String getDescription() {
+        return description;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
-    }
-
-    public int getWorkerId() {
-        return workerId;
-    }
-
-    public void setWorkerId(int workerId) {
-        this.workerId = workerId;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public int getTotal() {
@@ -156,12 +149,20 @@ public class Jobs implements Serializable {
         this.status = status;
     }
 
-    public int getWorkerAccepted() {
-        return workerAccepted;
+    public Integer getCustomerId() {
+        return customerId;
     }
 
-    public void setWorkerAccepted(int workerAccepted) {
-        this.workerAccepted = workerAccepted;
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
+    public Integer getWorkerId() {
+        return workerId;
+    }
+
+    public void setWorkerId(int workerId) {
+        this.workerId = workerId;
     }
 
     public int getCustomerAccepted() {
@@ -170,6 +171,14 @@ public class Jobs implements Serializable {
 
     public void setCustomerAccepted(int customerAccepted) {
         this.customerAccepted = customerAccepted;
+    }
+
+    public int getWorkerAccepted() {
+        return workerAccepted;
+    }
+
+    public void setWorkerAccepted(int workerAccepted) {
+        this.workerAccepted = workerAccepted;
     }
 
     public Date getUpdatedAt() {
@@ -212,5 +221,342 @@ public class Jobs implements Serializable {
     public String toString() {
         return "szakemberkereso.Model.Jobs[ id=" + id + " ]";
     }
+    
+    
+    public static Jobs objectToJob(Object[] o){
+        Integer o_id = Integer.parseInt(o[0].toString());
+        String o_description = o[1].toString();
+        Integer o_total = Integer.parseInt(o[2].toString());
+        Integer o_status = Integer.parseInt(o[3].toString());
+        Integer o_customer_id = Integer.parseInt(o[4].toString());
+        Integer o_worker_id = Integer.parseInt(o[5].toString());
+        Integer o_customer_accepted = Integer.parseInt(o[6].toString());
+        Integer o_worker_accepted = Integer.parseInt(o[7].toString());
+        Date o_updated_at = Timestamp.valueOf(o[8].toString());
+        Integer o_deleted = Integer.parseInt(o[9].toString());
+
+        return new Jobs(o_id, o_description, o_total, o_status, o_customer_id, o_worker_id, o_customer_accepted, o_worker_accepted, o_updated_at, o_deleted);
+    }
+    
+    public static Jobs getJobById(Jobs job_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getJobById");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            
+            spq.setParameter("id_in", job_in.getId());
+            
+            spq.execute();
+            
+            List<Object[]> result = spq.getResultList();
+            Object[] r = result.get(0);
+            Jobs j = Jobs.objectToJob(r);
+            
+            return j;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new Jobs();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static Boolean deleteJob(Jobs job_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteJob");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            
+            spq.setParameter("id_in", job_in.getId());
+            
+            spq.execute();
+            
+            return true;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static Boolean changeJobStatus(Jobs job){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("changeJobStatus");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            
+            spq.setParameter("id_in", job.getId());
+            
+            spq.execute();
+            
+            return true;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            //return new Users();
+            return false;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static List<Jobs> getAllJobs(){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        List<Jobs> jobs = new ArrayList<>();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllJobs");
+            spq.execute();
+            
+            List<Object[]> result = spq.getResultList();
+           
+            for(Object[] r : result){
+                Jobs j = Jobs.objectToJob(r);
+                jobs.add(j);
+            }
+            
+            return jobs;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return jobs;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static List<Jobs> getAllJobsByWorker(Jobs job_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        List<Jobs> jobs = new ArrayList<>();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllJobsByWorker");
+            
+            spq.registerStoredProcedureParameter("worker_id_in", Integer.class, ParameterMode.IN);
+            spq.setParameter("worker_id_in", job_in.getWorkerId());
+            
+            spq.execute();
+            
+            List<Object[]> result = spq.getResultList();
+           
+            for(Object[] r : result){
+                Jobs j = Jobs.objectToJob(r);
+                jobs.add(j);
+            }
+            
+            return jobs;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return jobs;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static List<Jobs> getAllJobsByCustomer(Jobs job_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        List<Jobs> jobs = new ArrayList<>();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllJobsByCustomer");
+            
+            spq.registerStoredProcedureParameter("customer_id_in", Integer.class, ParameterMode.IN);
+            spq.setParameter("customer_id_in", job_in.getCustomerId());
+            
+            spq.execute();
+            
+            List<Object[]> result = spq.getResultList();
+           
+            for(Object[] r : result){
+                Jobs j = Jobs.objectToJob(r);
+                jobs.add(j);
+            }
+            
+            return jobs;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return jobs;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static String createJob(Jobs job){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("createJob");
+            
+            spq.registerStoredProcedureParameter("customer_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("worker_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("desc_in", String.class, ParameterMode.IN);
+            
+            spq.setParameter("customer_id_in", job.getCustomerId());
+            spq.setParameter("worker_id_in", job.getWorkerId());
+            spq.setParameter("desc_in", job.getDescription());
+
+            spq.execute();
+            return "Sikeresen létrejött a munka";
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "HIBA: " + e.getMessage();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+    
+    public static String updateJobByWorker(Jobs job){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("updateJobByWorker");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("total_in", Integer.class, ParameterMode.IN);
+
+            spq.setParameter("id_in", job.getId());
+            spq.setParameter("total_in", job.getTotal());
+
+            spq.execute();
+            return "Sikeresen módosult a munka";
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "HIBA: " + e.getMessage();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+    
+    public static String updateJobByCustomer(Jobs job){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("updateJobByCustomer");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("desc_in", String.class, ParameterMode.IN);
+
+            spq.setParameter("id_in", job.getId());
+            spq.setParameter("desc_in", job.getDescription());
+
+            spq.execute();
+            return "Sikeresen módosult a munka";
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "HIBA: " + e.getMessage();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+    
+    public static Boolean acceptByWorker(Jobs job){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("acceptByWorker");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+
+            spq.setParameter("id_in", job.getId());
+
+            spq.execute();
+            return true;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+    
+    public static Boolean acceptByCustomer(Jobs job){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("acceptByCustomer");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+
+            spq.setParameter("id_in", job.getId());
+
+            spq.execute();
+            return true;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+    
+    
     
 }

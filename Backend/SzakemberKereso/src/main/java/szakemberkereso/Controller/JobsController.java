@@ -7,43 +7,38 @@ package szakemberkereso.Controller;
 import java.util.List;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.Produces;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
-import szakemberkereso.Model.Addresses;
-import szakemberkereso.Model.Users;
-import szakemberkereso.Service.UsersService;
+import szakemberkereso.Model.Jobs;
+import szakemberkereso.Service.JobsService;
 
 /**
  * REST Web Service
  *
  * @author Sharkz
  */
-@Path("Users")
-public class UsersController {
+@Path("Jobs")
+public class JobsController {
 
     @Context
     private UriInfo context;
-
-    private UsersService us = new UsersService();
     
+    private JobsService js = new JobsService();
+
     /**
-     * Creates a new instance of UsersController
+     * Creates a new instance of JobsController
      */
-    public UsersController() {
+    public JobsController() {
     }
 
     /**
-     * Retrieves representation of an instance of szakemberkereso.Configuration.UsersController
+     * Retrieves representation of an instance of szakemberkereso.Controller.JobsController
      * @return an instance of java.lang.String
      */
     @GET
@@ -54,7 +49,7 @@ public class UsersController {
     }
 
     /**
-     * PUT method for updating or creating an instance of UsersController
+     * PUT method for updating or creating an instance of JobsController
      * @param content representation for the resource
      */
     @PUT
@@ -62,91 +57,89 @@ public class UsersController {
     public void putJson(String content) {
     }
     
-    
-    @GET
-    @Path("getUserById/{id}")
-    public Response getUserById(@PathParam("id") Integer id){
-        Users result = us.getUserById(id);
+    @POST
+    @Path("getJobById")
+    public Response getJobById(Jobs job){
+        Jobs result = js.getJobById(job);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
     @POST
-    @Path("loginUser")
+    @Path("deleteJob")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response loginUser(Users user){
-        Users result = us.loginUser(user.getEmail(), user.getPhone(), user.getPassword());
+    public Response deleteJob(Jobs job){
+        Boolean result = js.deleteJob(job);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
     @POST
-    @Path("logoutUser")
+    @Path("changeJobStatus")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response logoutUser(Users user){
-        Boolean result = us.logoutUser(user.getId());
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
-    }
-    
-    @POST
-    @Path("deleteUser/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteUser(@PathParam("id") Integer id){
-        Boolean result = us.deleteUser(id);
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
-    }
-    
-    @POST
-    @Path("changeAccess/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response changeAccess(@PathParam("id") Integer id){
-        Boolean result = us.changeAccess(id);
+    public Response changeJobStatus(Jobs job){
+        Boolean result = js.changeJobStatus(job);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
     @GET
-    @Path("getAllUsers")
-    public Response getAllUsers(){
-        List<Users> result = us.getAllUsers();
+    @Path("getAllJobs")
+    public Response getAllJobs(){
+        List<Jobs> result = js.getAllJobs();
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
     @POST
-    @Path("createUser")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response createUser(Users user){
-        String result = us.createUser(user);
+    @Path("getAllJobsByWorker")
+    public Response getAllJobsByWorker(Jobs job){
+        List<Jobs> result = js.getAllJobsByWorker(job);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
     @POST
-    @Path("createUserWorker")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response createUserWorker(Users user){
-        String result = us.createUserWorker(user);
+    @Path("getAllJobsByCustomer")
+    public Response getAllJobsByCustomer(Jobs job){
+        List<Jobs> result = js.getAllJobsByCustomer(job);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
     @POST
-    @Path("updateUser")
+    @Path("createJob")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateUser(Users user){
-        String result = us.updateUser(user);
+    public Response createJob(Jobs job){
+        String result = js.createJob(job);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
     @POST
-    @Path("changePassword")
+    @Path("updateJobByWorker")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response changePassword(Users user){
-        String result = us.changePassword(user);
+    public Response updateJobByWorker(Jobs job){
+        String result = js.updateJobByWorker(job);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
     @POST
-    @Path("validateEmailByToken")
+    @Path("updateJobByCustomer")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response validateEmailByToken(Users user){
-        String result = us.validateEmailByToken(user);
+    public Response updateJobByCustomer(Jobs job){
+        String result = js.updateJobByCustomer(job);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
+    
+    @POST
+    @Path("acceptByWorker")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response acceptByWorker(Jobs job){
+        Boolean result = js.acceptByWorker(job);
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
+    @POST
+    @Path("acceptByCustomer")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response acceptByCustomer(Jobs job){
+        Boolean result = js.acceptByCustomer(job);
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
     
 }

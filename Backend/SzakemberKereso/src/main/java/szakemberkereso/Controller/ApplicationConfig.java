@@ -31,6 +31,7 @@ public class ApplicationConfig extends Application {
         resources.add(szakemberkereso.Controller.AddressesController.class);
         resources.add(szakemberkereso.Controller.AdsController.class);
         resources.add(szakemberkereso.Controller.AdsCountiesController.class);
+        resources.add(szakemberkereso.Controller.JobsController.class);
         resources.add(szakemberkereso.Controller.UsersController.class);
         resources.add(szakemberkereso.Controller.UsersJobsController.class);
     }

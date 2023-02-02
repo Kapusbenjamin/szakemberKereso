@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 01, 2023 at 06:55 PM
+-- Generation Time: Feb 02, 2023 at 03:47 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -238,7 +238,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createJob` (IN `customer_id_in` INT
 (
    `jobs`.`customer_id`,
    `jobs`.`worker_id`,
-   `jobs`.`desc`,
+   `jobs`.`description`,
    `jobs`.`customer_accepted` 
 )
 VALUES (
@@ -285,7 +285,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createRating` (IN `ratinged_user_id
 (
 	`ratings`.`ratinged_user_id`,
     `ratings`.`ratinger_user_id`,
-    `ratings`.`desc`,
+    `ratings`.`description`,
     `ratings`.`ratings_stars`
 )
 VALUES
@@ -547,6 +547,10 @@ DROP PROCEDURE IF EXISTS `getImagesByUserId`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getImagesByUserId` (IN `user_id_in` INT(11))  SELECT * FROM `images`
 WHERE `images`.`user_id` = user_id_in$$
 
+DROP PROCEDURE IF EXISTS `getJobById`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getJobById` (IN `id_in` INT(11))  SELECT * FROM `jobs`
+WHERE `jobs`.`id` = id_in$$
+
 DROP PROCEDURE IF EXISTS `getJobFilteredAds`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getJobFilteredAds` (IN `job_tag_id_in` INT(11))  SELECT * FROM `ads`
 WHERE `ads`.`job_tag_id` = job_tag_id_in
@@ -560,14 +564,6 @@ WHERE `job_tags`.`id` = id_in$$
 DROP PROCEDURE IF EXISTS `getRatingById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getRatingById` (IN `id_in` INT(11))  SELECT * FROM `ratings`
 WHERE `ratings`.`id` = id_in$$
-
-DROP PROCEDURE IF EXISTS `getRatingByRatinged`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getRatingByRatinged` (IN `user_id_in` INT(11))  SELECT * FROM `ratings`
-WHERE `ratings`.`ratinged_user_id` = user_id_in$$
-
-DROP PROCEDURE IF EXISTS `getRatingByRatinger`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getRatingByRatinger` (IN `user_id_in` INT(11))  SELECT * FROM `ratings`
-WHERE `ratings`.`ratinger_user_id` = user_id_in$$
 
 DROP PROCEDURE IF EXISTS `getUserById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserById` (IN `id_in` INT(11))  SELECT * FROM `users`
@@ -649,7 +645,7 @@ WHERE `companies`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `updateJobByCustomer`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateJobByCustomer` (IN `id_in` INT(11), IN `desc_in` TEXT CHARSET utf8)  UPDATE `jobs`
-SET `jobs`.`desc` = desc_in,
+SET `jobs`.`description` = desc_in,
 	`jobs`.`customer_accepted` = 1,
     `jobs`.`worker_accepted` = 0
 WHERE `jobs`.`id` = id_in$$
@@ -663,7 +659,7 @@ WHERE `jobs`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `updateRatingById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateRatingById` (IN `id_in` INT(11), IN `desc_in` TEXT CHARSET utf8, IN `ratings_stars_in` INT(2))  UPDATE `ratings`
-SET `ratings`.`desc` = desc_in,
+SET `ratings`.`description` = desc_in,
 	`ratings`.`ratings_stars` = ratings_stars_in,
     `ratings`.`status` = 0
 WHERE `ratings`.`id` = id_in$$
@@ -881,9 +877,9 @@ CREATE TABLE `images` (
   `id` int(11) NOT NULL,
   `url` varchar(255) NOT NULL,
   `title` varchar(100) NOT NULL,
-  `created_at` date NOT NULL,
   `status` int(1) NOT NULL DEFAULT 0,
-  `user_id` int(11) NOT NULL
+  `user_id` int(11) NOT NULL,
+  `created_at` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -895,16 +891,24 @@ CREATE TABLE `images` (
 DROP TABLE IF EXISTS `jobs`;
 CREATE TABLE `jobs` (
   `id` int(11) NOT NULL,
-  `customer_id` int(11) NOT NULL,
-  `worker_id` int(11) NOT NULL,
-  `desc` text NOT NULL,
+  `description` text NOT NULL,
   `total` int(11) NOT NULL DEFAULT 0,
   `status` int(11) NOT NULL DEFAULT 0,
-  `worker_accepted` int(1) NOT NULL DEFAULT 0,
+  `customer_id` int(11) NOT NULL,
+  `worker_id` int(11) NOT NULL,
   `customer_accepted` int(1) NOT NULL DEFAULT 0,
+  `worker_accepted` int(1) NOT NULL DEFAULT 0,
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `deleted` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `jobs`
+--
+
+INSERT INTO `jobs` (`id`, `description`, `total`, `status`, `customer_id`, `worker_id`, `customer_accepted`, `worker_accepted`, `updated_at`, `deleted`) VALUES
+(1, 'Alma', 200000, 1, 2, 4, 1, 1, '2023-02-02 14:26:43', 1),
+(2, 'Leírás', 0, 0, 1, 2, 1, 0, '2023-02-02 14:44:09', 0);
 
 -- --------------------------------------------------------
 
@@ -981,7 +985,7 @@ CREATE TABLE `ratings` (
   `id` int(11) NOT NULL,
   `ratinged_user_id` int(11) NOT NULL,
   `ratinger_user_id` int(11) NOT NULL,
-  `desc` text NOT NULL,
+  `description` text NOT NULL,
   `ratings_stars` int(2) NOT NULL DEFAULT 0,
   `status` int(1) NOT NULL DEFAULT 0,
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
@@ -1191,7 +1195,7 @@ ALTER TABLE `images`
 -- AUTO_INCREMENT for table `jobs`
 --
 ALTER TABLE `jobs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `job_tags`

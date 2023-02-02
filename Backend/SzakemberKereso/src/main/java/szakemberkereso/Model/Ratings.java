@@ -58,8 +58,8 @@ public class Ratings implements Serializable {
     @NotNull
     @Lob
     @Size(min = 1, max = 65535)
-    @Column(name = "desc")
-    private String desc;
+    @Column(name = "description")
+    private String description;
     @Basic(optional = false)
     @NotNull
     @Column(name = "ratings_stars")
@@ -85,11 +85,11 @@ public class Ratings implements Serializable {
         this.id = id;
     }
 
-    public Ratings(Integer id, int ratingedUserId, int ratingerUserId, String desc, int ratingsStars, int status, Date updatedAt, int deleted) {
+    public Ratings(Integer id, int ratingedUserId, int ratingerUserId, String description, int ratingsStars, int status, Date updatedAt, int deleted) {
         this.id = id;
         this.ratingedUserId = ratingedUserId;
         this.ratingerUserId = ratingerUserId;
-        this.desc = desc;
+        this.description = description;
         this.ratingsStars = ratingsStars;
         this.status = status;
         this.updatedAt = updatedAt;
@@ -120,12 +120,12 @@ public class Ratings implements Serializable {
         this.ratingerUserId = ratingerUserId;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public int getRatingsStars() {

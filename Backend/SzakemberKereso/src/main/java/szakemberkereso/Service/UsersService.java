@@ -104,10 +104,4 @@ public class UsersService {
         return result;
     }
     
-//    public Boolean deleteAddressById(Integer id){
-//        Boolean result = Addresses.deleteAddressById(id);
-//        return result;
-//    }
-    
-    
 }
