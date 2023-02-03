@@ -5,18 +5,26 @@
 package szakemberkereso.Model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.ParameterMode;
+import javax.persistence.Persistence;
+import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import szakemberkereso.Configuration.Database;
 
 /**
  *
@@ -94,6 +102,71 @@ public class JobTags implements Serializable {
     @Override
     public String toString() {
         return "szakemberkereso.Model.JobTags[ id=" + id + " ]";
+    }
+    
+    public static List<JobTags> getAllJobTags(){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        List<JobTags> jobTags = new ArrayList();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllJobTags");
+            spq.execute();
+            
+            List<Object[]> result = spq.getResultList();
+            
+            for(Object[] r : result){
+                Integer r_id = Integer.parseInt(r[0].toString());
+                String r_name = r[1].toString();
+                
+                JobTags jt = new JobTags(r_id, r_name);
+                jobTags.add(jt);
+            }
+            
+            return jobTags;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return jobTags;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static JobTags getJobTagById(JobTags jobTag){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getJobTagById");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            spq.setParameter("id_in", jobTag.getId());
+            
+            spq.execute();
+            
+            List<Object[]> result = spq.getResultList();
+            Object[] r = result.get(0);
+            
+            Integer r_id = Integer.parseInt(r[0].toString());
+            String r_name = r[1].toString();
+            
+            JobTags jt = new JobTags(r_id, r_name);
+            return jt;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new JobTags();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
     }
     
 }

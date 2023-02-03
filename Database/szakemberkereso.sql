@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 02, 2023 at 03:47 PM
+-- Generation Time: Feb 03, 2023 at 07:09 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -167,8 +167,8 @@ END$$
 
 DROP PROCEDURE IF EXISTS `createAddress`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `createAddress` (IN `county_id_in` INT(11), IN `zip_code_in` INT(5), IN `city_in` VARCHAR(255) CHARSET utf8, IN `street_in` VARCHAR(255) CHARSET utf8, IN `number_in` VARCHAR(30) CHARSET utf8, IN `staircase_in` VARCHAR(30) CHARSET utf8, IN `floor_in` INT(4), IN `door_in` INT(8))  BEGIN
-	CALL `stringToNull`(staircase_in) ;
-    CALL `integerToNull`(floor_in) ;
+	CALL `stringToNull`(staircase_in);
+    CALL `integerToNull`(floor_in);
     CALL `integerToNull`(door_in);
     INSERT INTO `addresses`
     (
@@ -433,9 +433,6 @@ DROP PROCEDURE IF EXISTS `getAllChatsByUserId`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllChatsByUserId` (IN `user_id_in` INT(11))  SELECT * FROM `chats`
 WHERE `chats`.`sender_id` = user_id_in
 OR `chats`.`receiver_id` = user_id_in$$
-
-DROP PROCEDURE IF EXISTS `getAllCompanies`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllCompanies` ()  SELECT * FROM `companies`$$
 
 DROP PROCEDURE IF EXISTS `getAllCounties`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllCounties` ()  SELECT * FROM `counties`$$
@@ -717,7 +714,8 @@ INSERT INTO `addresses` (`id`, `county_id`, `zip_code`, `city`, `street`, `numbe
 (4, 2, 7600, 'Pécs', 'Ág utca', '56', NULL, NULL, NULL),
 (6, 5, 4532, 'Pécs', 'Petőfi', '13/A', 'Első', 2, 12),
 (39, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(40, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL);
+(40, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
+(41, 4, 1111, 'Bp', 'AAAA utca', '56', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -813,7 +811,8 @@ CREATE TABLE `companies` (
 
 INSERT INTO `companies` (`id`, `name`, `address_id`, `tax_number`) VALUES
 (1, 'ABC Kft.', 6, '123423543'),
-(3, 'A kft.', 40, '2132165465');
+(3, 'A kft.', 40, '2132165465'),
+(4, 'Nagy Kft.', 41, '124556222');
 
 -- --------------------------------------------------------
 
@@ -1147,7 +1146,7 @@ ALTER TABLE `users_jobs`
 -- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `ads`
@@ -1171,7 +1170,7 @@ ALTER TABLE `chats`
 -- AUTO_INCREMENT for table `companies`
 --
 ALTER TABLE `companies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `counties`

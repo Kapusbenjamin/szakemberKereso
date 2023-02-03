@@ -5,18 +5,25 @@
 package szakemberkereso.Model;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.ParameterMode;
+import javax.persistence.Persistence;
+import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import szakemberkereso.Configuration.Database;
 
 /**
  *
@@ -135,5 +142,139 @@ public class Companies implements Serializable {
     public String toString() {
         return "szakemberkereso.Model.Companies[ id=" + id + " ]";
     }
+    
+    public static Companies getCompanyById(Companies company_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getCompanyById");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            
+            spq.setParameter("id_in", company_in.getId());
+            
+            spq.execute();
+            List<Object[]> result = spq.getResultList();
+            Object[] r = result.get(0);
+            
+            Integer r_id = Integer.parseInt(r[0].toString());
+            String r_name = r[1].toString();
+            Integer r_address_id = Integer.parseInt(r[2].toString());
+            String r_tax_number = r[3].toString();
+            
+            return new Companies(r_id, r_name, r_address_id, r_tax_number);
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new Companies();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static String createCompany(Companies company){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("createCompany");
+            
+            spq.registerStoredProcedureParameter("company_name_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("county_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("zip_code_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("city_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("street_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("number_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("staircase_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("floor_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("door_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("tax_number_in", String.class, ParameterMode.IN);
+
+            spq.setParameter("company_name_in", company.getName());
+            spq.setParameter("county_id_in", company.getAddress().getCountyId());
+            spq.setParameter("zip_code_in", company.getAddress().getZipCode());
+            spq.setParameter("city_in", company.getAddress().getCity());
+            spq.setParameter("street_in", company.getAddress().getStreet());
+            spq.setParameter("number_in", company.getAddress().getNumber());
+            spq.setParameter("staircase_in", company.getAddress().getStaircase());
+            spq.setParameter("floor_in", company.getAddress().getFloor());
+            spq.setParameter("door_in", company.getAddress().getDoor());
+            spq.setParameter("tax_number_in", company.getTaxNumber());
+
+            spq.execute();
+            return "Sikeresen létrejött a cég";
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "HIBA: " + e.getMessage();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+    
+    public static String updateCompanyById(Companies company){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("updateCompanyById");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("name_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("tax_number_in", String.class, ParameterMode.IN);
+
+            spq.setParameter("id_in", company.getId());
+            spq.setParameter("name_in", company.getName());
+            spq.setParameter("tax_number_in", company.getTaxNumber());
+
+            spq.execute();
+            return "Sikeresen módosult a cég";
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "HIBA: " + e.getMessage();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+    
+//    public static Boolean deleteAddressById(Integer id_in){
+//        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+//        EntityManager em = emf.createEntityManager();
+//        
+//        try {            
+//            StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteAddressById");
+//            
+//            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+//
+//            spq.setParameter("id_in", id_in);
+//
+//            spq.execute();
+//            return true;
+//        } 
+//        catch (Exception e) {
+//            System.out.println(e.getMessage());
+//            return false;
+//        }
+//        finally{
+//            em.clear();
+//            em.close();
+//            emf.close();
+//        }
+//        
+//    }
+//    
     
 }
