@@ -4,11 +4,14 @@
   box-sizing: border-box;
 }
 
+html{
+  scroll-snap-type: y proximity;
+}
+
 html, body { height: 100vh; }
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  background-color: rgb(48, 101, 83);
+  /* font-family: Roboto, "Helvetica Neue", sans-serif; */
 }
 
 .container{
@@ -17,15 +20,15 @@ body {
   width: 320px;
   min-height: 500px;
   padding: 20px;
-  background-color: rgba(120, 121, 222, 0.54);
+  background-color: rgba(40, 185, 40, 0.727)
 }
 
 .mat-slide-toggle.mat-checked .mat-slide-toggle-thumb{
-  background-color: blue;
+  background-color: rgb(3, 211, 24);
 }
 
 .mat-slide-toggle.mat-checked .mat-slide-toggle-bar{
-  background-color: rgb(96, 96, 242);
+  background-color: rgb(47, 115, 45);
 }
 
 .erroredInput{

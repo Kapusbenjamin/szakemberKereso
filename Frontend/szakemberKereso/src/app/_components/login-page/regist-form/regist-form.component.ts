@@ -45,7 +45,7 @@ export class RegistFormComponent implements OnInit {
     {control: this.registForm.controls['lastName'], name:'Vezetéknév', type:"text"},
     {control: this.registForm.controls['firstName'], name:'Keresztnév', type:"text"},
     {control: this.registForm.controls['email'], name:'Email', type:"email"},
-    {control: this.registForm.controls['number'], name:'Tel. szám', type:"text"},
+    {control: this.registForm.controls['telNumber'], name:'Telefon szám', type:"text"},
     {control: this.registForm.controls['password'], name:'Jelszó', type:"password"},
     {control: this.registForm.controls['passwordConfirm'], name:'Jelszó megerősítése', type:"password"},
   ];
@@ -126,7 +126,15 @@ export class RegistFormComponent implements OnInit {
   }
 
   regist(){
-    console.log(this.registForm.controls['county'].value);
+    if(this.registForm.valid){
+      console.log(this.registForm.value);
+    }else{
+      alert("invalidForm");
+      window.scroll({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
   }
 
   loadCounties(){

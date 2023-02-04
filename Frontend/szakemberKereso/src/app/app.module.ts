@@ -20,6 +20,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MenuComponent } from './_components/menu/menu.component';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     RegistFormComponent,
     MainPageComponent,
     SearchDropdownComponent,
-    InputComponent
+    InputComponent,
+    MenuComponent,
   ],
   imports: [
     BrowserModule,

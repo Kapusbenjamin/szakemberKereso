@@ -74,7 +74,7 @@
       "lng": "20.1667",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "admin",
       "population": "160766",
       "population_proper": "160766"
@@ -514,7 +514,7 @@
       "lng": "20.2572",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "minor",
       "population": "27080",
       "population_proper": "27080"
@@ -624,7 +624,7 @@
       "lng": "20.4789",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "minor",
       "population": "22514",
       "population_proper": "22514"
@@ -938,12 +938,12 @@
       "population_proper": "16084"
     },
     {
-      "city": "Csongrád",
+      "city": "Csongrád-Csanád",
       "lat": "46.7111",
       "lng": "20.1403",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "minor",
       "population": "16027",
       "population_proper": "16027"
@@ -2010,7 +2010,7 @@
       "lng": "20.1000",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "7756",
       "population_proper": "7756"
@@ -2153,7 +2153,7 @@
       "lng": "19.9800",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "minor",
       "population": "6917",
       "population_proper": "6917"
@@ -2241,7 +2241,7 @@
       "lng": "20.1850",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "6560",
       "population_proper": "6560"
@@ -2450,7 +2450,7 @@
       "lng": "19.8833",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "minor",
       "population": "6145",
       "population_proper": "6145"
@@ -3000,7 +3000,7 @@
       "lng": "20.0167",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "4919",
       "population_proper": "4919"
@@ -3187,7 +3187,7 @@
       "lng": "20.0500",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "4675",
       "population_proper": "4675"
@@ -3396,7 +3396,7 @@
       "lng": "20.2333",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "4385",
       "population_proper": "4385"
@@ -3913,7 +3913,7 @@
       "lng": "19.7833",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "3856",
       "population_proper": "3856"
@@ -4078,7 +4078,7 @@
       "lng": "20.4333",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "3722",
       "population_proper": "3722"
@@ -4309,7 +4309,7 @@
       "lng": "20.2500",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "3461",
       "population_proper": "3461"
@@ -4375,7 +4375,7 @@
       "lng": "20.0167",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "3422",
       "population_proper": "3422"
@@ -4584,7 +4584,7 @@
       "lng": "19.9167",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "3290",
       "population_proper": "3290"
@@ -4606,7 +4606,7 @@
       "lng": "19.9833",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "3281",
       "population_proper": "3281"
@@ -4749,7 +4749,7 @@
       "lng": "20.0500",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "3169",
       "population_proper": "3169"
@@ -5057,7 +5057,7 @@
       "lng": "20.5000",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "2985",
       "population_proper": "2985"
@@ -5068,7 +5068,7 @@
       "lng": "19.8500",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "2981",
       "population_proper": "2981"
@@ -5101,7 +5101,7 @@
       "lng": "20.5000",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "2967",
       "population_proper": "2967"
@@ -5453,7 +5453,7 @@
       "lng": "20.7333",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "2794",
       "population_proper": "2794"
@@ -5607,7 +5607,7 @@
       "lng": "19.9167",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "2720",
       "population_proper": "2720"
@@ -6289,7 +6289,7 @@
       "lng": "20.1048",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "2498",
       "population_proper": "2498"
@@ -6575,7 +6575,7 @@
       "lng": "19.7500",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "2401",
       "population_proper": "2401"
@@ -7114,7 +7114,7 @@
       "lng": "19.9167",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "2234",
       "population_proper": "2234"
@@ -7323,7 +7323,7 @@
       "lng": "20.0833",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "2178",
       "population_proper": "2178"
@@ -7873,7 +7873,7 @@
       "lng": "20.3500",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "2037",
       "population_proper": "2037"
@@ -8093,7 +8093,7 @@
       "lng": "20.1000",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "1993",
       "population_proper": "1993"
@@ -8170,7 +8170,7 @@
       "lng": "20.5333",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "1981",
       "population_proper": "1981"
@@ -8214,7 +8214,7 @@
       "lng": "20.4667",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "1970",
       "population_proper": "1970"
@@ -8313,7 +8313,7 @@
       "lng": "19.8667",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "1955",
       "population_proper": "1955"
@@ -8665,7 +8665,7 @@
       "lng": "20.1833",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "1899",
       "population_proper": "1899"
@@ -9721,7 +9721,7 @@
       "lng": "20.1667",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "1714",
       "population_proper": "1714"
@@ -9743,7 +9743,7 @@
       "lng": "20.0333",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "1706",
       "population_proper": "1706"
@@ -10447,7 +10447,7 @@
       "lng": "20.3667",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "1584",
       "population_proper": "1584"
@@ -11261,7 +11261,7 @@
       "lng": "20.2763",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "1446",
       "population_proper": "1446"
@@ -11525,7 +11525,7 @@
       "lng": "20.6170",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "1392",
       "population_proper": "1392"
@@ -11701,7 +11701,7 @@
       "lng": "19.9833",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "1365",
       "population_proper": "1365"
@@ -11899,7 +11899,7 @@
       "lng": "20.7330",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "1331",
       "population_proper": "1331"
@@ -12196,7 +12196,7 @@
       "lng": "20.2167",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "1298",
       "population_proper": "1298"
@@ -13373,7 +13373,7 @@
       "lng": "20.1000",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "1155",
       "population_proper": "1155"
@@ -14759,7 +14759,7 @@
       "lng": "19.6833",
       "country": "Hungary",
       "iso2": "HU",
-      "admin_name": "Csongrád",
+      "admin_name": "Csongrád-Csanád",
       "capital": "",
       "population": "1002",
       "population_proper": "1002"

@@ -8,7 +8,7 @@ const routes: Routes = [
   {
   path: '', component: LoginPageComponent,
   children: [
-    { path:'login', component:LoginFormComponent },
+    { path:'', component:LoginFormComponent},
     { path:'regist', component:RegistFormComponent }
   ]
 }];

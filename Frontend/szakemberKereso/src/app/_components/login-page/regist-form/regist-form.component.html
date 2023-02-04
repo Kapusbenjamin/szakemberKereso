@@ -1,7 +1,7 @@
 <div class="container">
   <form [formGroup]="registForm">
     <h2>Sign up / Regisztrálj</h2>
-    <a routerLink="/login">Bejelentkezés létező fiókba</a>
+    <a routerLink="">Bejelentkezés létező fiókba</a>
     <hr>
     <p>User</p>
     <!-- User -->
@@ -71,6 +71,6 @@
       </div>
   </div>
   <p>*-gal jelölt mezők kitöltése kötelező</p>
-  <button mat-raised-button color="primary" (click)="regist()" [disabled]="false">Regisztráció</button>
+  <button mat-raised-button color="primary" (click)="regist()">Regisztráció</button>
 </form>
 </div>
