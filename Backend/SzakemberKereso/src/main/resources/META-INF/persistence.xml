@@ -7,7 +7,7 @@
                             
         
         
-        <jta-data-source>java:/szakemberkereso</jta-data-source>
+        <jta-data-source>java:/SzakemberKereso</jta-data-source>
                             
         
         
