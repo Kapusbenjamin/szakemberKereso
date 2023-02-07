@@ -13,7 +13,7 @@ export class JobTagsService {
 
   constructor(private http:HttpClient) { }
 
-  getAllCounties():Observable<JobTag[]>{
+  getAllJobTags():Observable<JobTag[]>{
     return this.http.get<JobTag[]>(`${this.apiUrl}getAllJobTags`);
   }
 

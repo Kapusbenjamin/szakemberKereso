@@ -3,8 +3,9 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { City } from 'src/app/_model/City';
 import { County } from 'src/app/_model/County';
 import { Field } from 'src/app/_model/Field';
-import { Profession } from 'src/app/_model/Profession';
+import { JobTag } from 'src/app/_model/JobTag';
 import { HttpService } from 'src/app/_services/http.service';
+import { JobTagsService } from 'src/app/_services/job-tags.service';
 
 @Component({
   selector: 'app-regist-form',
@@ -75,12 +76,14 @@ export class RegistFormComponent implements OnInit {
   professions: string[] = [];
   company: boolean = false;
 
-  constructor(private fb: FormBuilder, private http: HttpService) { }
+  constructor(private fb: FormBuilder, private http: HttpService, private jobTagsService: JobTagsService) { }
 
   ngOnInit(): void {
     this.loadCounties();
     this.loadCities();
     this.loadProfessions();
+
+    console.log(localStorage.getItem('user'));
   }
 
   professionalSlide(){
@@ -156,9 +159,9 @@ export class RegistFormComponent implements OnInit {
   }
 
   loadProfessions(){
-    this.http.getAllProfessions().subscribe((response)=>{
-      response.forEach((profession:Profession) => {
-        this.professions.push(profession.profession);
+    this.jobTagsService.getAllJobTags().subscribe((response)=>{
+      response.forEach((jobTag:JobTag) => {
+        this.professions.push(jobTag.name);
       });
     })
   }
