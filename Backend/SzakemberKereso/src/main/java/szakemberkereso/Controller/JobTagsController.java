@@ -61,7 +61,18 @@ public class JobTagsController {
     @Path("getAllJobTags")
     public Response getAllJobTags(){
         List<JobTags> result = js.getAllJobTags();
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+        return Response
+            .status(200)
+            .header("Access-Control-Allow-Origin", "*")
+            .header("Access-Control-Allow-Credentials", "true")
+            .header("Access-Control-Allow-Headers",
+                "origin, content-type, accept, authorization")
+            .header("Access-Control-Allow-Methods", 
+                "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+            .entity(result)
+            .type(MediaType.APPLICATION_JSON)
+            .build();
+        //return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
     @POST
