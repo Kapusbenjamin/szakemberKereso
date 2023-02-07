@@ -34,10 +34,7 @@ export class LoginFormComponent implements OnInit {
       }
       let password = this.loginForm.controls['password'].value;
       User = this.usersService.loginUser(email,phone,password).subscribe();
-      localStorage.setItem('user',1+"");
-      let a= localStorage.getItem('user');
-      console.log(a);
-    }else{
+     }else{
       alert('Érvénytelen bejelentkezés');
     }
   }

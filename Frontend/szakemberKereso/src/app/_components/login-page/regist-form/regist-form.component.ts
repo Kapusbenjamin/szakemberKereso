@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { City } from 'src/app/_model/City';
 import { County } from 'src/app/_model/County';
+import { DropDown } from 'src/app/_model/DropDown';
 import { Field } from 'src/app/_model/Field';
 import { JobTag } from 'src/app/_model/JobTag';
 import { HttpService } from 'src/app/_services/http.service';
@@ -69,11 +70,11 @@ export class RegistFormComponent implements OnInit {
     {control: this.registForm.controls['companyDoor'], name:'Ajtó', type:"text"},
   ]
 
-  counties:string[] = [];
-  citiesNames:string[] = [];
-  streetsNames:string[] = [];
-  professional:boolean = false;
-  professions: string[] = [];
+  counties: DropDown[] = [];
+  citiesNames: DropDown[] = [];
+  streetsNames: DropDown[] = [];
+  professional: boolean = false;
+  professions: DropDown[] = [];
   company: boolean = false;
 
   constructor(private fb: FormBuilder, private http: HttpService, private jobTagsService: JobTagsService) { }
@@ -82,8 +83,6 @@ export class RegistFormComponent implements OnInit {
     this.loadCounties();
     this.loadCities();
     this.loadProfessions();
-
-    console.log(localStorage.getItem('user'));
   }
 
   professionalSlide(){
@@ -143,8 +142,8 @@ export class RegistFormComponent implements OnInit {
   loadCounties(){
     this.http.getAllCounties().subscribe((response:County[])=>{
       response.forEach((county:County)=>{
-        if(county.countyName != "Budapest"){
-          this.counties.push(county.countyName)
+        if(county.name != "Budapest"){
+          this.counties.push({id: county.id, name: county.name})
         }
       });
     });
@@ -152,8 +151,8 @@ export class RegistFormComponent implements OnInit {
 
   loadCities(){
     this.http.getAllCities().subscribe((response)=>{
-      response.forEach((city:City)=>{
-        this.citiesNames.push(city.city)
+      response.forEach((city:City, index:number)=>{
+        this.citiesNames.push({id: index, name: city.city})
       });
     });
   }
@@ -161,7 +160,7 @@ export class RegistFormComponent implements OnInit {
   loadProfessions(){
     this.jobTagsService.getAllJobTags().subscribe((response)=>{
       response.forEach((jobTag:JobTag) => {
-        this.professions.push(jobTag.name);
+        this.professions.push(jobTag);
       });
     })
   }
