@@ -28,6 +28,7 @@ public class ApplicationConfig extends Application {
      * If required, comment out calling this method in getClasses().
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(szakemberkereso.Configuration.CorsFilter.class);
         resources.add(szakemberkereso.Controller.AddressesController.class);
         resources.add(szakemberkereso.Controller.AdsController.class);
         resources.add(szakemberkereso.Controller.AdsCountiesController.class);
