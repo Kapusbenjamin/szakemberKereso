@@ -5,17 +5,25 @@
 package szakemberkereso.Model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.ParameterMode;
+import javax.persistence.Persistence;
+import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+import szakemberkereso.Configuration.Database;
 
 /**
  *
@@ -28,7 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Favorites.findAll", query = "SELECT f FROM Favorites f"),
     @NamedQuery(name = "Favorites.findById", query = "SELECT f FROM Favorites f WHERE f.id = :id"),
     @NamedQuery(name = "Favorites.findByUserId", query = "SELECT f FROM Favorites f WHERE f.userId = :userId"),
-    @NamedQuery(name = "Favorites.findByAdsId", query = "SELECT f FROM Favorites f WHERE f.adsId = :adsId")})
+    @NamedQuery(name = "Favorites.findByAdId", query = "SELECT f FROM Favorites f WHERE f.adId = :adId")})
 public class Favorites implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -43,8 +51,8 @@ public class Favorites implements Serializable {
     private int userId;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "ads_id")
-    private int adsId;
+    @Column(name = "ad_id")
+    private int adId;
 
     public Favorites() {
     }
@@ -53,10 +61,10 @@ public class Favorites implements Serializable {
         this.id = id;
     }
 
-    public Favorites(Integer id, int userId, int adsId) {
+    public Favorites(Integer id, int userId, int adId) {
         this.id = id;
         this.userId = userId;
-        this.adsId = adsId;
+        this.adId = adId;
     }
 
     public Integer getId() {
@@ -75,12 +83,12 @@ public class Favorites implements Serializable {
         this.userId = userId;
     }
 
-    public int getAdsId() {
-        return adsId;
+    public int getAdId() {
+        return adId;
     }
 
-    public void setAdsId(int adsId) {
-        this.adsId = adsId;
+    public void setAdId(int adId) {
+        this.adId = adId;
     }
 
     @Override
@@ -107,5 +115,131 @@ public class Favorites implements Serializable {
     public String toString() {
         return "szakemberkereso.Model.Favorites[ id=" + id + " ]";
     }
+    
+    public static Favorites objectToFavorite(Object[] o){
+        Integer o_id = Integer.parseInt(o[0].toString());
+        Integer o_user_id = Integer.parseInt(o[1].toString());
+        Integer o_ad_id = Integer.parseInt(o[2].toString());
+
+        return new Favorites(o_id, o_user_id, o_ad_id);
+    }
+    
+    public static List<Favorites> getAllfavoritesByUserId(Integer user_id_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        List<Favorites> favorites = new ArrayList<>();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllfavoritesByUserId");
+            
+            spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
+            
+            spq.setParameter("user_id_in", user_id_in);
+            
+            spq.execute();
+            List<Object[]> result = spq.getResultList();
+            
+            for(Object[] r : result){
+                Favorites f = Favorites.objectToFavorite(r);
+                favorites.add(f);
+            }
+            
+            return favorites;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return favorites;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static Favorites getFavoriteById(Integer id_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getFavoriteById");  
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            spq.setParameter("id_in", id_in);
+            
+            spq.execute();
+            
+            List<Object[]> result = spq.getResultList();
+            Object[] r = result.get(0);
+            
+            Favorites f = Favorites.objectToFavorite(r);
+            return f;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new Favorites();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static Boolean deleteFavorite(Integer id_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteFavorite");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            
+            spq.setParameter("id_in", id_in);
+            
+            spq.execute();
+            
+            return true;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static String addFavorite(Favorites favorite){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("addFavorite");
+            
+            spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("ad_id_in", Integer.class, ParameterMode.IN);
+            
+            spq.setParameter("user_id_in", favorite.getUserId());
+            spq.setParameter("ad_id_in", favorite.getAdId());
+            
+            spq.execute();
+            
+            return "Sikeresen hozzáadta a kedvencekhez!";
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "HIBA: " + e.getMessage();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
     
 }

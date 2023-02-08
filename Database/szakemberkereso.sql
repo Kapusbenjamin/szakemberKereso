@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 08, 2023 at 05:38 PM
+-- Generation Time: Feb 08, 2023 at 08:08 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -65,15 +65,15 @@ VALUE
 )$$
 
 DROP PROCEDURE IF EXISTS `addFavorite`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addFavorite` (IN `user_id_in` INT(11), IN `ads_id_in` INT(11))  INSERT INTO `favorites`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addFavorite` (IN `user_id_in` INT(11), IN `ad_id_in` INT(11))  INSERT INTO `favorites`
 (
 	`favorites`.`user_id`,
-    `favorites`.`ads_id`
+    `favorites`.`ad_id`
 )
 VALUES
 (
 	user_id_in,
-    ads_id_in
+    ad_id_in
 )$$
 
 DROP PROCEDURE IF EXISTS `addNewCountyToAd`$$
@@ -862,8 +862,18 @@ DROP TABLE IF EXISTS `favorites`;
 CREATE TABLE `favorites` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `ads_id` int(11) NOT NULL
+  `ad_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `favorites`
+--
+
+INSERT INTO `favorites` (`id`, `user_id`, `ad_id`) VALUES
+(1, 1, 1),
+(2, 2, 4),
+(4, 4, 2),
+(5, 2, 10);
 
 -- --------------------------------------------------------
 
@@ -1187,7 +1197,7 @@ ALTER TABLE `counties`
 -- AUTO_INCREMENT for table `favorites`
 --
 ALTER TABLE `favorites`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `images`
