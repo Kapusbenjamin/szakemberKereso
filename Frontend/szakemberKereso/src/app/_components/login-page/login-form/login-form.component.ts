@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UsersService } from 'src/app/_services/users.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { UsersService } from 'src/app/_services/users.service';
 })
 export class LoginFormComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private usersService: UsersService) { }
+  constructor(private fb: FormBuilder, private usersService: UsersService, private route: Router) { }
 
   loginForm = this.fb.group({
     emailNumber: new FormControl<string>('',[Validators.required]),
@@ -17,7 +18,6 @@ export class LoginFormComponent implements OnInit {
   })
 
   ngOnInit(): void {
-
   }
 
   login(){
@@ -33,7 +33,18 @@ export class LoginFormComponent implements OnInit {
         phone = emailNumber;
       }
       let password = this.loginForm.controls['password'].value;
-      User = this.usersService.loginUser(email,phone,password).subscribe();
+      this.usersService.loginUser(email,phone,password!).subscribe((response)=>{
+        User = response;
+        if(User.id > 0){
+          localStorage.setItem('id',User.id + '');
+          localStorage.setItem('access_type',User.accessType + '');
+          localStorage.setItem('firstName',User.firstName);
+          localStorage.setItem('lastName',User.lastName);
+          this.route.navigateByUrl('/main/advertisement');
+        }else{
+          alert('Sikertelen bejelentkezés');
+        }
+      });
      }else{
       alert('Érvénytelen bejelentkezés');
     }
