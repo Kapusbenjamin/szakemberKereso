@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 08, 2023 at 08:08 PM
+-- Generation Time: Feb 08, 2023 at 10:29 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -76,20 +76,8 @@ VALUES
     ad_id_in
 )$$
 
-DROP PROCEDURE IF EXISTS `addNewCountyToAd`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addNewCountyToAd` (IN `ad_id_in` INT(11), IN `county_id_in` INT(11))  INSERT INTO `ads_counties`
-(
-    `ads_counties`.`ad_id`,
-    `ads_counties`.`county_id`
-)
-VALUE
-(
-    ad_id_in,
-    county_id_in
-)$$
-
-DROP PROCEDURE IF EXISTS `addNewImage`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addNewImage` (IN `url_in` VARCHAR(255) CHARSET utf8, IN `title_in` VARCHAR(100) CHARSET utf8, IN `created_at_in` DATE, IN `user_id_in` INT(11))  INSERT INTO `images`
+DROP PROCEDURE IF EXISTS `addImage`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addImage` (IN `url_in` VARCHAR(255) CHARSET utf8, IN `title_in` VARCHAR(100) CHARSET utf8, IN `created_at_in` TIMESTAMP, IN `user_id_in` INT(11))  INSERT INTO `images`
 (
 	`images`.`url`,
     `images`.`title`,
@@ -102,6 +90,18 @@ VALUES
     title_in,
     created_at_in,
     user_id_in
+)$$
+
+DROP PROCEDURE IF EXISTS `addNewCountyToAd`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addNewCountyToAd` (IN `ad_id_in` INT(11), IN `county_id_in` INT(11))  INSERT INTO `ads_counties`
+(
+    `ads_counties`.`ad_id`,
+    `ads_counties`.`county_id`
+)
+VALUE
+(
+    ad_id_in,
+    county_id_in
 )$$
 
 DROP PROCEDURE IF EXISTS `addNewJobToUser`$$
@@ -888,8 +888,22 @@ CREATE TABLE `images` (
   `title` varchar(100) NOT NULL,
   `status` int(1) NOT NULL DEFAULT 0,
   `user_id` int(11) NOT NULL,
-  `created_at` date NOT NULL
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `images`
+--
+
+INSERT INTO `images` (`id`, `url`, `title`, `status`, `user_id`, `created_at`) VALUES
+(1, 'asd', 'b', 1, 1, '2023-02-08 20:20:56'),
+(2, 'asd', 'b', 0, 1, '2023-02-08 20:05:11'),
+(3, 'bffg', 'x', 1, 2, '2023-02-08 20:05:11'),
+(4, 'a', 'b', 0, 2, '2002-02-02 19:20:20'),
+(5, 'url', 'title', 0, 3, '2023-02-08 20:05:11'),
+(6, 'url', 'title', 0, 3, '2023-02-08 20:05:11'),
+(7, 'url', 'title', 0, 3, '2000-02-02 20:20:20'),
+(8, 'url', 'title', 0, 3, '2030-02-02 20:20:20');
 
 -- --------------------------------------------------------
 
@@ -1203,7 +1217,7 @@ ALTER TABLE `favorites`
 -- AUTO_INCREMENT for table `images`
 --
 ALTER TABLE `images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `jobs`

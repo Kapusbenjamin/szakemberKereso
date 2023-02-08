@@ -4,22 +4,33 @@
  */
 package szakemberkereso.Model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.ParameterMode;
+import javax.persistence.Persistence;
+import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import szakemberkereso.Configuration.Database;
 
 /**
  *
@@ -57,7 +68,8 @@ public class Images implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "created_at")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdAt;
     @Basic(optional = false)
     @NotNull
@@ -155,6 +167,227 @@ public class Images implements Serializable {
     @Override
     public String toString() {
         return "szakemberkereso.Model.Images[ id=" + id + " ]";
+    }
+    
+    public static Images objectToImage(Object[] o) throws ParseException{
+        Integer o_id = Integer.parseInt(o[0].toString());
+        String o_url = o[1].toString();
+        String o_title = o[2].toString();
+        Integer o_status = Integer.parseInt(o[3].toString());
+        Integer o_user_id = Integer.parseInt(o[4].toString());
+        Date o_created_at = Timestamp.valueOf(o[5].toString());
+
+        return new Images(o_id, o_url, o_title, o_created_at, o_status, o_user_id);
+    }
+
+    public static List<Images> getAllNotAcceptedImages(){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        List<Images> images = new ArrayList<>();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllNotAcceptedImages");
+            
+            spq.execute();
+            List<Object[]> result = spq.getResultList();
+            
+            for(Object[] r : result){
+                Images i = Images.objectToImage(r);
+                images.add(i);
+            }
+            
+            return images;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return images;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static List<Images> getAllAcceptedImagesByUserId(Integer user_id_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        List<Images> images = new ArrayList<>();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllAcceptedImagesByUserId");
+            
+            spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
+            spq.setParameter("user_id_in", user_id_in);
+            
+            spq.execute();
+            List<Object[]> result = spq.getResultList();
+            
+            for(Object[] r : result){
+                Images i = Images.objectToImage(r);
+                images.add(i);
+            }
+            
+            return images;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return images;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static List<Images> getImagesByUserId(Integer user_id_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        List<Images> images = new ArrayList<>();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getImagesByUserId");
+            
+            spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
+            spq.setParameter("user_id_in", user_id_in);
+            
+            spq.execute();
+            List<Object[]> result = spq.getResultList();
+            
+            for(Object[] r : result){
+                Images i = Images.objectToImage(r);
+                images.add(i);
+            }
+            
+            return images;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return images;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static List<Images> getAllImages(){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        List<Images> images = new ArrayList<>();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllImages");            
+            spq.execute();
+            
+            List<Object[]> result = spq.getResultList();
+            
+            for(Object[] r : result){
+                Images i = Images.objectToImage(r);
+                images.add(i);
+            }
+            
+            return images;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return images;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static Boolean acceptImage(Integer id_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("acceptImage");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            
+            spq.setParameter("id_in", id_in);
+            
+            spq.execute();
+            
+            return true;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static Boolean deleteImage(Integer id_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteImage");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            
+            spq.setParameter("id_in", id_in);
+            
+            spq.execute();
+            
+            return true;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static String addImage(Images image){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("addImage");
+            
+            spq.registerStoredProcedureParameter("url_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("title_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("created_at_in", Timestamp.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
+            
+            spq.setParameter("url_in", image.getUrl());
+            spq.setParameter("title_in", image.getTitle());
+            spq.setParameter("created_at_in", image.getCreatedAt());
+            spq.setParameter("user_id_in", image.getUserId());
+            
+            spq.execute();
+            
+            return "Sikeresen hozzáadta a képet!";
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "HIBA: " + e.getMessage();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
     }
     
 }
