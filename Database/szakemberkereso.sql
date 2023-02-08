@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 03, 2023 at 07:09 PM
+-- Generation Time: Feb 08, 2023 at 05:38 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -143,11 +143,10 @@ SET `users`.`password` = password_in
 WHERE `users`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `checkMessage`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkMessage` (IN `sender_id_in` INT(11), IN `receiver_id_in` INT(11))  UPDATE `messages`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkMessage` (IN `chat_id_in` INT(11), IN `user_id_in` INT(11))  UPDATE `messages`
 SET `messages`.`checked` = 1
-WHERE `messages`.`sender_id` = sender_id_in 
-AND `messages`.`receiver_id` = receiver_id_in
-AND `messages`.`checked` = 0$$
+WHERE `messages`.`chat_id` = chat_id_in
+AND `messages`.`receiver_id` = user_id_in$$
 
 DROP PROCEDURE IF EXISTS `createAd`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `createAd` (IN `user_id_in` INT(11), IN `job_tag_id_in` INT(11), IN `desc_in` TEXT CHARSET utf8, OUT `last_id_out` INT(11))  BEGIN
@@ -249,7 +248,7 @@ VALUES (
 )$$
 
 DROP PROCEDURE IF EXISTS `createMessage`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createMessage` (IN `sender_id_in` INT(11), IN `receiver_id_in` INT(11), IN `message_in` TEXT CHARSET utf8, IN `chat_id` INT(11))  INSERT INTO `messages`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createMessage` (IN `chat_id_in` INT(11), IN `sender_id_in` INT(11), IN `receiver_id_in` INT(11), IN `message_in` TEXT CHARSET utf8)  INSERT INTO `messages`
 (
     `messages`.`chat_id`,
 	`messages`.`sender_id`,
@@ -258,7 +257,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createMessage` (IN `sender_id_in` I
 )
 VALUES
 (
-    chat_id,
+    chat_id_in,
 	sender_id_in,
     receiver_id_in,
     message_in
@@ -789,7 +788,8 @@ CREATE TABLE `chats` (
 INSERT INTO `chats` (`id`, `sender_id`, `receiver_id`) VALUES
 (1, 2, 3),
 (2, 3, 1),
-(3, 2, 1);
+(3, 2, 1),
+(4, 4, 3);
 
 -- --------------------------------------------------------
 
@@ -971,7 +971,12 @@ CREATE TABLE `messages` (
 --
 
 INSERT INTO `messages` (`id`, `chat_id`, `sender_id`, `receiver_id`, `message`, `checked`, `sended_at`) VALUES
-(1, 3, 1, 2, 'Alma', 0, '2023-01-24 13:33:26');
+(1, 3, 1, 2, 'Alma', 0, '2023-01-24 13:33:26'),
+(2, 4, 3, 2, 'Nem', 1, '2023-02-08 15:50:49'),
+(3, 1, 5, 6, 'Kettő is', 0, '2023-02-08 15:50:49'),
+(4, 4, 2, 3, 'De', 1, '2023-02-08 15:51:39'),
+(5, 4, 3, 2, 'Nemssssssss', 1, '2023-02-08 16:34:38'),
+(6, 3, 2, 3, 'Uzi', 0, '2023-02-08 16:35:51');
 
 -- --------------------------------------------------------
 
@@ -1164,7 +1169,7 @@ ALTER TABLE `ads_counties`
 -- AUTO_INCREMENT for table `chats`
 --
 ALTER TABLE `chats`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `companies`
@@ -1206,7 +1211,7 @@ ALTER TABLE `job_tags`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `ratings`

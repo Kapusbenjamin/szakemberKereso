@@ -5,22 +5,31 @@
 package szakemberkereso.Model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.ParameterMode;
+import javax.persistence.Persistence;
+import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import szakemberkereso.Configuration.Database;
 
 /**
  *
@@ -169,6 +178,144 @@ public class Messages implements Serializable {
     @Override
     public String toString() {
         return "szakemberkereso.Model.Messages[ id=" + id + " ]";
+    }
+    
+    public static Messages objectToMessage(Object[] o){
+        Integer o_id = Integer.parseInt(o[0].toString());
+        Integer o_chat_id = Integer.parseInt(o[1].toString());
+        Integer o_sender_id = Integer.parseInt(o[2].toString());
+        Integer o_receiver_id = Integer.parseInt(o[3].toString());
+        String o_message = o[4].toString();
+        Integer o_checked = Integer.parseInt(o[5].toString());
+        Date o_sended_at = Timestamp.valueOf(o[6].toString());
+
+        return new Messages(o_id, o_chat_id, o_sender_id, o_receiver_id, o_message, o_checked, o_sended_at);
+    }
+    
+    public static List<Messages> getAllMessagesBetweenUsers(Messages message){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        List<Messages> messages = new ArrayList<>();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllMessagesBetweenUsers");
+            
+            spq.registerStoredProcedureParameter("user1_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("user2_id_in", Integer.class, ParameterMode.IN);
+            
+            spq.setParameter("user1_id_in", message.getSenderId());
+            spq.setParameter("user2_id_in", message.getReceiverId());
+            
+            spq.execute();
+            List<Object[]> result = spq.getResultList();
+            
+            for(Object[] r : result){
+                Messages m = Messages.objectToMessage(r);
+                messages.add(m);
+            }
+            
+            return messages;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return messages;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static List<Messages> getAllMessages(){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        List<Messages> messages = new ArrayList<>();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllMessages");            
+            spq.execute();
+            
+            List<Object[]> result = spq.getResultList();
+            
+            for(Object[] r : result){
+                Messages m = Messages.objectToMessage(r);
+                messages.add(m);
+            }
+            
+            return messages;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return messages;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static Boolean checkMessage(Messages message){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("checkMessage");
+            
+            spq.registerStoredProcedureParameter("chat_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
+            
+            spq.setParameter("chat_id_in", message.getChatId());
+            spq.setParameter("user_id_in", message.getReceiverId());
+            
+            spq.execute();
+            
+            return true;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static String createMessage(Messages message){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("createMessage");
+            
+            spq.registerStoredProcedureParameter("chat_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("sender_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("receiver_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("message_in", String.class, ParameterMode.IN);
+            
+            spq.setParameter("chat_id_in", message.getChatId());
+            spq.setParameter("sender_id_in", message.getSenderId());
+            spq.setParameter("receiver_id_in", message.getReceiverId());
+            spq.setParameter("message_in", message.getMessage());
+            
+            spq.execute();
+            
+            return "Sikeresen létrejött a message!";
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "HIBA: " + e.getMessage();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
     }
     
 }
