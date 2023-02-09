@@ -5,22 +5,31 @@
 package szakemberkereso.Model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.ParameterMode;
+import javax.persistence.Persistence;
+import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import szakemberkereso.Configuration.Database;
 
 /**
  *
@@ -185,4 +194,286 @@ public class Ratings implements Serializable {
         return "szakemberkereso.Model.Ratings[ id=" + id + " ]";
     }
     
+    public static Ratings objectToRating(Object[] o){
+        Integer o_id = Integer.parseInt(o[0].toString());
+        Integer o_ratinged_user_id = Integer.parseInt(o[1].toString());
+        Integer o_ratinger_user_id = Integer.parseInt(o[2].toString());
+        String o_description = o[3].toString();
+        Integer o_ratings_stars = Integer.parseInt(o[4].toString());
+        Integer o_status = Integer.parseInt(o[5].toString());
+        Date o_updated_at = Timestamp.valueOf(o[6].toString());
+        Integer o_deleted = Integer.parseInt(o[7].toString());
+
+        return new Ratings(o_id, o_ratinged_user_id, o_ratinger_user_id, o_description, o_ratings_stars, o_status, o_updated_at, o_deleted);
+    }
+
+    public static Ratings getRatingById(Integer id_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getRatingById");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            
+            spq.setParameter("id_in", id_in);
+            
+            spq.execute();
+            List<Object[]> result = spq.getResultList();
+            Object[] r = result.get(0);
+            
+            Ratings rating = Ratings.objectToRating(r);
+            return rating;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new Ratings();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static List<Ratings> getAllRatings(){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        List<Ratings> ratings = new ArrayList<>();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllRatings");            
+            spq.execute();
+            
+            List<Object[]> result = spq.getResultList();
+            
+            for(Object[] r : result){
+                Ratings rating = Ratings.objectToRating(r);
+                ratings.add(rating);
+            }
+            
+            return ratings;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ratings;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static List<Ratings> getAllNotAcceptedRatings(){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        List<Ratings> ratings = new ArrayList<>();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllNotAcceptedRatings");            
+            spq.execute();
+            
+            List<Object[]> result = spq.getResultList();
+            
+            for(Object[] r : result){
+                Ratings rating = Ratings.objectToRating(r);
+                ratings.add(rating);
+            }
+            
+            return ratings;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ratings;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static List<Ratings> getAllRatingsByRatinger(Integer user_id_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        List<Ratings> ratings = new ArrayList<>();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllRatingsByRatinger");            
+            spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
+            spq.setParameter("user_id_in", user_id_in);
+            
+            spq.execute();
+            
+            List<Object[]> result = spq.getResultList();
+            
+            for(Object[] r : result){
+                Ratings rating = Ratings.objectToRating(r);
+                ratings.add(rating);
+            }
+            
+            return ratings;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ratings;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static List<Ratings> getAllRatingsByRatinged(Integer user_id_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        List<Ratings> ratings = new ArrayList<>();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllRatingsByRatinged");            
+            spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
+            spq.setParameter("user_id_in", user_id_in);
+            
+            spq.execute();
+            
+            List<Object[]> result = spq.getResultList();
+            
+            for(Object[] r : result){
+                Ratings rating = Ratings.objectToRating(r);
+                ratings.add(rating);
+            }
+            
+            return ratings;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ratings;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static Boolean updateRatingById(Ratings rating){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("updateRatingById");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("desc_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("ratings_stars_in", Integer.class, ParameterMode.IN);
+            
+            spq.setParameter("id_in", rating.getId());
+            spq.setParameter("desc_in", rating.getDescription());
+            spq.setParameter("ratings_stars_in", rating.getRatingsStars());
+            
+            spq.execute();
+            
+            return true;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static Boolean acceptRating(Integer id_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("acceptRating");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            
+            spq.setParameter("id_in", id_in);
+            
+            spq.execute();
+            
+            return true;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static Boolean deleteRatingById(Integer id_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteRatingById");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            
+            spq.setParameter("id_in", id_in);
+            
+            spq.execute();
+            
+            return true;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static String createRating(Ratings rating){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("createRating");
+            
+            spq.registerStoredProcedureParameter("ratinged_user_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("ratinger_user_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("desc_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("ratings_stars_in", Integer.class, ParameterMode.IN);
+            
+            spq.setParameter("ratinged_user_id_in", rating.getRatingedUserId());
+            spq.setParameter("ratinger_user_id_in", rating.getRatingerUserId());
+            spq.setParameter("desc_in", rating.getDescription());
+            spq.setParameter("ratings_stars_in", rating.getRatingsStars());
+            
+            spq.execute();
+            
+            return "Sikeresen létrejött a rating!";
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "HIBA: " + e.getMessage();
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+
 }

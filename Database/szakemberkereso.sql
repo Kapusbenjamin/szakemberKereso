@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 08, 2023 at 10:29 PM
+-- Generation Time: Feb 09, 2023 at 11:06 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -389,7 +389,8 @@ AND (`jobs`.`worker_accepted` != 1
 OR `jobs`.`customer_accepted` != 1)$$
 
 DROP PROCEDURE IF EXISTS `deleteRatingById`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteRatingById` (IN `id_in` INT(11))  DELETE FROM `ratings`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteRatingById` (IN `id_in` INT(11))  UPDATE `ratings`
+SET `ratings`.`deleted` = 1
 WHERE `ratings`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `deleteUser`$$
@@ -508,7 +509,6 @@ AND `ratings`.`deleted` != 1$$
 DROP PROCEDURE IF EXISTS `getAllRatingsByRatinger`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllRatingsByRatinger` (IN `user_id_in` INT(11))  SELECT * FROM `ratings`
 WHERE `ratings`.`ratinger_user_id` = user_id_in
-AND `ratings`.`status` = 1
 AND `ratings`.`deleted` != 1$$
 
 DROP PROCEDURE IF EXISTS `getAllUsers`$$
@@ -1020,6 +1020,15 @@ CREATE TABLE `ratings` (
   `deleted` int(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `ratings`
+--
+
+INSERT INTO `ratings` (`id`, `ratinged_user_id`, `ratinger_user_id`, `description`, `ratings_stars`, `status`, `updated_at`, `deleted`) VALUES
+(1, 2, 3, 'nem hozta az anyagot', 1, 1, '2023-02-09 09:57:36', 0),
+(3, 1, 2, 'kettő is', 2, 0, '2023-02-09 10:05:04', 1),
+(4, 2, 3, 'mindent megcsinált csak nem jól', 2, 0, '2023-02-09 09:59:50', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -1241,7 +1250,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `ratings`
 --
 ALTER TABLE `ratings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
