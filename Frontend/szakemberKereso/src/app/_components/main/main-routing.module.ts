@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdPageComponent } from './ad-page/ad-page.component';
-import { MainPageComponent } from './main-page.component';
+import { MainPageComponent } from './main-page/main-page.component';
 import { UserPageComponent } from './user-page/user-page.component';
 
 const routes: Routes = [
@@ -18,4 +18,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class MainPageRoutingModule { }
+export class MainRoutingModule { }
