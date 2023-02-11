@@ -21,6 +21,10 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MenuComponent } from './_components/menu/menu.component';
+import { NotFoundComponent } from './_components/not-found/not-found.component';
+import { AdPageComponent } from './_components/main/ad-page/ad-page.component';
+import { UserPageComponent } from './_components/main/user-page/user-page.component';
+import { AdvestComponent } from './_components/advest/advest.component';
 
 
 @NgModule({
@@ -30,9 +34,13 @@ import { MenuComponent } from './_components/menu/menu.component';
     LoginFormComponent,
     RegistFormComponent,
     MainPageComponent,
+    AdPageComponent,
+    UserPageComponent,
     SearchDropdownComponent,
     InputComponent,
     MenuComponent,
+    NotFoundComponent,
+    AdvestComponent
   ],
   imports: [
     BrowserModule,

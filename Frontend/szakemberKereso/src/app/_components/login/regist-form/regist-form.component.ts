@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { City } from 'src/app/_model/City';
 import { County } from 'src/app/_model/County';
 import { DropDown } from 'src/app/_model/DropDown';
@@ -9,6 +9,7 @@ import { User } from 'src/app/_model/User';
 import { HttpService } from 'src/app/_services/http.service';
 import { JobTagsService } from 'src/app/_services/job-tags.service';
 import { UsersService } from 'src/app/_services/users.service';
+import { PasswordValidators } from 'src/app/_validators/password-validators';
 
 @Component({
   selector: 'app-regist-form',
@@ -17,28 +18,28 @@ import { UsersService } from 'src/app/_services/users.service';
 })
 export class RegistFormComponent implements OnInit {
 
-  registForm = this.fb.group({
+  registForm = new FormGroup({
     lastName:new FormControl('',[Validators.required]),
     firstName: new FormControl('',[Validators.required]),
     email:new FormControl('',[Validators.required]),
     telNumber:new FormControl('',[Validators.required]),
     password:new FormControl('',[Validators.required]),
     passwordConfirm:new FormControl('',[Validators.required]),
-    address: this.fb.group({
-      county:new FormControl(''),
-      city:new FormControl(''),
-      zipCode:new FormControl(''),
-      streetName:new FormControl(''),
-      number:new FormControl(''),
+    address: new FormGroup({
+      county:new FormControl('',[Validators.required]),
+      city:new FormControl('',[Validators.required]),
+      zipCode:new FormControl('',[Validators.required]),
+      streetName:new FormControl('',[Validators.required]),
+      number:new FormControl('',[Validators.required]),
       staircase:new FormControl(''),
       floor:new FormControl(''),
       door:new FormControl(''),
     }),
     profession: new FormControl(''),
-    company: this.fb.group({
+    company : new FormGroup({
       companyName: new FormControl(''),
       taxNumber: new FormControl(''),
-      address: this.fb.group({
+      address: new FormGroup({
         zipCode: new FormControl(''),
         county: new FormControl(''),
         city: new FormControl(''),
@@ -86,12 +87,12 @@ export class RegistFormComponent implements OnInit {
   company: boolean = false;
   county: any = null;
 
-  constructor(private fb: FormBuilder,
-      private http: HttpService,
+  constructor(private http: HttpService,
       private jobTagsService: JobTagsService,
       private userService: UsersService) { }
 
   ngOnInit(): void {
+    this.registForm.addValidators([PasswordValidators.same('password','passwordConfirm')])
     this.loadCounties();
     this.registForm.controls['address'].controls['county'].valueChanges.subscribe((value)=>{
       this.county = value;
@@ -182,9 +183,9 @@ export class RegistFormComponent implements OnInit {
     })
   }
 
-  getIdFromDropDown(name: string):number {
+  getIdFromDropDown(name: string, dropdown:DropDown[]):number {
     let id = -1
-    this.professions.forEach((element:DropDown)=>{
+    dropdown.forEach((element:DropDown)=>{
       if(name == element.name){
         id = element.id;
       }

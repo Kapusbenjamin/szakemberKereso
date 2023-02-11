@@ -4,7 +4,7 @@ export interface Address{
     city: string,
     street: string,
     number: string,
-    staircase: string | null,
-    floor: number | null,
-    door: number | null
+    staircase?: string,
+    floor?: number,
+    door?: number
 }

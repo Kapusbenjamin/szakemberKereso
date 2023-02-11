@@ -1,1 +1,10 @@
-<p>ad-page works!</p>
+<div class="searchBar">
+  <app-search-dropdown [options]="counties" name="Megye"
+  [control]="searchForm.controls['county']" ></app-search-dropdown>
+  <app-search-dropdown [options]="jobTags" name="Szakma"
+  [control]="searchForm.controls['jobTag']" ></app-search-dropdown>
+  <button mat-raised-button color="primary" (click)="search()">Keresés</button>
+</div>
+<div *ngFor="let ad of ads" class="ad">
+  <app-advest [ad]="ad"></app-advest>
+</div>

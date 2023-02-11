@@ -38,3 +38,8 @@ body {
 mat-error{
   margin-top: -15px;
 }
+
+a{
+  text-decoration: none;
+  color: white;
+}

@@ -28,6 +28,12 @@ export class UsersService {
     // });
   }
 
+  getUserById(id: number):Observable<User>{
+    return this.http.get<User>(`${this.apiUrl}getUserById/${id}`);
+  }
 
+  getAllUsers(){
+    return this.http.get<User>(`${this.apiUrl}getAllUsers`);
+  }
 
 }
