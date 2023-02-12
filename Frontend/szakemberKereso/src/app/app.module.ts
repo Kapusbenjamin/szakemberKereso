@@ -25,6 +25,7 @@ import { NotFoundComponent } from './_components/not-found/not-found.component';
 import { AdPageComponent } from './_components/main/ad-page/ad-page.component';
 import { UserPageComponent } from './_components/main/user-page/user-page.component';
 import { AdvestComponent } from './_components/advest/advest.component';
+import { AddressFormComponent } from './_components/address-form/address-form.component';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { AdvestComponent } from './_components/advest/advest.component';
     InputComponent,
     MenuComponent,
     NotFoundComponent,
-    AdvestComponent
+    AdvestComponent,
+    AddressFormComponent
   ],
   imports: [
     BrowserModule,

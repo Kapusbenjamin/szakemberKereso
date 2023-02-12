@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Company } from '../_model/Company';
 import { User } from '../_model/User';
 
 @Injectable({
@@ -29,6 +30,18 @@ export class UsersService {
       phone: user.phone,
       password: user.password,
       address: user.address
+    });
+  }
+
+  createUserWorker(user: User, company: Company){
+    return this.http.post(`${this.apiUrl}createUserWorker`,{
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phone: user.phone,
+      password: user.password,
+      address: user.address,
+      company: company
     });
   }
 
