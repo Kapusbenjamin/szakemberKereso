@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Address } from 'src/app/_model/Address';
 import { City } from 'src/app/_model/City';
+import { Company } from 'src/app/_model/Company';
 import { Field } from 'src/app/_model/Field';
 import { Tag } from 'src/app/_model/Tag';
 import { User } from 'src/app/_model/User';
@@ -20,7 +21,6 @@ import { PasswordValidators } from 'src/app/_validators/password-validators';
 export class RegistFormComponent implements OnInit {
 
   counties: Tag[] = [];
-  CompanyCounties: Tag[] = [];
   cities: Tag[] = [];
   companyCities: Tag[] = [];
   streetsNames: Tag[] = [];
@@ -29,6 +29,7 @@ export class RegistFormComponent implements OnInit {
   professional: boolean = false;
   hasCompany: boolean = false;
   county: any = null;
+  companyCounty: any = null;
 
   registForm = new FormGroup({
     lastName:new FormControl('',[Validators.required]),
@@ -100,9 +101,14 @@ export class RegistFormComponent implements OnInit {
   ngOnInit(): void {
     this.registForm.addValidators([PasswordValidators.same('password','passwordConfirm')])
     this.loadCounties(this.counties);
+
     this.address.controls['county'].valueChanges.subscribe((value)=>{
       this.county = value;
       this.loadCities(this.county,this.cities);
+    })
+    this.companyAddress.controls['county'].valueChanges.subscribe((value)=>{
+      this.companyCounty = value;
+      this.loadCities(this.companyCounty,this.companyCities);
     })
     this.loadProfessions();
   }
@@ -151,29 +157,30 @@ export class RegistFormComponent implements OnInit {
   }
 
   regist(){
-    console.log(this.registForm.value);
-
-    // if(this.registForm.valid){
-    //   let user = this.buildUser();
-    //   if(this.professional){
-    //     let jobTag = this.registForm.controls['profession'].value!;
-    //     let JobTagId = this.getIdFromDropDown(jobTag,this.professions)
-    //     user.profession = JobTagId;
-    //     if(this.hasCompany){
-
-    //     }
-    //   }else{
-    //     this.userService.createUser(user).subscribe(res=>{
-    //       console.log(res);
-    //     });
-    //   }
-    // }else{
-    //   alert("invalidForm");
-    //   window.scroll({
-    //     top: 0,
-    //     behavior: 'smooth'
-    //   });
-    // }
+    if(this.registForm.valid){
+      let user = this.buildUser();
+      if(this.professional){
+        let jobTag = this.registForm.controls['profession'].value!;
+        let JobTagId = this.getIdFromDropDown(jobTag,this.professions)
+        user.profession = JobTagId;
+        if(this.hasCompany){
+          let company: Company = this.companyBuilder();
+          this.userService.createUserWorker(user,company).subscribe(res=>{
+            console.log(res);
+          });
+        }
+      }else{
+        this.userService.createUser(user).subscribe(res=>{
+          console.log(res);
+        });
+      }
+    }else{
+      alert("invalidForm");
+      window.scroll({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
   }
 
   loadCounties(counties: Tag[]){
@@ -205,19 +212,7 @@ export class RegistFormComponent implements OnInit {
   }
 
   buildUser():User{
-    let county = this.address.controls['county'].value!
-    let countyId = this.getIdFromDropDown(county,this.counties);
-    let zipCode = parseInt(this.address.controls['zipCode'].value!);
-    let address: Address = {
-      countyId: countyId,
-      zipCode: zipCode,
-      city: this.registForm.value.firstName!,
-      street: this.registForm.value.firstName!,
-      number: this.registForm.value.firstName!,
-      staircase: null,
-      floor: null,
-      door: null
-    }
+    let address: Address = this.addressBuilder(this.address,this.counties)
     let user: User = {
       firstName: this.registForm.value.firstName!,
       lastName: this.registForm.value.lastName!,
@@ -227,6 +222,41 @@ export class RegistFormComponent implements OnInit {
       address: address,
     }
     return user;
+  }
+
+  companyBuilder(): Company {
+    let address: Address = this.addressBuilder(this.companyAddress,this.counties);
+    let company: Company = {
+      name: this.company.controls['companyName'].value!,
+      taxNumber: this.company.controls['taxNumber'].value!,
+      address: address
+    }
+    return company;
+  }
+
+  addressBuilder(addressForm: FormGroup,countyDropDown: Tag[]): Address{
+    let county = addressForm.controls['county'].value!;
+    let countyId = this.getIdFromDropDown(county,countyDropDown);
+    let zipCode = parseInt(addressForm.controls['zipCode'].value!);
+    let staircase = addressForm.controls['staircase'].value!;
+    let floor:number | null = parseInt(addressForm.controls['floor'].value!);
+    let door:number | null = parseInt(addressForm.controls['door'].value!)
+    if(staircase == ""){
+      staircase = null;
+      floor = null;
+      door = null;
+    }
+    let address: Address = {
+      countyId: countyId,
+      zipCode: zipCode,
+      city: addressForm.controls['city'].value!,
+      street: addressForm.controls['streetName'].value!,
+      number: addressForm.controls['number'].value!,
+      staircase: staircase,
+      floor: floor,
+      door: door
+    }
+    return address;
   }
 
   getIdFromDropDown(name: string, dropdown:Tag[]):number {
