@@ -11,7 +11,16 @@
     </div>
     <h2>Cím</h2>
     <!-- Address -->
-    <app-address-form [addressFormGroup]="address" [addressFields]="addressFields"></app-address-form>
+    <app-address-form
+    [city]="address.controls['city']"
+    [county]="address.controls['county']"
+    [streetName]="address.controls['streetName']"
+    [addressFormGroup]="address"
+    [counties]="counties"
+    [cities]="cities"
+    [streetsNames]="streetsNames"
+    [addressFields]="addressFields"
+    ></app-address-form>
     <!-- Professional -->
     <mat-slide-toggle (click)="professionalSlide()">Regisztrálás szakemberként</mat-slide-toggle>
     <div *ngIf="professional">
@@ -28,7 +37,16 @@
           </div>
           <h2>Cég Telephely</h2>
           <!-- Company Address -->
-          <app-address-form [addressFormGroup]="companyAddress" [addressFields]="companyAddressFields"></app-address-form>
+          <app-address-form
+          [city]="companyAddress.controls['city']"
+          [county]="companyAddress.controls['county']"
+          [streetName]="companyAddress.controls['streetName']"
+          [addressFormGroup]="companyAddress"
+          [counties]="CompanyCounties"
+          [cities]="companyCities"
+          [streetsNames]="streetsNames"
+          [addressFields]="companyAddressFields"
+          ></app-address-form>
           <!-- Company Address -->
       </div>
   </div>
