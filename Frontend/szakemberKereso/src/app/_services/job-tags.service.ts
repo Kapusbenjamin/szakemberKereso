@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { JobTag } from '../_model/JobTag';
+import { Tag } from '../_model/Tag';
 
 
 @Injectable({
@@ -13,12 +13,12 @@ export class JobTagsService {
 
   constructor(private http:HttpClient) { }
 
-  getAllJobTags():Observable<JobTag[]>{
-    return this.http.get<JobTag[]>(`${this.apiUrl}getAllJobTags`);
+  getAllJobTags():Observable<Tag[]>{
+    return this.http.get<Tag[]>(`${this.apiUrl}getAllJobTags`);
   }
 
-  getJobTagById(id: number):Observable<JobTag>{
-    return this.http.post<JobTag>(`${this.apiUrl}getJobTagById`,{
+  getJobTagById(id: number):Observable<Tag>{
+    return this.http.post<Tag>(`${this.apiUrl}getJobTagById`,{
       id
     });
   }

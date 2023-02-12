@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Address } from 'src/app/_model/Address';
 import { City } from 'src/app/_model/City';
-import { County } from 'src/app/_model/County';
-import { DropDown } from 'src/app/_model/DropDown';
 import { Field } from 'src/app/_model/Field';
-import { JobTag } from 'src/app/_model/JobTag';
+import { Tag } from 'src/app/_model/Tag';
 import { User } from 'src/app/_model/User';
 import { HttpService } from 'src/app/_services/http.service';
 import { JobTagsService } from 'src/app/_services/job-tags.service';
 import { UsersService } from 'src/app/_services/users.service';
+import { DropdownValidator } from 'src/app/_validators/dropdown-validators';
 import { PasswordValidators } from 'src/app/_validators/password-validators';
 
 @Component({
@@ -18,6 +18,14 @@ import { PasswordValidators } from 'src/app/_validators/password-validators';
 })
 export class RegistFormComponent implements OnInit {
 
+  counties: Tag[] = [];
+  cities: Tag[] = [];
+  streetsNames: Tag[] = [];
+  professional: boolean = false;
+  professions: Tag[] = [];
+  company: boolean = false;
+  county: any = null;
+
   registForm = new FormGroup({
     lastName:new FormControl('',[Validators.required]),
     firstName: new FormControl('',[Validators.required]),
@@ -26,9 +34,9 @@ export class RegistFormComponent implements OnInit {
     password:new FormControl('',[Validators.required]),
     passwordConfirm:new FormControl('',[Validators.required]),
     address: new FormGroup({
-      county:new FormControl('',[Validators.required]),
-      city:new FormControl('',[Validators.required]),
-      zipCode:new FormControl('',[Validators.required]),
+      county:new FormControl('',[Validators.required,DropdownValidator(this.counties)]),
+      city:new FormControl('',[Validators.required,DropdownValidator(this.cities)]),
+      zipCode:new FormControl('',[Validators.required,Validators.pattern('[0-9]+')]),
       streetName:new FormControl('',[Validators.required]),
       number:new FormControl('',[Validators.required]),
       staircase:new FormControl(''),
@@ -61,7 +69,7 @@ export class RegistFormComponent implements OnInit {
     {control: this.registForm.controls['passwordConfirm'], name:'Jelszó megerősítése', type:"password"},
   ];
   addressFields:Field[] = [
-    {control: this.registForm.controls['address'].controls['zipCode'], name:'Irányítószám', type:"text"},
+    {control: this.registForm.controls['address'].controls['zipCode'], name:'Irányítószám', type:"text", errorMessage:"Csak számokat tartalmazhat"},
     {control: this.registForm.controls['address'].controls['number'], name:'Házszám', type:"text"},
     {control: this.registForm.controls['address'].controls['staircase'], name:'Lépcsőház', type:"text"},
     {control: this.registForm.controls['address'].controls['floor'], name:'Emelet', type:"text"},
@@ -79,13 +87,6 @@ export class RegistFormComponent implements OnInit {
     {control: this.registForm.controls['company'].controls['address'].controls['door'], name:'Ajtó', type:"text"},
   ]
 
-  counties: DropDown[] = [];
-  citiesNames: DropDown[] = [];
-  streetsNames: DropDown[] = [];
-  professional: boolean = false;
-  professions: DropDown[] = [];
-  company: boolean = false;
-  county: any = null;
 
   constructor(private http: HttpService,
       private jobTagsService: JobTagsService,
@@ -144,20 +145,43 @@ export class RegistFormComponent implements OnInit {
   }
 
   regist(){
-      this.userService.createUser(this.registForm.value)
-    // if(this.registForm.valid){
-    // }else{
-    //   alert("invalidForm");
-    //   window.scroll({
-    //     top: 0,
-    //     behavior: 'smooth'
-    //   });
-    // }
+    if(this.registForm.valid){
+      let county = this.registForm.controls['address'].controls['county'].value!
+      let countyId = this.getIdFromDropDown(county,this.counties);
+      let zipCode = parseInt(this.registForm.controls['address'].controls['zipCode'].value!);
+      let address: Address = {
+        countyId: countyId,
+        zipCode: zipCode,
+        city: this.registForm.value.firstName!,
+        street: this.registForm.value.firstName!,
+        number: this.registForm.value.firstName!,
+        staircase: null,
+        floor: null,
+        door: null
+      }
+      let user: User = {
+        firstName: this.registForm.value.firstName!,
+        lastName: this.registForm.value.lastName!,
+        email: this.registForm.value.email!,
+        phone: this.registForm.value.telNumber!,
+        password: this.registForm.value.password!,
+        address: address,
+      }
+      this.userService.createUser(user).subscribe(res=>{
+        console.log(res);
+      });
+    }else{
+      alert("invalidForm");
+      window.scroll({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
   }
 
   loadCounties(){
-    this.http.getAllCounties().subscribe((response:County[])=>{
-      response.forEach((county:County)=>{
+    this.http.getAllCounties().subscribe((response:Tag[])=>{
+      response.forEach((county:Tag)=>{
         if(county.name != "Budapest"){
           this.counties.push({id: county.id, name: county.name})
         }
@@ -169,7 +193,7 @@ export class RegistFormComponent implements OnInit {
     this.http.getAllCities().subscribe((response)=>{
       response.forEach((city:City, index:number)=>{
         if(county == city.admin_name){
-          this.citiesNames.push({id: index, name: city.city})
+          this.cities.push({id: index, name: city.city})
         }
       });
     });
@@ -177,20 +201,28 @@ export class RegistFormComponent implements OnInit {
 
   loadProfessions(){
     this.jobTagsService.getAllJobTags().subscribe((response)=>{
-      response.forEach((jobTag:JobTag) => {
+      response.forEach((jobTag:Tag) => {
         this.professions.push(jobTag);
       });
     })
   }
 
-  getIdFromDropDown(name: string, dropdown:DropDown[]):number {
+  getIdFromDropDown(name: string, dropdown:Tag[]):number {
     let id = -1
-    dropdown.forEach((element:DropDown)=>{
+    dropdown.forEach((element:Tag)=>{
       if(name == element.name){
         id = element.id;
       }
     });
     return id;
+  }
+
+  get companyAddress(){
+    return this.registForm.controls['company'].controls['address'];
+  }
+
+  get address(){
+    return this.registForm.controls['address'];
   }
 
 }

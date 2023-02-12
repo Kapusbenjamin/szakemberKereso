@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
-import { DropDown } from 'src/app/_model/DropDown';
+import { Tag } from 'src/app/_model/Tag';
 
 @Component({
   selector: 'app-search-dropdown',
@@ -12,7 +12,7 @@ import { DropDown } from 'src/app/_model/DropDown';
 export class SearchDropdownComponent implements OnInit {
   @Input() name!: string;
   @Input() control!: FormControl;
-  @Input() options!: DropDown[];
+  @Input() options!: Tag[];
   filteredOptions!: Observable<any[]>;
 
   ngOnInit() {
@@ -22,7 +22,7 @@ export class SearchDropdownComponent implements OnInit {
     );
   }
 
-  private _filter(value: string): DropDown[] {
+  private _filter(value: string): Tag[] {
     const filterValue = value.toLowerCase();
 
     return this.options.filter(option => option.name.toLowerCase().includes(filterValue));

@@ -29,9 +29,9 @@ export class AddressesService {
     });
   }
 
-  updateAddressById(id: number,address:Address){
+  updateAddressById(address:Address){
     return this.http.post(`${this.apiUrl}updateAddressById`,{
-      id: id,
+      id: address.id,
       countyId: address.countyId,
       zipCode: address.zipCode,
       city: address.city,

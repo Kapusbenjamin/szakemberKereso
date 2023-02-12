@@ -2,12 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Ad } from 'src/app/_model/Ad';
 import { AdsService } from 'src/app/_services/ads.service';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { DropDown } from 'src/app/_model/DropDown';
 import { CountiesService } from 'src/app/_services/counties.service';
 import { JobTagsService } from 'src/app/_services/job-tags.service';
-import { County } from 'src/app/_model/County';
-import { JobTag } from 'src/app/_model/JobTag';
 import { JsonPipe } from '@angular/common';
+import { Tag } from 'src/app/_model/Tag';
 
 @Component({
   selector: 'app-ad-page',
@@ -16,8 +14,8 @@ import { JsonPipe } from '@angular/common';
 })
 export class AdPageComponent implements OnInit {
 
-  counties: DropDown[] = [];
-  jobTags: DropDown[] = [];
+  counties: Tag[] = [];
+  jobTags: Tag[] = [];
 
   ads!: Ad[];
 
@@ -51,15 +49,15 @@ export class AdPageComponent implements OnInit {
 
   getAllJobTags(){
     this.jobTagsService.getAllJobTags().subscribe((response)=>{
-      response.forEach((jobTag:JobTag) => {
+      response.forEach((jobTag:Tag) => {
         this.jobTags.push(jobTag);
       });
     })
   }
 
   getAllCounties(){
-    this.countiesService.getAllCounties().subscribe((response:County[])=>{
-      response.forEach((county:County)=>{
+    this.countiesService.getAllCounties().subscribe((response:Tag[])=>{
+      response.forEach((county:Tag)=>{
           this.counties.push({id: county.id, name: county.name})
       });
     });
@@ -85,9 +83,9 @@ export class AdPageComponent implements OnInit {
   }
 
   // Máshol is felhasználható
-  getIdFromDropDown(name: string, dropdown:DropDown[]):number {
+  getIdFromDropDown(name: string, dropdown:Tag[]):number {
     let id = -1
-    dropdown.forEach((element:DropDown)=>{
+    dropdown.forEach((element:Tag)=>{
       if(name == element.name){
         id = element.id;
       }

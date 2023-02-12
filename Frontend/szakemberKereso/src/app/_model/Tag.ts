@@ -1,4 +1,4 @@
-export interface JobTag{
+export interface Tag{
   id :number,
   name:string
 }

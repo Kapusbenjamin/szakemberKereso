@@ -35,7 +35,7 @@ export class LoginFormComponent implements OnInit {
       let password = this.loginForm.controls['password'].value;
       this.usersService.loginUser(email,phone,password!).subscribe((response)=>{
         User = response;
-        if(User.id > 0){
+        if(User.id! > 0){
           localStorage.setItem('id',User.id + '');
           localStorage.setItem('access_type',User.accessType + '');
           localStorage.setItem('firstName',User.firstName);

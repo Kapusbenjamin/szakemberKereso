@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { City } from '../_model/City';
-import { County } from '../_model/County';
+import { Tag } from '../_model/Tag';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +15,8 @@ export class HttpService {
 
   constructor(private http:HttpClient) { }
 
-  getAllCounties(): Observable<County[]>{
-    return this.http.get<County[]>(`${this.apiUrl}counties`);
+  getAllCounties(): Observable<Tag[]>{
+    return this.http.get<Tag[]>(`${this.apiUrl}counties`);
   }
 
   getAllCities(): Observable<City[]>{

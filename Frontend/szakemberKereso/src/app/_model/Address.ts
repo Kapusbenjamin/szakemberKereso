@@ -1,10 +1,11 @@
 export interface Address{
+    id?: number
     countyId: number,
     zipCode: number,
     city: string,
     street: string,
     number: string,
-    staircase?: string,
-    floor?: number,
-    door?: number
+    staircase?: string | null,
+    floor?: number | null,
+    door?: number | null
 }

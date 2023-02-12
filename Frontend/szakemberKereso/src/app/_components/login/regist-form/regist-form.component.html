@@ -16,27 +16,39 @@
 
       <div class="dropdown">
         <app-search-dropdown [options]="counties" name="Megye"
-        [control]="registForm.controls['address'].controls['county']" ></app-search-dropdown>
-        <mat-error *ngIf="registForm.controls['address'].controls['county'].hasError('required') &&
-        registForm.controls['address'].controls['county'].touched">Mező kitöltése kötelező</mat-error>
+        [control]="address.controls['county']" ></app-search-dropdown>
+        <mat-error *ngIf="
+        !address.controls['county'].hasError('required') &&
+        address.controls['county'].hasError('notContains') &&
+        address.controls['county'].dirty">
+          Érvénytelen név
+        </mat-error>
+        <mat-error *ngIf="address.controls['county'].hasError('required') &&
+        address.controls['county'].touched">Mező kitöltése kötelező</mat-error>
       </div>
+
     <div class="dropdown">
-      <app-search-dropdown  [options]="citiesNames" name="Város"
-      [control]="registForm.controls['address'].controls['city']"></app-search-dropdown>
-      <mat-error *ngIf="registForm.controls['address'].controls['city'].hasError('required') &&
-      registForm.controls['address'].controls['city'].touched">Mező kitöltése kötelező</mat-error>
+      <app-search-dropdown  [options]="cities" name="Város"
+      [control]="address.controls['city']"></app-search-dropdown>
+      <mat-error *ngIf="!address.controls['city'].hasError('required') && address.controls['city'].hasError('notContains') && address.controls['city'].dirty">
+        Érvénytelen név
+      </mat-error>
+      <mat-error *ngIf="address.controls['city'].hasError('required') &&
+      address.controls['city'].touched">Mező kitöltése kötelező</mat-error>
     </div>
+
     <div class="dropdown">
       <app-search-dropdown [options]="streetsNames" name="Utca"
-      [control]="registForm.controls['address'].controls['streetName']"></app-search-dropdown>
-      <mat-error *ngIf="registForm.controls['address'].controls['streetName'].hasError('required') &&
-      registForm.controls['address'].controls['streetName'].touched">Mező kitöltése kötelező</mat-error>
+      [control]="address.controls['streetName']"></app-search-dropdown>
+      <mat-error *ngIf="address.controls['streetName'].hasError('required') &&
+      address.controls['streetName'].touched">Mező kitöltése kötelező</mat-error>
     </div>
 
     <!-- search dropdown -->
 
     <div *ngFor="let field of addressFields">
       <app-input [control]="field.control" [type]="field.type" [name]="field.name"></app-input>
+      <mat-error *ngIf="field.control.hasError('pattern')">{{ field.errorMessage }}</mat-error>
       <mat-error *ngIf="field.control.hasError('required') && field.control.touched">Mező kitöltése kötelező</mat-error>
     </div>
 
@@ -56,21 +68,21 @@
           <p>Cég Telephely</p>
           <div class="dropdown">
             <app-search-dropdown  [options]="counties" name="Megye"
-            [control]="registForm.controls['company'].controls['address'].controls['county']" ></app-search-dropdown>
-            <mat-error *ngIf="registForm.controls['company'].controls['address'].controls['county'].hasError('required') &&
-            registForm.controls['company'].controls['address'].controls['county'].touched">Mező kitöltése kötelező</mat-error>
+            [control]="companyAddress.controls['county']" ></app-search-dropdown>
+            <mat-error *ngIf="companyAddress.controls['county'].hasError('required') &&
+            companyAddress.controls['county'].touched">Mező kitöltése kötelező</mat-error>
           </div>
           <div class="dropdown">
-            <app-search-dropdown [options]="citiesNames" name="Város"
-            [control]="registForm.controls['company'].controls['address'].controls['city']"></app-search-dropdown>
-            <mat-error *ngIf="registForm.controls['company'].controls['address'].controls['city'].hasError('required') &&
-            registForm.controls['company'].controls['address'].controls['city'].touched">Mező kitöltése kötelező</mat-error>
+            <app-search-dropdown [options]="cities" name="Város"
+            [control]="companyAddress.controls['city']"></app-search-dropdown>
+            <mat-error *ngIf="companyAddress.controls['city'].hasError('required') &&
+            companyAddress.controls['city'].touched">Mező kitöltése kötelező</mat-error>
           </div>
           <div class="dropdown">
             <app-search-dropdown [options]="streetsNames" name="Utca"
-            [control]="registForm.controls['company'].controls['address'].controls['streetName']"></app-search-dropdown>
-            <mat-error *ngIf="registForm.controls['company'].controls['address'].controls['streetName'].hasError('required') &&
-            registForm.controls['company'].controls['address'].controls['streetName'].touched">Mező kitöltése kötelező</mat-error>
+            [control]="companyAddress.controls['streetName']"></app-search-dropdown>
+            <mat-error *ngIf="companyAddress.controls['streetName'].hasError('required') &&
+            companyAddress.controls['streetName'].touched">Mező kitöltése kötelező</mat-error>
           </div>
           <div *ngFor="let field of companyAddressFields">
             <app-input [control]="field.control" [type]="field.type" [name]="field.name"></app-input>
@@ -85,4 +97,3 @@
 
 {{ registForm.valid }}
 {{ registForm.value | json }}
-{{ registForm.errors | json }}
