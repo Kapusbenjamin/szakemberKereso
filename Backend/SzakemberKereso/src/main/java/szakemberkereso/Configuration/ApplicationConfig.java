@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package szakemberkereso.Controller;
+package szakemberkereso.Configuration;
 
 import java.util.Set;
 import javax.ws.rs.core.Application;
