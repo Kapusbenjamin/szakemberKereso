@@ -26,6 +26,8 @@ import { AdPageComponent } from './_components/main/ad-page/ad-page.component';
 import { UserPageComponent } from './_components/main/user-page/user-page.component';
 import { AdvestComponent } from './_components/advest/advest.component';
 import { AddressFormComponent } from './_components/address-form/address-form.component';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatIconModule} from '@angular/material/icon';
 
 
 @NgModule({
@@ -57,6 +59,8 @@ import { AddressFormComponent } from './_components/address-form/address-form.co
     MatDialogModule,
     MatButtonModule,
     MatSlideToggleModule,
+    MatToolbarModule,
+    MatIconModule
   ],
   providers: [
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}

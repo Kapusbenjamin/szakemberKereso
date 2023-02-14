@@ -12,19 +12,15 @@ export class AdsService {
 
   constructor(private http: HttpClient) { }
 
-  getAllAcceptedAds():Observable<Ad[]>{
-    return this.http.get<Ad[]>(`${this.apiUrl}getAllAcceptedAds`);
+  getAllAcceptedAds(){
+    return this.http.get(`${this.apiUrl}getAllAcceptedAds`);
   }
 
-  filteringAds(countyId: number | "",jobTagId: number | ""):Observable<Ad[]>{
-    return this.http.post<Ad[]>(`${this.apiUrl}filteringAds`,
-      {
-        countyId:countyId,
-        jobTagId:jobTagId
-      }
-    );
+  filteringAds(filter:Object):Observable<Ad[]>{
+    return this.http.post<Ad[]>(`${this.apiUrl}filteringAds`,filter);
   }
 
-
-
+  getAllNonAcceptedAds():Observable<any>{
+    return this.http.get<any>(`${this.apiUrl}getAllNonAcceptedAds`);
+  }
 }

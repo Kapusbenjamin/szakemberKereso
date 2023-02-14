@@ -4,7 +4,6 @@ import { AdsService } from 'src/app/_services/ads.service';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { CountiesService } from 'src/app/_services/counties.service';
 import { JobTagsService } from 'src/app/_services/job-tags.service';
-import { JsonPipe } from '@angular/common';
 import { Tag } from 'src/app/_model/Tag';
 
 @Component({
@@ -30,18 +29,22 @@ export class AdPageComponent implements OnInit {
   ngOnInit(): void {
     this.getAllCounties();
     this.getAllJobTags();
-    this.filteringAds("",1);
+    // this.filteringAds("",1);
     // this.getAllAcceptedAds();
+    this.adService.getAllNonAcceptedAds().subscribe(res=>{
+      console.log(res);
+
+    })
   }
 
   getAllAcceptedAds(){
-    this.adService.getAllAcceptedAds().subscribe((response)=>{
-      console.log(response);
+    this.adService.getAllAcceptedAds().subscribe((res)=>{
+      console.log(res);
     });
   }
 
-  filteringAds(countyId:number | "",jobTagId:number | ""){
-    this.adService.filteringAds(countyId,jobTagId).subscribe((response:Ad[])=>{
+  filteringAds(filter:Object){
+    this.adService.filteringAds(filter).subscribe((response:Ad[])=>{
       this.ads = response
       console.log(this.ads);
     });
@@ -64,20 +67,21 @@ export class AdPageComponent implements OnInit {
   }
 
   search(){
+    let filter:any = {};
     let county = this.searchForm.value.county;
     let jobTag = this.searchForm.value.jobTag;
-    let countyId: number | "" = this.getIdFromDropDown(county!,this.counties);
-    let jobTagId: number | "" = this.getIdFromDropDown(jobTag!,this.jobTags);
+    let countyId: number = this.getIdFromDropDown(county!,this.counties);
+    let jobTagId: number = this.getIdFromDropDown(jobTag!,this.jobTags);
     if(countyId == -1 && jobTagId == -1){
       this.getAllAcceptedAds();
     }else{
-      if(countyId == -1){
-        countyId = "";
-      }
-      if(jobTagId == -1){
-        jobTagId = ""
-      }
-      this.filteringAds(countyId,jobTagId);
+    if(countyId != -1){
+      filter['countyId'] = countyId;
+    }
+    if(jobTagId != -1){
+      filter["jobTagId"] = jobTagId;
+    }
+      this.filteringAds(filter);
     }
 
   }
