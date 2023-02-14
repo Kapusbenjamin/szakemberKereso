@@ -268,12 +268,13 @@ public class Ads implements Serializable {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
+        List<Ads> ads = new ArrayList<>();
+        
         try {            
             StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllAcceptedAds");
             spq.execute();
             
             List<Object[]> result = spq.getResultList();
-            List<Ads> ads = new ArrayList<>();
             
             for(Object[] o : result){
                 Ads ad = Ads.objectToAd(o);
@@ -284,7 +285,7 @@ public class Ads implements Serializable {
         } 
         catch (Exception e) {
             System.out.println(e.getMessage());
-            return null;
+            return ads;
         }
         finally{
             em.clear();
@@ -298,12 +299,13 @@ public class Ads implements Serializable {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
+        List<Ads> ads = new ArrayList<>();
+            
         try {            
             StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllNonAcceptedAds");
             spq.execute();
             
             List<Object[]> result = spq.getResultList();
-            List<Ads> ads = new ArrayList<>();
             
             for(Object[] o : result){
                 Ads ad = Ads.objectToAd(o);
@@ -314,7 +316,7 @@ public class Ads implements Serializable {
         } 
         catch (Exception e) {
             System.out.println(e.getMessage());
-            return null;
+            return ads;
         }
         finally{
             em.clear();
