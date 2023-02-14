@@ -51,7 +51,7 @@
       </div>
   </div>
   <p>a *-gal jelölt mezők kitöltése kötelező</p>
-  <button mat-raised-button color="primary" (click)="regist()">Regisztráció</button>
+  <button mat-raised-button color="primary" [disabled]="registForm.valid" (click)="regist()">Regisztráció</button>
 </form>
 </div>
 

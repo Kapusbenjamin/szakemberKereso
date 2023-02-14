@@ -19,7 +19,8 @@ export class AdvestComponent implements OnInit {
   }
 
   getNameByUser(){
-    this.userService.getUserById(this.ad.id).subscribe(user=>{
+    this.userService.getUserById(this.ad.userId).subscribe(user=>{
+      console.log(user);
       this.name = user.firstName + " " + user. lastName;
     });
   }
