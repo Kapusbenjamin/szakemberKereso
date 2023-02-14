@@ -74,14 +74,14 @@ public class AdsController {
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
-    @POST
+    @GET
     @Path("getAllAcceptedAds")
     public Response getAllAcceptedAds(){
         List<Ads> result = as.getAllAcceptedAds();
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
-    @POST
+    @GET
     @Path("getAllNonAcceptedAds")
     public Response getAllNonAcceptedAds(){
         List<Ads> result = as.getAllNonAcceptedAds();
