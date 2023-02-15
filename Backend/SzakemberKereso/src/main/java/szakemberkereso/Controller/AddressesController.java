@@ -4,10 +4,11 @@
  */
 package szakemberkereso.Controller;
 
+import javax.annotation.security.RolesAllowed;
+import javax.ejb.Stateless;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -18,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import szakemberkereso.Model.Addresses;
 import szakemberkereso.Service.AddressesService;
+import szakemberkereso.Service.AuthService;
 
 /**
  * REST Web Service
@@ -25,13 +27,16 @@ import szakemberkereso.Service.AddressesService;
  * @author Sharkz
  */
 @Path("Addresses")
+@Stateless
 public class AddressesController {
 
     @Context
     private UriInfo context;
     
     AddressesService as = new AddressesService();
-
+    
+    AuthService authService = new AuthService();
+    
     /**
      * Creates a new instance of Addresses
      */
@@ -81,10 +86,14 @@ public class AddressesController {
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
-    @DELETE
-    @Path("deleteAddressById/{id}")
-    public Response deleteAddressById(@PathParam("id") Integer id){
-        Boolean result = as.deleteAddressById(id);
+    @POST
+    @Path("deleteAddressById")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteAddressById(Addresses address){
+        if (!authService.isUserAuthorized(address.getUserId(), "ADMIN")) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        Boolean result = as.deleteAddressById(address.getId());
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     

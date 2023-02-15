@@ -4,6 +4,7 @@
  */
 package szakemberkereso.Model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.sql.CallableStatement;
 import java.util.List;
@@ -21,6 +22,7 @@ import javax.persistence.ParameterMode;
 import javax.persistence.Persistence;
 import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
@@ -83,6 +85,10 @@ public class Addresses implements Serializable {
     @Column(name = "door")
     private Integer door;
 
+    @Transient
+    @JsonInclude
+    private Integer userId;
+    
     public Addresses() {
     }
 
@@ -172,6 +178,14 @@ public class Addresses implements Serializable {
 
     public void setDoor(Integer door) {
         this.door = door;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     @Override
