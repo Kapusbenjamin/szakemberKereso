@@ -22,27 +22,13 @@ export class UsersService {
     return this.http.post<User>(`${this.apiUrl}loginUser`,User);
   }
 
-  createUser(user:User):Observable<any>{
-    return this.http.post<any>(`${this.apiUrl}createUser`,{
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      phone: user.phone,
-      password: user.password,
-      address: user.address
-    });
+  createUser(user:any):Observable<any>{
+    console.log(user);
+    return this.http.post<any>(`${this.apiUrl}createUser`,user);
   }
 
-  createUserWorker(user: User, company: Company){
-    return this.http.post(`${this.apiUrl}createUserWorker`,{
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      phone: user.phone,
-      password: user.password,
-      address: user.address,
-      company: company
-    });
+  createUserWorker(user: any){
+    return this.http.post(`${this.apiUrl}createUserWorker`,user);
   }
 
   getUserById(id: number):Observable<User>{

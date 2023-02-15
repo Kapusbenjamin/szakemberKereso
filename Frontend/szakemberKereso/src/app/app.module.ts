@@ -28,6 +28,7 @@ import { AdvestComponent } from './_components/advest/advest.component';
 import { AddressFormComponent } from './_components/address-form/address-form.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
+import { CompanyFormComponent } from './_components/company-form/company-form.component';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import {MatIconModule} from '@angular/material/icon';
     MenuComponent,
     NotFoundComponent,
     AdvestComponent,
-    AddressFormComponent
+    AddressFormComponent,
+    CompanyFormComponent
   ],
   imports: [
     BrowserModule,

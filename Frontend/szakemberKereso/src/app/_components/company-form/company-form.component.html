@@ -1,0 +1,8 @@
+<div class="company">
+  <h2>Cég Információ</h2>
+  <div *ngFor="let field of fields">
+    <app-input [control]="field.control" [type]="field.type" [name]="field.name"></app-input>
+    <mat-error *ngIf="field.control.hasError('required') && field.control.touched">Mező kitöltése kötelező</mat-error>
+  </div>
+  <app-address-form [formGroup]="company" ></app-address-form>
+</div>

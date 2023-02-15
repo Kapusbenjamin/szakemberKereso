@@ -1,5 +1,6 @@
 export interface Address{
     id?: number
+    county?:string,
     countyId: number,
     zipCode: number,
     city: string,

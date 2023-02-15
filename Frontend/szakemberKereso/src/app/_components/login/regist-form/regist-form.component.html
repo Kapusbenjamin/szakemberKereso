@@ -9,51 +9,36 @@
       <app-input [control]="field.control" [type]="field.type" [name]="field.name"></app-input>
       <mat-error *ngIf="field.control.hasError('required') && field.control.touched">Mező kitöltése kötelező</mat-error>
     </div>
-    <h2>Cím</h2>
+    <mat-error *ngIf="registForm.hasError('notSame') &&
+    registForm.controls['passwordConfirm'].value != '' ">A jelszavak nem egyeznek</mat-error>
     <!-- Address -->
     <app-address-form
-    [city]="address.controls['city']"
-    [county]="address.controls['county']"
-    [streetName]="address.controls['streetName']"
-    [addressFormGroup]="address"
-    [counties]="counties"
-    [cities]="cities"
-    [streetsNames]="streetsNames"
-    [addressFields]="addressFields"
+    [formGroup]="registForm"
     ></app-address-form>
     <!-- Professional -->
     <mat-slide-toggle (click)="professionalSlide()">Regisztrálás szakemberként</mat-slide-toggle>
     <div *ngIf="professional">
+      <h2>Szakember adatok</h2>
       <div class="dropdown">
-        <app-search-dropdown [options]="professions" name="Foglalkozás" [control]="registForm.controls['profession']"></app-search-dropdown>
-        <mat-error *ngIf="registForm.controls['profession'].hasError('required') &&
-         registForm.controls['profession'].touched">Mező kitöltése kötelező</mat-error>
+        <app-search-dropdown [options]="professions" name="Foglalkozás" [control]="professionControl"></app-search-dropdown>
+        <mat-error *ngIf="!professionControl.hasError('required') &&
+        professionControl.hasError('notContains') && professionControl.dirty">
+          Érvénytelen név
+        </mat-error>
+        <mat-error *ngIf="professionControl.hasError('required') &&
+        professionControl.touched">Mező kitöltése kötelező</mat-error>
       </div>
       <mat-slide-toggle (click)="companySlide()">Cég regisztálása</mat-slide-toggle>
-      <div *ngIf="hasCompany" class="company">
-          <div *ngFor="let field of companyFields">
-            <app-input [control]="field.control" [type]="field.type" [name]="field.name"></app-input>
-            <mat-error *ngIf="field.control.hasError('required') && field.control.touched">Mező kitöltése kötelező</mat-error>
-          </div>
-          <h2>Cég Telephely</h2>
-          <!-- Company Address -->
-          <app-address-form
-          [city]="companyAddress.controls['city']"
-          [county]="companyAddress.controls['county']"
-          [streetName]="companyAddress.controls['streetName']"
-          [addressFormGroup]="companyAddress"
-          [counties]="counties"
-          [cities]="companyCities"
-          [streetsNames]="streetsNames"
-          [addressFields]="companyAddressFields"
-          ></app-address-form>
-          <!-- Company Address -->
+      <!-- Company -->
+      <div *ngIf="hasCompany">
+        <app-company-form [formGroup]="registForm"></app-company-form>
       </div>
-  </div>
+    </div>
   <p>a *-gal jelölt mezők kitöltése kötelező</p>
-  <button mat-raised-button color="primary" [disabled]="registForm.valid" (click)="regist()">Regisztráció</button>
+  <button mat-raised-button color="primary" (click)="regist()">Regisztráció</button>
 </form>
 </div>
 
 {{ registForm.valid }}
 {{ registForm.value | json }}
+{{ registForm.errors | json }}
