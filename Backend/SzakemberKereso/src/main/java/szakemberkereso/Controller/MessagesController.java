@@ -66,9 +66,10 @@ public class MessagesController {
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
-    @GET
+    @POST
     @Path("getAllMessages")
-    public Response getAllMessages(){
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getAllMessages(Integer userId){
         List<Messages> result = ms.getAllMessages();
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }

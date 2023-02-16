@@ -33,8 +33,8 @@ public class AdsService {
         return result;
     }
     
-    public Boolean acceptAds(Integer id){
-        Boolean result = Ads.acceptAds(id);
+    public Boolean acceptAd(Integer id){
+        Boolean result = Ads.acceptAd(id);
         return result;
     }
     

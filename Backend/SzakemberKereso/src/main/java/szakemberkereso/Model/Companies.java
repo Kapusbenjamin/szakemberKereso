@@ -4,6 +4,7 @@
  */
 package szakemberkereso.Model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
@@ -20,6 +21,7 @@ import javax.persistence.ParameterMode;
 import javax.persistence.Persistence;
 import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -60,8 +62,14 @@ public class Companies implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "tax_number")
     private String taxNumber;
-
+    
+    //jogosultság miatt
+    @Transient
+    @JsonInclude
+    private Integer currentUserId;
     //address adatokhoz (id miatt)
+    @Transient
+    @JsonInclude
     private Addresses address;
     
     public Companies() {
@@ -118,6 +126,14 @@ public class Companies implements Serializable {
         this.address = address;
     }
 
+    public Integer getCurrentUserId() {
+        return currentUserId;
+    }
+
+    public void setCurrentUserId(Integer currentUserId) {
+        this.currentUserId = currentUserId;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -143,7 +159,7 @@ public class Companies implements Serializable {
         return "szakemberkereso.Model.Companies[ id=" + id + " ]";
     }
     
-    public static Companies getCompanyById(Companies company_in){
+    public static Companies getCompanyById(Integer id_in){
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -152,7 +168,7 @@ public class Companies implements Serializable {
             
             spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
             
-            spq.setParameter("id_in", company_in.getId());
+            spq.setParameter("id_in", id_in);
             
             spq.execute();
             List<Object[]> result = spq.getResultList();
@@ -250,31 +266,31 @@ public class Companies implements Serializable {
         
     }
     
-//    public static Boolean deleteAddressById(Integer id_in){
-//        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
-//        EntityManager em = emf.createEntityManager();
-//        
-//        try {            
-//            StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteAddressById");
-//            
-//            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
-//
-//            spq.setParameter("id_in", id_in);
-//
-//            spq.execute();
-//            return true;
-//        } 
-//        catch (Exception e) {
-//            System.out.println(e.getMessage());
-//            return false;
-//        }
-//        finally{
-//            em.clear();
-//            em.close();
-//            emf.close();
-//        }
-//        
-//    }
-//    
+    public static Boolean deleteCompanyById(Companies company_in){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteCompanyById");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+
+            spq.setParameter("id_in", company_in.getId());
+
+            spq.execute();
+            return true;
+        } 
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+    
     
 }

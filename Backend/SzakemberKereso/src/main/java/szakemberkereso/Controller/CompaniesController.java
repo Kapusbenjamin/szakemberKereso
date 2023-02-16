@@ -12,6 +12,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import szakemberkereso.Model.Companies;
@@ -56,10 +57,10 @@ public class CompaniesController {
     public void putJson(String content) {
     }
     
-    @POST
-    @Path("getCompanyById")
-    public Response getCompanyById(Companies company){
-        Companies result = cs.getCompanyById(company);
+    @GET
+    @Path("getCompanyById/{id}")
+    public Response getCompanyById(@PathParam("id") Integer id){
+        Companies result = cs.getCompanyById(id);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
@@ -79,11 +80,12 @@ public class CompaniesController {
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
-//    @DELETE
-//    @Path("deleteAddressById/{id}")
-//    public Response deleteAddressById(@PathParam("id") Integer id){
-//        Boolean result = as.deleteAddressById(id);
-//        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
-//    }
-//    
+    @POST
+    @Path("deleteCompanyById")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteCompanyById(Companies company){
+        Boolean result = cs.deleteCompanyById(company);
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
 }

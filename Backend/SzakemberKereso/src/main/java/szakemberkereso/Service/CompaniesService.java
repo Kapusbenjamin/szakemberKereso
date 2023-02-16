@@ -14,8 +14,8 @@ import szakemberkereso.Model.Companies;
 public class CompaniesService {
     
     
-    public Companies getCompanyById(Companies company){
-        Companies result = Companies.getCompanyById(company);
+    public Companies getCompanyById(Integer id){
+        Companies result = Companies.getCompanyById(id);
         return result;
     }
     
@@ -39,10 +39,10 @@ public class CompaniesService {
         String result = Companies.updateCompanyById(company);
         return result;
     }
-//    
-//    public Boolean deleteAddressById(Integer id){
-//        Boolean result = Addresses.deleteAddressById(id);
-//        return result;
-//    }
+    
+    public Boolean deleteCompanyById(Companies company){
+        Boolean result = Companies.deleteCompanyById(company);
+        return result;
+    }
     
 }

@@ -4,6 +4,7 @@
  */
 package szakemberkereso.Model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -82,6 +84,11 @@ public class Messages implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date sendedAt;
 
+    //jogosultság miatt
+    @Transient
+    @JsonInclude
+    private Integer currentUserId;
+    
     public Messages() {
     }
 
@@ -153,6 +160,14 @@ public class Messages implements Serializable {
 
     public void setSendedAt(Date sendedAt) {
         this.sendedAt = sendedAt;
+    }
+
+    public Integer getCurrentUserId() {
+        return currentUserId;
+    }
+
+    public void setCurrentUserId(Integer currentUserId) {
+        this.currentUserId = currentUserId;
     }
 
     @Override

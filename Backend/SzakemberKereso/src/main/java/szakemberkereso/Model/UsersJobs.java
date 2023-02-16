@@ -4,6 +4,7 @@
  */
 package szakemberkereso.Model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ import javax.persistence.ParameterMode;
 import javax.persistence.Persistence;
 import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import szakemberkereso.Configuration.Database;
@@ -54,6 +56,11 @@ public class UsersJobs implements Serializable {
     @Column(name = "job_tag_id")
     private int jobTagId;
 
+    //jogosultság miatt
+    @Transient
+    @JsonInclude
+    private Integer currentUserId;
+    
     public UsersJobs() {
     }
 
@@ -89,6 +96,14 @@ public class UsersJobs implements Serializable {
 
     public void setJobTagId(int jobTagId) {
         this.jobTagId = jobTagId;
+    }
+
+    public Integer getCurrentUserId() {
+        return currentUserId;
+    }
+
+    public void setCurrentUserId(Integer currentUserId) {
+        this.currentUserId = currentUserId;
     }
 
     @Override

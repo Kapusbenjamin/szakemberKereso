@@ -5,6 +5,7 @@
 package szakemberkereso.Model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -27,6 +28,7 @@ import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -80,6 +82,11 @@ public class Images implements Serializable {
     @Column(name = "user_id")
     private int userId;
 
+    //jogosultság miatt
+    @Transient
+    @JsonInclude
+    private Integer currentUserId;
+    
     public Images() {
     }
 
@@ -142,6 +149,14 @@ public class Images implements Serializable {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public Integer getCurrentUserId() {
+        return currentUserId;
+    }
+
+    public void setCurrentUserId(Integer currentUserId) {
+        this.currentUserId = currentUserId;
     }
 
     @Override

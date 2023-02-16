@@ -13,7 +13,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import szakemberkereso.Model.Ratings;
@@ -58,39 +57,43 @@ public class RatingsController {
     public void putJson(String content) {
     }
     
-    @GET
-    @Path("getRatingById/{id}")
+    @POST
+    @Path("getRatingById")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getRatingById(@PathParam("id") Integer id){
-        Ratings result = rs.getRatingById(id);
+    public Response getRatingById(Ratings rating){
+        Ratings result = rs.getRatingById(rating.getId());
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
-    @GET
+    @POST
     @Path("getAllRatings")
-    public Response getAllRatings(){
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getAllRatings(Integer userId){
         List<Ratings> result = rs.getAllRatings();
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
-    @GET
+    @POST
     @Path("getAllNotAcceptedRatings")
-    public Response getAllNotAcceptedRatings(){
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getAllNotAcceptedRatings(Integer userId){
         List<Ratings> result = rs.getAllNotAcceptedRatings();
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
-    @GET
-    @Path("getAllRatingsByRatinger/{user_id}")
-    public Response getAllRatingsByRatinger(@PathParam("user_id") Integer user_id){
-        List<Ratings> result = rs.getAllRatingsByRatinger(user_id);
+    @POST
+    @Path("getAllRatingsByRatinger")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getAllRatingsByRatinger(Ratings rating){
+        List<Ratings> result = rs.getAllRatingsByRatinger(rating.getRatingerUserId());
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
-    @GET
-    @Path("getAllRatingsByRatinged/{user_id}")
-    public Response getAllRatingsByRatinged(@PathParam("user_id") Integer user_id){
-        List<Ratings> result = rs.getAllRatingsByRatinged(user_id);
+    @POST
+    @Path("getAllRatingsByRatinged")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getAllRatingsByRatinged(Ratings rating){
+        List<Ratings> result = rs.getAllRatingsByRatinged(rating.getRatingedUserId());
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
@@ -103,18 +106,18 @@ public class RatingsController {
     }
     
     @POST
-    @Path("acceptRating/{id}")
+    @Path("acceptRating")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response acceptRating(@PathParam("id") Integer id){
-        Boolean result = rs.acceptRating(id);
+    public Response acceptRating(Ratings rating){
+        Boolean result = rs.acceptRating(rating.getId());
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
     @POST
-    @Path("deleteRatingById/{id}")
+    @Path("deleteRatingById")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteRatingById(@PathParam("id") Integer id){
-        Boolean result = rs.deleteRatingById(id);
+    public Response deleteRatingById(Ratings rating){
+        Boolean result = rs.deleteRatingById(rating.getId());
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     

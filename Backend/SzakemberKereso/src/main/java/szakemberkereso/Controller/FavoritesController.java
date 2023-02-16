@@ -9,7 +9,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -61,24 +60,24 @@ public class FavoritesController {
     @POST
     @Path("getAllfavoritesByUserId")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getAllfavoritesByUserId(Integer user_id){
-        List<Favorites> result = fs.getAllfavoritesByUserId(user_id);
+    public Response getAllfavoritesByUserId(Favorites favorite){
+        List<Favorites> result = fs.getAllfavoritesByUserId(favorite.getUserId());
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
-    @GET
+    @POST
     @Path("getFavoriteById")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getFavoriteById(Integer id){
-        Favorites result = fs.getFavoriteById(id);
+    public Response getFavoriteById(Favorites favorite){
+        Favorites result = fs.getFavoriteById(favorite.getId());
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
-    @DELETE
+    @POST
     @Path("deleteFavorite")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteFavorite(Integer id){
-        Boolean result = fs.deleteFavorite(id);
+    public Response deleteFavorite(Favorites favorite){
+        Boolean result = fs.deleteFavorite(favorite.getId());
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     

@@ -4,7 +4,6 @@
  */
 package szakemberkereso.Controller;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -90,9 +89,9 @@ public class AddressesController {
     @Path("deleteAddressById")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deleteAddressById(Addresses address){
-        if (!authService.isUserAuthorized(address.getUserId(), "ADMIN")) {
-            return Response.status(Response.Status.FORBIDDEN).build();
-        }
+//        if (!authService.isUserAuthorized(address.getUserId(), "ADMIN")) {
+//            return Response.status(Response.Status.FORBIDDEN).build();
+//        }
         Boolean result = as.deleteAddressById(address.getId());
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }

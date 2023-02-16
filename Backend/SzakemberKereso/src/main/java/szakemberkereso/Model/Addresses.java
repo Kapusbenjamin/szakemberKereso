@@ -6,7 +6,6 @@ package szakemberkereso.Model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
-import java.sql.CallableStatement;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -24,7 +23,6 @@ import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import szakemberkereso.Configuration.Database;
@@ -85,9 +83,10 @@ public class Addresses implements Serializable {
     @Column(name = "door")
     private Integer door;
 
+    //jogosultság miatt
     @Transient
     @JsonInclude
-    private Integer userId;
+    private Integer currentUserId;
     
     public Addresses() {
     }
@@ -180,12 +179,12 @@ public class Addresses implements Serializable {
         this.door = door;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public Integer getCurrentUserId() {
+        return currentUserId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setCurrentUserId(Integer currentUserId) {
+        this.currentUserId = currentUserId;
     }
 
     @Override

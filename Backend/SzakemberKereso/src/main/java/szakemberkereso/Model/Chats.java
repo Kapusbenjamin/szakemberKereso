@@ -4,6 +4,7 @@
  */
 package szakemberkereso.Model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ import javax.persistence.ParameterMode;
 import javax.persistence.Persistence;
 import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import szakemberkereso.Configuration.Database;
@@ -53,7 +55,16 @@ public class Chats implements Serializable {
     @NotNull
     @Column(name = "receiver_id")
     private int receiverId;
-
+    
+    //jogosultság miatt
+    @Transient
+    @JsonInclude
+    private Integer currentUserId;
+    //sender vagy receiver miatt
+    @Transient
+    @JsonInclude
+    private Integer userId;
+    
     public Chats() {
     }
 
@@ -89,6 +100,22 @@ public class Chats implements Serializable {
 
     public void setReceiverId(int receiverId) {
         this.receiverId = receiverId;
+    }
+
+    public Integer getCurrentUserId() {
+        return currentUserId;
+    }
+
+    public void setCurrentUserId(Integer currentUserId) {
+        this.currentUserId = currentUserId;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     @Override

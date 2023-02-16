@@ -4,13 +4,13 @@
  */
 package szakemberkereso.Model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -20,13 +20,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.ParameterMode;
 import javax.persistence.Persistence;
 import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -131,8 +131,16 @@ public class Users implements Serializable {
     @Column(name = "deleted")
     private int deleted;
 
+    //jogosultság miatt
+    @Transient
+    @JsonInclude
+    private Integer currentUserId;
     //user létrehozásánál az address és cég adatokhoz (mivel csak address_id van)
+    @Transient
+    @JsonInclude
     private Addresses address;
+    @Transient
+    @JsonInclude
     private Companies company;
     
     public Users() {
@@ -314,6 +322,14 @@ public class Users implements Serializable {
         this.company = company;
     }
 
+    public Integer getCurrentUserId() {
+        return currentUserId;
+    }
+
+    public void setCurrentUserId(Integer currentUserId) {
+        this.currentUserId = currentUserId;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

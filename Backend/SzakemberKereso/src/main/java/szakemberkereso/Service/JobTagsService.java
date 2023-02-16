@@ -18,8 +18,8 @@ public class JobTagsService {
         return result;
     }
     
-    public JobTags getJobTagById(JobTags jobTag){
-        JobTags result = JobTags.getJobTagById(jobTag);
+    public JobTags getJobTagById(Integer id){
+        JobTags result = JobTags.getJobTagById(id);
         return result;
     }
     

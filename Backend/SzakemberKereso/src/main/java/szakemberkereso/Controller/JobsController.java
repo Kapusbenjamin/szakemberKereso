@@ -59,6 +59,7 @@ public class JobsController {
     
     @POST
     @Path("getJobById")
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response getJobById(Jobs job){
         Jobs result = js.getJobById(job);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
@@ -80,15 +81,17 @@ public class JobsController {
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
-    @GET
+    @POST
     @Path("getAllJobs")
-    public Response getAllJobs(){
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getAllJobs(Integer userId){
         List<Jobs> result = js.getAllJobs();
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
     @POST
     @Path("getAllJobsByWorker")
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response getAllJobsByWorker(Jobs job){
         List<Jobs> result = js.getAllJobsByWorker(job);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
@@ -96,6 +99,7 @@ public class JobsController {
     
     @POST
     @Path("getAllJobsByCustomer")
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response getAllJobsByCustomer(Jobs job){
         List<Jobs> result = js.getAllJobsByCustomer(job);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();

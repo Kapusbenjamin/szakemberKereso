@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 09, 2023 at 11:06 AM
+-- Generation Time: Feb 16, 2023 at 03:41 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -27,8 +27,8 @@ DELIMITER $$
 --
 -- Procedures
 --
-DROP PROCEDURE IF EXISTS `acceptAds`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptAds` (IN `id_in` INT(11))  UPDATE `ads`
+DROP PROCEDURE IF EXISTS `acceptAd`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptAd` (IN `id_in` INT(11))  UPDATE `ads`
 SET `ads`.`status` = 1
 WHERE `ads`.`id` = id_in$$
 
@@ -712,7 +712,6 @@ INSERT INTO `addresses` (`id`, `county_id`, `zip_code`, `city`, `street`, `numbe
 (3, 1, 4532, 'Budapest', 'A utca', '23/A', NULL, NULL, NULL),
 (4, 2, 7600, 'Pécs', 'Ág utca', '56', NULL, NULL, NULL),
 (6, 5, 4532, 'Pécs', 'Petőfi', '13/A', 'Első', 2, 12),
-(39, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
 (40, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
 (41, 4, 1111, 'Bp', 'AAAA utca', '56', NULL, NULL, NULL);
 

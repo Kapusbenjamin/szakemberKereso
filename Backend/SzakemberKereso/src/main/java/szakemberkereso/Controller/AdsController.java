@@ -81,36 +81,41 @@ public class AdsController {
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
-    @GET
+    @POST
     @Path("getAllNonAcceptedAds")
-    public Response getAllNonAcceptedAds(){
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getAllNonAcceptedAds(Integer userId){
         List<Ads> result = as.getAllNonAcceptedAds();
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
-    @GET
-    @Path("acceptAds/{id}")
-    public Response acceptAds(@PathParam("id") Integer id){
-        Boolean result = as.acceptAds(id);
+    @POST
+    @Path("acceptAd")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response acceptAd(Ads ad){
+        Boolean result = as.acceptAd(ad.getId());
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
-    @GET
+    @POST
     @Path("getAllAds")
-    public Response getAllAds(){
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getAllAds(Integer userId){
         List<Ads> result = as.getAllAds();
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
-    @GET
-    @Path("getAllAdsByUserId/{user_id}")
-    public Response getAllAdsByUserId(@PathParam("user_id") Integer user_id){
-        List<Ads> result = as.getAllAdsByUserId(user_id);
+    @POST
+    @Path("getAllAdsByUserId")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getAllAdsByUserId(Ads ad){
+        List<Ads> result = as.getAllAdsByUserId(ad.getUserId());
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
     @POST
     @Path("filteringAds")
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response filteringAds(Ads ad){
         List<Ads> result = as.filteringAds(ad);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
@@ -124,9 +129,10 @@ public class AdsController {
     }
     
     @POST
-    @Path("deleteAd/{id}")
-    public Response deleteAd(@PathParam("id") Integer id){
-        Boolean result = as.deleteAd(id);
+    @Path("deleteAd")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteAd(Ads ad){
+        Boolean result = as.deleteAd(ad.getId());
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     

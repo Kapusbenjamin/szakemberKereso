@@ -9,7 +9,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -60,6 +59,14 @@ public class UsersJobsController {
     public void putJson(String content) {
     }
     
+    @GET
+    @Path("getAllJobsByUser/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getAllJobsByUser(@PathParam("id") Integer id){
+        List<JobTags> result = ujs.getAllJobsByUser(id);
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
     @POST
     @Path("addNewJobToUser")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -68,19 +75,11 @@ public class UsersJobsController {
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
-    @DELETE
+    @POST
     @Path("deleteUserJob")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deleteUserJob(UsersJobs user_job){
         String result = ujs.deleteUserJob(user_job);
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
-    }
-    
-    @GET
-    @Path("getAllJobsByUser/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response getAllJobsByUser(@PathParam("id") Integer user_id_in){
-        List<JobTags> result = ujs.getAllJobsByUser(user_id_in);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     

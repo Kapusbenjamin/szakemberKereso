@@ -137,7 +137,7 @@ public class JobTags implements Serializable {
         }
     }
     
-    public static JobTags getJobTagById(JobTags jobTag){
+    public static JobTags getJobTagById(Integer id_in){
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -145,7 +145,7 @@ public class JobTags implements Serializable {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("getJobTagById");
             
             spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
-            spq.setParameter("id_in", jobTag.getId());
+            spq.setParameter("id_in", id_in);
             
             spq.execute();
             

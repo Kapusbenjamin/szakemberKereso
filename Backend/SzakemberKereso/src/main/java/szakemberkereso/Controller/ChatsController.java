@@ -60,8 +60,8 @@ public class ChatsController {
     @POST
     @Path("getAllChatsByUserId")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getAllChatsByUserId(Integer id){
-        List<Chats> result = cs.getAllChatsByUserId(id);
+    public Response getAllChatsByUserId(Chats chat){
+        List<Chats> result = cs.getAllChatsByUserId(chat.getUserId());
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     

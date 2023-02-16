@@ -8,18 +8,13 @@ import java.util.List;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
-import szakemberkereso.Model.Addresses;
 import szakemberkereso.Model.Users;
 import szakemberkereso.Service.UsersService;
 
@@ -63,10 +58,19 @@ public class UsersController {
     }
     
     
-    @GET
-    @Path("getUserById/{id}")
-    public Response getUserById(@PathParam("id") Integer id){
-        Users result = us.getUserById(id);
+    @POST
+    @Path("getUserById")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getUserById(Users user){
+        Users result = us.getUserById(user.getId());
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
+    @POST
+    @Path("getAllUsers")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response getAllUsers(Integer userId){
+        List<Users> result = us.getAllUsers();
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
@@ -83,29 +87,6 @@ public class UsersController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response logoutUser(Users user){
         Boolean result = us.logoutUser(user.getId());
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
-    }
-    
-    @POST
-    @Path("deleteUser/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteUser(@PathParam("id") Integer id){
-        Boolean result = us.deleteUser(id);
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
-    }
-    
-    @POST
-    @Path("changeAccess/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response changeAccess(@PathParam("id") Integer id){
-        Boolean result = us.changeAccess(id);
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
-    }
-    
-    @GET
-    @Path("getAllUsers")
-    public Response getAllUsers(){
-        List<Users> result = us.getAllUsers();
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
@@ -130,6 +111,22 @@ public class UsersController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateUser(Users user){
         String result = us.updateUser(user);
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
+    @POST
+    @Path("deleteUser")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteUser(Users user){
+        Boolean result = us.deleteUser(user.getId());
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
+    @POST
+    @Path("changeAccess")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response changeAccess(Users user){
+        Boolean result = us.changeAccess(user.getId());
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
