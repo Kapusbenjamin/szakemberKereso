@@ -43,7 +43,7 @@ export class LoginFormComponent implements OnInit {
             access_type: User.accessType!
           }
           this.usersService.setUserData(userData);
-          this.route.navigateByUrl('/advertisement');
+          this.route.navigateByUrl('/main');
         }else{
           alert('Sikertelen bejelentkezés');
         }

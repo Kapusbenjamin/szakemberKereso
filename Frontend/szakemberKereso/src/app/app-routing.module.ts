@@ -4,11 +4,12 @@ import { NotFoundComponent } from './_components/not-found/not-found.component';
 import { AuthGuard } from './_Guards/auth.guard';
 
 const routes: Routes = [
-  {path: '',
+  {path: 'main',
+  canLoad: [AuthGuard],
   loadChildren: ()=> import('./_components/main/main.module')
   .then(m => m.MainModule)
   },
-  {path:'login', canLoad: [AuthGuard],
+  {path:'login',
   loadChildren: ()=> import('./_components/login/login.module')
   .then(m => m.LoginModule)
   },
