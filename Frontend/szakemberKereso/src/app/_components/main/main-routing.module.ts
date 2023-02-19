@@ -9,7 +9,7 @@ const routes: Routes = [
     path: '', component: MainPageComponent,
     children: [
       { path:'user', component:UserPageComponent },
-      { path:'advertisement', component:AdPageComponent }
+      { path:'', component:AdPageComponent }
     ]
   }
 ];

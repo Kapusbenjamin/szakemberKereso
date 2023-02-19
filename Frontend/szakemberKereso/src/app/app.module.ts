@@ -13,7 +13,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SearchDropdownComponent } from './_components/search-dropdown/search-dropdown.component';
 import { InputComponent } from './_components/input/input.component';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
-import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -26,8 +25,6 @@ import { AdPageComponent } from './_components/main/ad-page/ad-page.component';
 import { UserPageComponent } from './_components/main/user-page/user-page.component';
 import { AdvestComponent } from './_components/advest/advest.component';
 import { AddressFormComponent } from './_components/address-form/address-form.component';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatIconModule} from '@angular/material/icon';
 import { CompanyFormComponent } from './_components/company-form/company-form.component';
 
 
@@ -58,11 +55,8 @@ import { CompanyFormComponent } from './_components/company-form/company-form.co
     MatInputModule,
     MatSelectModule,
     MatAutocompleteModule,
-    MatDialogModule,
     MatButtonModule,
     MatSlideToggleModule,
-    MatToolbarModule,
-    MatIconModule
   ],
   providers: [
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}

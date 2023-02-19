@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UsersService } from 'src/app/_services/users.service';
 
 @Component({
   selector: 'app-menu',
@@ -7,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MenuComponent implements OnInit {
 
-  constructor() { }
+  userName: string = "";
+
+  constructor(private userService: UsersService) { }
 
   ngOnInit(): void {
     document.querySelector('[data-toggle="collapse"]')!.addEventListener('click', function (this: HTMLElement) {
@@ -15,8 +18,11 @@ export class MenuComponent implements OnInit {
       const element = document.querySelector(target!);
       element!.classList.toggle('collapse');
     });
+    this.userName = this.userService.userData.name;
   }
 
-
+  logOut(){
+    this.userService.logoutUser(this.userService.userData.userId).subscribe();
+  }
 
 }

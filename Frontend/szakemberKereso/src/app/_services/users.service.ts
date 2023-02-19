@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Company } from '../_model/Company';
 import { User } from '../_model/User';
+import { UserData } from '../_model/UserData';
 
 @Injectable({
   providedIn: 'root'
@@ -10,20 +11,39 @@ import { User } from '../_model/User';
 export class UsersService {
 
   apiUrl: string = "http://127.0.0.1:8080/SzakemberKereso-1.0-SNAPSHOT/webresources/Users/";
+  userData: UserData = {userId: -1, name:"", access_type: -1};
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient, private router: Router) { }
+
+  getUserById(id: number):Observable<User>{
+    return this.http.post<User>(`${this.apiUrl}getUserById`,{
+      id,
+      currentUserId: this.userData.userId
+    });
+  }
+
+  getAllUsers():Observable<User[]>{
+    return this.http.post<User[]>(`${this.apiUrl}getAllUsers`,this.userData.userId);
+  }
 
   loginUser(email:string | null, phone:string | null, password:string): Observable<User>{
-    let User = {
+    let user = {
       email: email,
       phone: phone,
       password: password
     }
-    return this.http.post<User>(`${this.apiUrl}loginUser`,User);
+    return this.http.post<User>(`${this.apiUrl}loginUser`,user);
+  }
+
+  logoutUser(id: number){
+    this.clearUserData();
+    return this.http.post(`${this.apiUrl}logoutUser`,{
+      id,
+      currentUserId: this.userData.userId
+    })
   }
 
   createUser(user:any):Observable<any>{
-    console.log(user);
     return this.http.post<any>(`${this.apiUrl}createUser`,user);
   }
 
@@ -31,34 +51,54 @@ export class UsersService {
     return this.http.post(`${this.apiUrl}createUserWorker`,user);
   }
 
-  getUserById(id: number):Observable<User>{
-    return this.http.get<User>(`${this.apiUrl}getUserById/${id}`);
-  }
-
-  getAllUsers():Observable<User[]>{
-    return this.http.get<User[]>(`${this.apiUrl}getAllUsers`);
-  }
-
   updateUser(id: number, user: User){
     return this.http.post(`${this.apiUrl}updateUser`,{
-      id: id,
+      id,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      phone: user.phone
+      phone: user.phone,
+      currentUserId: this.userData.userId
     })
   }
 
-  logoutUser(id: number){
-    return this.http.post(`${this.apiUrl}logoutUser`,{
-      id:id
-    })
+  deleteUser(id: number){
+    return this.http.post(`${this.apiUrl}deleteUser`,{
+      id,
+      currentUserId: this.userData.userId
+    });
   }
 
-  // deleteUser(id: number){
-  //   return this.http.post(`${this.apiUrl}deleteUser`,{
-  //    id: id
-  //  });
-  // }
+  changeAccess(id: number){
+    return this.http.post(`${this.apiUrl}changeAccess`,{
+      id,
+      currentUserId: this.userData.userId
+    });
+  }
 
+  changePassword(id:number, password: string){
+    return this.http.post(`${this.apiUrl}changePassword`,{
+      id,
+      password,
+      currentUserId: this.userData.userId
+    });
+  }
+
+  getUserData(){
+    let user = JSON.parse(localStorage.getItem('userData')!);
+    if(user){
+      this.userData = user;
+    }
+    return this.userData;
+  }
+
+  setUserData(user: UserData){
+    this.userData = user;
+    localStorage.setItem('userData', JSON.stringify(this.userData));
+  }
+
+  clearUserData(){
+    this.userData = {userId: -1, name:"", access_type: -1};
+    localStorage.removeItem('userData');
+  }
 }

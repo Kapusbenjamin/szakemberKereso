@@ -15,6 +15,7 @@
     <app-address-form
     [formGroup]="registForm"
     ></app-address-form>
+    <!-- Address -->
     <!-- Professional -->
     <mat-slide-toggle (click)="professionalSlide()">Regisztrálás szakemberként</mat-slide-toggle>
     <div *ngIf="professional">
@@ -23,22 +24,20 @@
         <app-search-dropdown [options]="professions" name="Foglalkozás" [control]="professionControl"></app-search-dropdown>
         <mat-error *ngIf="!professionControl.hasError('required') &&
         professionControl.hasError('notContains') && professionControl.dirty">
-          Érvénytelen név
-        </mat-error>
-        <mat-error *ngIf="professionControl.hasError('required') &&
-        professionControl.touched">Mező kitöltése kötelező</mat-error>
+        Érvénytelen név
+      </mat-error>
+      <mat-error *ngIf="professionControl.hasError('required') &&
+      professionControl.touched">Mező kitöltése kötelező</mat-error>
       </div>
       <mat-slide-toggle (click)="companySlide()">Cég regisztálása</mat-slide-toggle>
       <!-- Company -->
       <div *ngIf="hasCompany">
         <app-company-form [formGroup]="registForm"></app-company-form>
       </div>
+      <!-- Company -->
+      <!-- Professional -->
     </div>
   <p>a *-gal jelölt mezők kitöltése kötelező</p>
   <button mat-raised-button color="primary" (click)="regist()">Regisztráció</button>
 </form>
 </div>
-
-{{ registForm.valid }}
-{{ registForm.value | json }}
-{{ registForm.errors | json }}

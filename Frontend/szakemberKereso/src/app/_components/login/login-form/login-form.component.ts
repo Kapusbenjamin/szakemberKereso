@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { UserData } from 'src/app/_model/UserData';
 import { UsersService } from 'src/app/_services/users.service';
 
 @Component({
@@ -32,15 +33,17 @@ export class LoginFormComponent implements OnInit {
       }else{
         phone = emailNumber;
       }
-      let password = this.loginForm.controls['password'].value;
-      this.usersService.loginUser(email,phone,password!).subscribe((response)=>{
+      let password = this.loginForm.controls['password'].value!;
+      this.usersService.loginUser(email,phone,password).subscribe((response)=>{
         User = response;
         if(User.id! > 0){
-          localStorage.setItem('id',User.id + '');
-          localStorage.setItem('access_type',User.accessType + '');
-          localStorage.setItem('firstName',User.firstName);
-          localStorage.setItem('lastName',User.lastName);
-          this.route.navigateByUrl('/main/advertisement');
+          let userData: UserData ={
+            name: User.firstName + " " + User.lastName,
+            userId: User.id!,
+            access_type: User.accessType!
+          }
+          this.usersService.setUserData(userData);
+          this.route.navigateByUrl('/advertisement');
         }else{
           alert('Sikertelen bejelentkezés');
         }
@@ -49,6 +52,8 @@ export class LoginFormComponent implements OnInit {
       alert('Érvénytelen bejelentkezés');
     }
   }
+
+
 
 
 

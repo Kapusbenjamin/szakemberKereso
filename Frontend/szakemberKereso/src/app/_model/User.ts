@@ -7,8 +7,8 @@ export interface User{
   lastName: string,
   email: string,
   phone: string,
-  password: string,
-  address: Address,
+  password?: string,
+  address?: Address,
   profession?:number,
   company?: Company,
   accessType?: number

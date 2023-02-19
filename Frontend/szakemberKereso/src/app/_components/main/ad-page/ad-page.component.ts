@@ -6,6 +6,7 @@ import { CountiesService } from 'src/app/_services/counties.service';
 import { JobTagsService } from 'src/app/_services/job-tags.service';
 import { Tag } from 'src/app/_model/Tag';
 
+
 @Component({
   selector: 'app-ad-page',
   templateUrl: './ad-page.component.html',
@@ -15,6 +16,7 @@ export class AdPageComponent implements OnInit {
 
   counties: Tag[] = [];
   jobTags: Tag[] = [];
+  title:string = "Title";
 
   ads!: Ad[];
 
@@ -29,24 +31,18 @@ export class AdPageComponent implements OnInit {
   ngOnInit(): void {
     this.getAllCounties();
     this.getAllJobTags();
-    // this.filteringAds("",1);
-    // this.getAllAcceptedAds();
-    this.adService.getAllNonAcceptedAds().subscribe(res=>{
-      console.log(res);
-
-    })
+    this.getAllAcceptedAds();
   }
 
   getAllAcceptedAds(){
     this.adService.getAllAcceptedAds().subscribe((res)=>{
-      console.log(res);
+     this.ads = res
     });
   }
 
   filteringAds(filter:Object){
     this.adService.filteringAds(filter).subscribe((response:Ad[])=>{
       this.ads = response
-      console.log(this.ads);
     });
   }
 

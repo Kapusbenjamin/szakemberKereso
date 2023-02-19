@@ -18,9 +18,7 @@ export class JobTagsService {
   }
 
   getJobTagById(id: number):Observable<Tag>{
-    return this.http.post<Tag>(`${this.apiUrl}getJobTagById`,{
-      id
-    });
+    return this.http.get<Tag>(`${this.apiUrl}getJobTagById/${id}`);
   }
 
 }

@@ -1,5 +1,9 @@
 <div class="ad">
   <h2> {{ name }} </h2>
+  <p>{{ jobTag }}</p>
+  <div *ngFor="let countyname of countiesNames">
+    <p> {{ countyname }} </p>
+  </div>
   <p class="rating">
      *****
   </p>

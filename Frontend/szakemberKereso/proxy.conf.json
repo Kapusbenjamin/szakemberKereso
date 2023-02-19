@@ -1,7 +1,0 @@
-{
-  "*":{
-    "target": "http://127.0.0.1:8080/SzakemberKereso-1.0-SNAPSHOT/webresources",
-    "secure":false,
-    "logLevel":"debug"
-  }
-}
