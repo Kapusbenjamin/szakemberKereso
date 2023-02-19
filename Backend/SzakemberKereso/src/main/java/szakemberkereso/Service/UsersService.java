@@ -99,9 +99,23 @@ public class UsersService {
         return result;
     }
     
-    public String validateEmailByToken(Users user){
-        String result = Users.validateEmailByToken(user);
+    public String validateEmailByToken(String token){
+        String result = Users.validateEmailByToken(token);
         return result;
+    }
+    
+    public Boolean forgotPassword(String email){
+        Boolean result = Users.forgotPassword(email);
+        return result;
+    }
+        
+    public String resetPassword(String email, String password, String pwtoken){
+        if(Users.resetPassword(email,password,pwtoken)){
+            return "Password succesfully changed.";
+        }
+        else{
+            return "There is some problem!";
+        }
     }
     
 }

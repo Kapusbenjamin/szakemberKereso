@@ -10,6 +10,13 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,7 +37,10 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.commons.lang.RandomStringUtils;
 import szakemberkereso.Configuration.Database;
+import szakemberkereso.Configuration.Email;
+import szakemberkereso.Configuration.Email.EmailConfig;
 
 /**
  *
@@ -567,6 +577,12 @@ public class Users implements Serializable {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
+        //Generate a random token
+        int length = 40;
+        boolean useLetters = true;
+        boolean useNumbers = true;
+        String token = RandomStringUtils.random(length, useLetters, useNumbers);
+
         try {            
             StoredProcedureQuery spq = em.createStoredProcedureQuery("createUser");
             
@@ -583,6 +599,7 @@ public class Users implements Serializable {
             spq.registerStoredProcedureParameter("staircase_in", String.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("floor_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("door_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("token_in", String.class, ParameterMode.IN);
 
             spq.setParameter("first_name_in", user.getFirstName());
             spq.setParameter("last_name_in", user.getLastName());
@@ -597,8 +614,11 @@ public class Users implements Serializable {
             spq.setParameter("staircase_in", user.getAddress().getStaircase());
             spq.setParameter("floor_in", user.getAddress().getFloor());
             spq.setParameter("door_in", user.getAddress().getDoor());
+            spq.setParameter("token_in", token);
 
             spq.execute();
+            registrationEmail(user.getEmail(), token);
+            
             return "Sikeresen létrejött a user";
         } 
         catch (Exception e) {
@@ -616,6 +636,12 @@ public class Users implements Serializable {
     public static String createUserWorker(Users user){
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
+        
+        //Generate a random token
+        int length = 40;
+        boolean useLetters = true;
+        boolean useNumbers = true;
+        String token = RandomStringUtils.random(length, useLetters, useNumbers);
         
         try {            
             StoredProcedureQuery spq = em.createStoredProcedureQuery("createUserWorker");
@@ -643,6 +669,7 @@ public class Users implements Serializable {
             spq.registerStoredProcedureParameter("premise_floor_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("premise_door_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("tax_number_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("token_in", String.class, ParameterMode.IN);
 
             spq.setParameter("first_name_in", user.getFirstName());
             spq.setParameter("last_name_in", user.getLastName());
@@ -667,8 +694,11 @@ public class Users implements Serializable {
             spq.setParameter("premise_floor_in", user.getCompany().getAddress().getFloor());
             spq.setParameter("premise_door_in", user.getCompany().getAddress().getDoor());
             spq.setParameter("tax_number_in", user.getCompany().getTaxNumber());
+            spq.setParameter("token_in", token);
             
             spq.execute();
+            registrationEmail(user.getEmail(), token);
+            
             return "Sikeresen létrejött a workeruser";
         } 
         catch (Exception e) {
@@ -745,7 +775,118 @@ public class Users implements Serializable {
         
     }
     
-    public static String validateEmailByToken(Users user){
+    public static Boolean resetPassword(String email, String password, String pwtoken){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+
+        try{
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("resetPassword");
+
+            spq.registerStoredProcedureParameter("email_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("token_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("psw_in", String.class, ParameterMode.IN);
+
+            spq.setParameter("email_in", email);
+            spq.setParameter("token_in", pwtoken);
+            spq.setParameter("psw_in", password);
+            spq.execute();
+
+            return true;
+        }
+        catch(Exception ex){
+            System.out.println(ex.getMessage());
+            return false;
+        }
+        finally{
+            //clean up metods, and close connections
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+    
+    public static Boolean forgotPassword(String email){
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+
+        //Generate a random token
+        int length = 40;
+        boolean useLetters = true;
+        boolean useNumbers = true;
+        String token = RandomStringUtils.random(length, useLetters, useNumbers);
+        
+        try{
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("forgotPassword");
+
+            spq.registerStoredProcedureParameter("email_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("token_in", String.class, ParameterMode.IN);
+
+            spq.setParameter("email_in", email);
+            spq.setParameter("token_in", token);
+            spq.execute();
+            
+            forgotPasswordEmail(email, token);
+            
+            return true;
+        }
+        catch(Exception ex){
+            System.out.println(ex.getMessage());
+            return false;
+        }
+        finally{
+            //clean up metods, and close connections
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+    
+    public static boolean forgotPasswordEmail(String email, String token){
+        try{
+            //who will get the email
+            String to = email;
+            //Who is the sender of the email
+            String from = Email.EmailConfig.EMAIL.get();
+            
+            //Confirmation link
+            System.err.println("Token: " + token);
+            String link = EmailConfig.PWLINK.get() + token;
+            
+            Properties properties = System.getProperties();
+            //setup mail server to properties
+            properties.put("mail.smtp.host", Email.EmailConfig.HOST.get());
+            properties.put("mail.smtp.port", Email.EmailConfig.PORT.get());
+            properties.put("mail.smtp.ssl.enable", "true");
+            properties.put("mail.smtp.auth", "true");
+            
+            //Get session object, and pass username and password in
+            Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(Email.EmailConfig.EMAIL.get(), Email.EmailConfig.PASSWORD.get());
+                }
+            });
+            session.setDebug(true);
+            
+            //Configure the email (message object)
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(from));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            
+            message.setSubject("Password replacement");
+            message.setText("Your new password link is: " + link);
+            
+            //Send the email
+            Transport.send(message);
+            return true;
+        }
+        catch(Exception ex){
+            return false;
+        }
+    }
+    
+    public static String validateEmailByToken(String token_in){
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -754,7 +895,7 @@ public class Users implements Serializable {
             
             spq.registerStoredProcedureParameter("token_in", String.class, ParameterMode.IN);
 
-            spq.setParameter("token_in", user.getToken());
+            spq.setParameter("token_in", token_in);
 
             spq.execute();
             return "Sikeresen aktiválta a user-t és email-t";
@@ -769,6 +910,49 @@ public class Users implements Serializable {
             emf.close();
         }
         
+    }
+    
+    public static Boolean registrationEmail(String email, String token){
+        try{
+            //who will get the email
+            String to = email;
+            //Who is the sender of the email
+            String from = Email.EmailConfig.EMAIL.get();
+            
+            //Confirmation link
+            System.err.println("Token: " + token);
+            String link = EmailConfig.CONFIRMLINK.get() + token;
+            
+            Properties properties = System.getProperties();
+            //setup mail server to properties
+            properties.put("mail.smtp.host", Email.EmailConfig.HOST.get());
+            properties.put("mail.smtp.port", Email.EmailConfig.PORT.get());
+            properties.put("mail.smtp.ssl.enable", "true");
+            properties.put("mail.smtp.auth", "true");
+            
+            //Get session object, and pass username and password in
+            Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(Email.EmailConfig.EMAIL.get(), Email.EmailConfig.PASSWORD.get());
+                }
+            });
+            session.setDebug(true);
+            
+            //Configure the email (message object)
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(from));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            
+            message.setSubject("Welcome");
+            message.setText("Thanks for the registration to our service, and enjoy your journey with our application! \n Confirm link : " + link);
+            
+            //Send the email
+            Transport.send(message);
+            return true;            
+        }
+        catch(Exception ex){
+            return false;
+        }
     }
     
 }

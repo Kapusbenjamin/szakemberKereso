@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 16, 2023 at 03:41 PM
+-- Generation Time: Feb 19, 2023 at 06:24 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -296,7 +296,7 @@ VALUES
 )$$
 
 DROP PROCEDURE IF EXISTS `createUser`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createUser` (IN `first_name_in` VARCHAR(100) CHARSET utf8, IN `last_name_in` VARCHAR(100) CHARSET utf8, IN `email_in` VARCHAR(200) CHARSET utf8, IN `phone_in` VARCHAR(12) CHARSET utf8, IN `password_in` VARCHAR(255) CHARSET utf8, IN `county_id_in` INT(11), IN `zip_code_in` INT(5), IN `city_in` VARCHAR(255) CHARSET utf8, IN `street_in` VARCHAR(255) CHARSET utf8, IN `number_in` VARCHAR(30) CHARSET utf8, IN `staircase_in` VARCHAR(30) CHARSET utf8, IN `floor_in` INT(4), IN `door_in` INT(8))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createUser` (IN `first_name_in` VARCHAR(100) CHARSET utf8, IN `last_name_in` VARCHAR(100) CHARSET utf8, IN `email_in` VARCHAR(200) CHARSET utf8, IN `phone_in` VARCHAR(12) CHARSET utf8, IN `password_in` VARCHAR(255) CHARSET utf8, IN `county_id_in` INT(11), IN `zip_code_in` INT(5), IN `city_in` VARCHAR(255) CHARSET utf8, IN `street_in` VARCHAR(255) CHARSET utf8, IN `number_in` VARCHAR(30) CHARSET utf8, IN `staircase_in` VARCHAR(30) CHARSET utf8, IN `floor_in` INT(4), IN `door_in` INT(8), IN `token_in` VARCHAR(255) CHARSET utf8)  BEGIN
 	DECLARE address_id INT(11);
     
     CALL `createAddress`(county_id_in, zip_code_in, city_in, street_in, number_in, staircase_in, floor_in, door_in);
@@ -309,7 +309,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createUser` (IN `first_name_in` VAR
         `users`.`email`,
         `users`.`phone`,
         `users`.`password`,
-        `users`.`address_id`
+        `users`.`address_id`,
+        `users`.`token`,
+        `users`.`token_expired_at`
     )
     VALUES (
     	first_name_in,
@@ -317,12 +319,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createUser` (IN `first_name_in` VAR
         email_in,
         phone_in,
         password_in,
-        address_id
+        address_id,
+        token_in,
+        DATE_ADD(NOW(), INTERVAL 10 MINUTE)
     );
 END$$
 
 DROP PROCEDURE IF EXISTS `createUserWorker`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createUserWorker` (IN `first_name_in` VARCHAR(100) CHARSET utf8, IN `last_name_in` VARCHAR(100) CHARSET utf8, IN `email_in` VARCHAR(200) CHARSET utf8, IN `phone_in` VARCHAR(12) CHARSET utf8, IN `password_in` VARCHAR(255) CHARSET utf8, IN `county_id_in` INT(11), IN `zip_code_in` INT(5), IN `city_in` VARCHAR(255) CHARSET utf8, IN `street_in` VARCHAR(255) CHARSET utf8, IN `number_in` VARCHAR(30) CHARSET utf8, IN `staircase_in` VARCHAR(30) CHARSET utf8, IN `floor_in` INT(4), IN `door_in` INT(8), IN `company_name_in` VARCHAR(200) CHARSET utf8, IN `premise_county_id_in` INT(11), IN `premise_zip_code_in` INT(5), IN `premise_city_in` VARCHAR(255) CHARSET utf8, IN `premise_street_in` VARCHAR(255) CHARSET utf8, IN `premise_number_in` VARCHAR(30) CHARSET utf8, IN `premise_staircase_in` VARCHAR(30) CHARSET utf8, IN `premise_floor_in` INT(4), IN `premise_door_in` INT(8), IN `tax_number_in` VARCHAR(255) CHARSET utf8)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createUserWorker` (IN `first_name_in` VARCHAR(100) CHARSET utf8, IN `last_name_in` VARCHAR(100) CHARSET utf8, IN `email_in` VARCHAR(200) CHARSET utf8, IN `phone_in` VARCHAR(12) CHARSET utf8, IN `password_in` VARCHAR(255) CHARSET utf8, IN `county_id_in` INT(11), IN `zip_code_in` INT(5), IN `city_in` VARCHAR(255) CHARSET utf8, IN `street_in` VARCHAR(255) CHARSET utf8, IN `number_in` VARCHAR(30) CHARSET utf8, IN `staircase_in` VARCHAR(30) CHARSET utf8, IN `floor_in` INT(4), IN `door_in` INT(8), IN `company_name_in` VARCHAR(200) CHARSET utf8, IN `premise_county_id_in` INT(11), IN `premise_zip_code_in` INT(5), IN `premise_city_in` VARCHAR(255) CHARSET utf8, IN `premise_street_in` VARCHAR(255) CHARSET utf8, IN `premise_number_in` VARCHAR(30) CHARSET utf8, IN `premise_staircase_in` VARCHAR(30) CHARSET utf8, IN `premise_floor_in` INT(4), IN `premise_door_in` INT(8), IN `tax_number_in` VARCHAR(255) CHARSET utf8, IN `token_in` VARCHAR(255) CHARSET utf8)  BEGIN
 	DECLARE address_id INT(11);
     DECLARE company_id INT(11);
     
@@ -341,7 +345,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createUserWorker` (IN `first_name_i
         `users`.`phone`,
         `users`.`password`,
         `users`.`company_id`,
-        `users`.`address_id`
+        `users`.`address_id`,
+        `users`.`token`,
+        `users`.`token_expired_at`
     )
     VALUES (
     	first_name_in,
@@ -351,7 +357,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createUserWorker` (IN `first_name_i
         phone_in,
         password_in,
         company_id,
-        address_id
+        address_id,
+        token_in,
+        DATE_ADD(NOW(),INTERVAL 10 MINUTE)
     );
 END$$
 
@@ -402,6 +410,12 @@ DROP PROCEDURE IF EXISTS `deleteUserJob`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUserJob` (IN `user_id_in` INT(11), IN `job_tag_id_in` INT(11))  DELETE FROM `users_jobs`
 WHERE `users_jobs`.`user_id` = user_id_in
 AND `users_jobs`.`job_tag_id` = job_tag_id_in$$
+
+DROP PROCEDURE IF EXISTS `forgotPassword`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `forgotPassword` (IN `email_in` VARCHAR(200) CHARSET utf8, IN `token_in` VARCHAR(255) CHARSET utf8)  UPDATE `users`
+SET `users`.`token` = token_in,
+	`users`.`token_expired_at` = DATE_ADD(NOW(), INTERVAL 10 MINUTE)
+WHERE `users`.`email` = email_in$$
 
 DROP PROCEDURE IF EXISTS `getAddressById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAddressById` (IN `id_in` INT(11))  SELECT * FROM `addresses`
@@ -599,6 +613,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `logoutUser` (IN `id_in` INT(11))  U
 SET `users`.`status` = 0
 WHERE `users`.`id` = id_in$$
 
+DROP PROCEDURE IF EXISTS `resetPassword`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `resetPassword` (IN `email_in` VARCHAR(200) CHARSET utf8, IN `token_in` VARCHAR(255) CHARSET utf8, IN `psw_in` VARCHAR(255) CHARSET utf8)  UPDATE `users`
+SET `users`.`password` = psw_in,
+	`users`.`token` = null,
+    `users`.`token_expired_at` = null
+WHERE `users`.`email` = email_in
+AND `users`.`token` = token_in
+AND `users`.`token_expired_at` > NOW()$$
+
 DROP PROCEDURE IF EXISTS `stringToNull`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `stringToNull` (INOUT `str_in` VARCHAR(255) CHARSET utf8)  IF(str_in = "")
 	THEN SET str_in = null;
@@ -668,16 +691,12 @@ SET `users`.`first_name` = first_name_in,
 	`users`.`phone` = phone_in
 WHERE `users`.`id` = id_in$$
 
-DROP PROCEDURE IF EXISTS `validateEmail`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `validateEmail` (IN `id_in` INT(11))  UPDATE `users`
-SET `users`.`status` = 0
-WHERE `users`.`id` = id_in$$
-
 DROP PROCEDURE IF EXISTS `validateEmailByToken`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `validateEmailByToken` (IN `token_in` VARCHAR(255) CHARSET utf8)  UPDATE `users`
 SET `users`.`status` = 0,
 	`users`.`token` = null,
-    `users`.`token_expired_at` = null
+    `users`.`token_expired_at` = null,
+    `users`.`activated_at` = NOW()
 WHERE `users`.`token` = token_in
 AND `users`.`token_expired_at` > NOW()$$
 
@@ -713,7 +732,22 @@ INSERT INTO `addresses` (`id`, `county_id`, `zip_code`, `city`, `street`, `numbe
 (4, 2, 7600, 'Pécs', 'Ág utca', '56', NULL, NULL, NULL),
 (6, 5, 4532, 'Pécs', 'Petőfi', '13/A', 'Első', 2, 12),
 (40, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
-(41, 4, 1111, 'Bp', 'AAAA utca', '56', NULL, NULL, NULL);
+(41, 4, 1111, 'Bp', 'AAAA utca', '56', NULL, NULL, NULL),
+(42, 4, 1111, 'Bp', 'AAAA utca', '56', NULL, NULL, NULL),
+(43, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
+(44, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
+(45, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
+(46, 4, 1111, 'Bp', 'AAAA utca', '56', NULL, NULL, NULL),
+(47, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
+(48, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
+(49, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
+(50, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
+(51, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
+(52, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
+(53, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
+(54, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
+(55, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
+(56, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -738,12 +772,13 @@ CREATE TABLE `ads` (
 
 INSERT INTO `ads` (`id`, `user_id`, `job_tag_id`, `description`, `updated_at`, `status`, `deleted`) VALUES
 (1, 2, 1, 'Valami', '2023-01-17 15:24:57', 1, 0),
-(2, 2, 3, 'aaaaaaaaaaaaa', '2023-02-01 17:45:46', 1, 0),
+(2, 2, 3, 'aaaaaaaaaaaaa', '2023-02-16 16:18:17', 0, 0),
 (3, 2, 5, 'asfddsgfs', '2023-01-29 16:10:55', 1, 0),
 (4, 2, 5, 'Semmi', '2023-01-29 14:53:19', 0, 0),
 (5, 4, 1, 'a', '2023-02-01 17:46:21', 1, 0),
-(6, 2, 5, 'Semmi', '2023-01-29 15:42:46', 1, 0),
-(7, 2, 5, 'aaaaaaaaaaaaa', '2023-01-29 15:42:30', 1, 1);
+(6, 2, 5, 'Semmi', '2023-02-16 16:18:20', 1, 1),
+(7, 2, 5, 'aaaaaaaaaaaaa', '2023-01-29 15:42:30', 1, 1),
+(8, 2, 5, 'Semmi', '2023-02-16 16:18:13', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -765,7 +800,8 @@ CREATE TABLE `ads_counties` (
 INSERT INTO `ads_counties` (`id`, `ad_id`, `county_id`) VALUES
 (1, 1, 2),
 (2, 1, 3),
-(5, 2, 5);
+(5, 2, 5),
+(6, 2, 5);
 
 -- --------------------------------------------------------
 
@@ -811,7 +847,11 @@ CREATE TABLE `companies` (
 INSERT INTO `companies` (`id`, `name`, `address_id`, `tax_number`) VALUES
 (1, 'ABC Kft.', 6, '123423543'),
 (3, 'A kft.', 40, '2132165465'),
-(4, 'Nagy Kft.', 41, '124556222');
+(5, 'A kft.', 45, '2132165465'),
+(6, 'Kis és társai Bt.', 46, '6542187486'),
+(7, 'A kft.', 50, '2132165465'),
+(8, 'A kft.', 52, '2132165465'),
+(9, 'A kft.', 55, '2132165465');
 
 -- --------------------------------------------------------
 
@@ -870,9 +910,9 @@ CREATE TABLE `favorites` (
 
 INSERT INTO `favorites` (`id`, `user_id`, `ad_id`) VALUES
 (1, 1, 1),
-(2, 2, 4),
 (4, 4, 2),
-(5, 2, 10);
+(5, 2, 10),
+(6, 2, 10);
 
 -- --------------------------------------------------------
 
@@ -896,13 +936,13 @@ CREATE TABLE `images` (
 
 INSERT INTO `images` (`id`, `url`, `title`, `status`, `user_id`, `created_at`) VALUES
 (1, 'asd', 'b', 1, 1, '2023-02-08 20:20:56'),
-(2, 'asd', 'b', 0, 1, '2023-02-08 20:05:11'),
-(3, 'bffg', 'x', 1, 2, '2023-02-08 20:05:11'),
+(2, 'asd', 'b', 1, 1, '2023-02-16 16:20:29'),
 (4, 'a', 'b', 0, 2, '2002-02-02 19:20:20'),
 (5, 'url', 'title', 0, 3, '2023-02-08 20:05:11'),
 (6, 'url', 'title', 0, 3, '2023-02-08 20:05:11'),
 (7, 'url', 'title', 0, 3, '2000-02-02 20:20:20'),
-(8, 'url', 'title', 0, 3, '2030-02-02 20:20:20');
+(8, 'url', 'title', 0, 3, '2030-02-02 20:20:20'),
+(9, 'url', 'title', 0, 3, '2020-02-02 20:20:20');
 
 -- --------------------------------------------------------
 
@@ -929,8 +969,9 @@ CREATE TABLE `jobs` (
 --
 
 INSERT INTO `jobs` (`id`, `description`, `total`, `status`, `customer_id`, `worker_id`, `customer_accepted`, `worker_accepted`, `updated_at`, `deleted`) VALUES
-(1, 'Alma', 200000, 1, 2, 4, 1, 1, '2023-02-02 14:26:43', 1),
-(2, 'Leírás', 0, 0, 1, 2, 1, 0, '2023-02-02 14:44:09', 0);
+(1, 'Alma', 200000, 1, 2, 4, 1, 1, '2023-02-16 16:24:08', 1),
+(2, 'Leírás', 0, 0, 1, 2, 1, 0, '2023-02-02 14:44:09', 0),
+(3, 'Leírás', 0, 0, 1, 2, 1, 0, '2023-02-16 16:24:17', 0);
 
 -- --------------------------------------------------------
 
@@ -999,7 +1040,8 @@ INSERT INTO `messages` (`id`, `chat_id`, `sender_id`, `receiver_id`, `message`, 
 (3, 1, 5, 6, 'Kettő is', 0, '2023-02-08 15:50:49'),
 (4, 4, 2, 3, 'De', 1, '2023-02-08 15:51:39'),
 (5, 4, 3, 2, 'Nemssssssss', 1, '2023-02-08 16:34:38'),
-(6, 3, 2, 3, 'Uzi', 0, '2023-02-08 16:35:51');
+(6, 3, 2, 3, 'Uzi', 0, '2023-02-08 16:35:51'),
+(7, 3, 2, 3, 'Uzi', 0, '2023-02-16 16:19:34');
 
 -- --------------------------------------------------------
 
@@ -1026,7 +1068,8 @@ CREATE TABLE `ratings` (
 INSERT INTO `ratings` (`id`, `ratinged_user_id`, `ratinger_user_id`, `description`, `ratings_stars`, `status`, `updated_at`, `deleted`) VALUES
 (1, 2, 3, 'nem hozta az anyagot', 1, 1, '2023-02-09 09:57:36', 0),
 (3, 1, 2, 'kettő is', 2, 0, '2023-02-09 10:05:04', 1),
-(4, 2, 3, 'mindent megcsinált csak nem jól', 2, 0, '2023-02-09 09:59:50', 0);
+(4, 2, 3, 'mindent megcsinált csak nem jól', 2, 0, '2023-02-09 09:59:50', 0),
+(5, 2, 3, 'nem hozta az anyagot', 1, 0, '2023-02-16 16:23:27', 0);
 
 -- --------------------------------------------------------
 
@@ -1061,10 +1104,13 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `access_type`, `email`, `phone`, `password`, `company_id`, `address_id`, `status`, `token`, `token_expired_at`, `last_login_at`, `created_at`, `activated_at`, `updated_at`, `deleted`) VALUES
 (1, 'Teszt', 'Ferenc', 0, 'tesztf@teszt-user.com', '+36202567896', '1234', NULL, 0, -1, NULL, NULL, NULL, '2023-01-05 15:57:39', NULL, '2023-01-05 15:57:39', 0),
-(2, 'Teszt', 'László', 1, 'tesztl@teszt-user.com', '+36202567894', '1234', 1, 0, 0, NULL, NULL, '2023-01-27 10:35:06', '2023-01-05 15:57:39', '2023-01-05 15:48:18', '2023-01-27 10:35:31', 0),
+(2, 'Teszt', 'László', 1, 'tesztl@teszt-user.com', '+36202567894', '1234', 1, 0, 0, NULL, NULL, '2023-02-16 16:16:19', '2023-01-05 15:57:39', '2023-01-05 15:48:18', '2023-02-16 16:16:22', 0),
 (3, 'Teszt', 'Izabella', 1, 'tesztiza@teszt-user.com', '+36302987764', '1234', NULL, 0, 0, NULL, NULL, '2023-01-05 15:55:18', '2023-01-05 15:57:39', '2023-01-04 15:48:18', '2023-01-27 11:31:13', 0),
 (4, 'Teszt', 'Admin', 2, 'teszta@teszt-user.com', '+36702753456', '1234', NULL, 0, 0, NULL, NULL, '2023-01-06 15:48:18', '2023-01-05 15:57:39', '2023-01-01 15:48:18', '2023-01-05 15:57:39', 0),
-(8, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', 'jelszo123', 3, 39, -1, NULL, NULL, NULL, '2023-01-28 15:00:51', NULL, '2023-01-28 15:00:51', 0);
+(8, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', 'jelszo123', 3, 39, -1, NULL, NULL, NULL, '2023-01-28 15:00:51', NULL, '2023-01-28 15:00:51', 0),
+(9, 'TESZT', 'AA', 0, 'A@gmail.com', '+36123456789', 'jelszo123', NULL, 43, -1, NULL, NULL, NULL, '2023-02-16 16:16:26', NULL, '2023-02-16 16:16:26', 0),
+(10, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', 'jelszo123', 5, 44, -1, NULL, NULL, NULL, '2023-02-16 16:16:31', NULL, '2023-02-16 16:16:31', 0),
+(15, 'TESZT', 'AA', 1, 'bkap100@gmail.com', '+36123456789', '1234', 9, 54, 0, NULL, NULL, NULL, '2023-02-19 17:15:04', '2023-02-19 17:19:27', '2023-02-19 17:21:58', 0);
 
 -- --------------------------------------------------------
 
@@ -1183,19 +1229,19 @@ ALTER TABLE `users_jobs`
 -- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `ads`
 --
 ALTER TABLE `ads`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `ads_counties`
 --
 ALTER TABLE `ads_counties`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `chats`
@@ -1207,7 +1253,7 @@ ALTER TABLE `chats`
 -- AUTO_INCREMENT for table `companies`
 --
 ALTER TABLE `companies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `counties`
@@ -1219,19 +1265,19 @@ ALTER TABLE `counties`
 -- AUTO_INCREMENT for table `favorites`
 --
 ALTER TABLE `favorites`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `images`
 --
 ALTER TABLE `images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `jobs`
 --
 ALTER TABLE `jobs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `job_tags`
@@ -1243,25 +1289,25 @@ ALTER TABLE `job_tags`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `ratings`
 --
 ALTER TABLE `ratings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `users_jobs`
 --
 ALTER TABLE `users_jobs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

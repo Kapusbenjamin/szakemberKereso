@@ -13,6 +13,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import szakemberkereso.Model.Users;
@@ -141,8 +142,28 @@ public class UsersController {
     @POST
     @Path("validateEmailByToken")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response validateEmailByToken(Users user){
-        String result = us.validateEmailByToken(user);
+    public Response validateEmailByToken(@QueryParam("t") String token){
+        String result = us.validateEmailByToken(token);
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
+    @POST
+    @Path("forgotPassword")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response forgotPassword(Users user){
+        Boolean result = us.forgotPassword(user.getEmail());
+        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    }
+    
+    @POST
+    @Path("resetPassword")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response resetPassword(Users u){
+        String email = u.getEmail();
+        String password = u.getPassword();
+        String pwtoken = u.getToken();
+        
+        String result = us.resetPassword(email, password, pwtoken);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
