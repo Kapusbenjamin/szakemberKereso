@@ -5,6 +5,7 @@
 package szakemberkereso.Service;
 
 import java.util.List;
+import szakemberkereso.Model.Roles;
 import szakemberkereso.Model.Users;
 
 /**
@@ -13,8 +14,24 @@ import szakemberkereso.Model.Users;
  */
 public class UsersService {
     
-    public Users getUserById(Integer id){
-        Users result = Users.getUserById(id);
+    public Users getUserById(Users user){
+        Users result = Users.getUserById(user.getId());
+        
+        //aktuális felhasználó jogosultsága alapján mit kaphat meg
+        Roles role = Roles.getRoleByCode(Users.getUserById(user.getCurrentUserId()).getAccessType());
+        
+        if(!role.equals(Roles.ADMIN)){
+            if(result.getDeleted() != 1){
+                result.setStatus(null);
+                result.setLastLoginAt(null);
+                result.setActivatedAt(null);
+                result.setUpdatedAt(null);
+                result.setDeleted(null);
+                return result;
+            }
+            return null;
+        }
+        
         return result;
     }
     
@@ -48,7 +65,7 @@ public class UsersService {
         return result;
     }
     
-    public String createUser(Users user){
+    public Integer createUser(Users user){
         //Business logic
         if(user.getAddress().getStaircase() == null){
             user.getAddress().setStaircase("");
@@ -60,11 +77,11 @@ public class UsersService {
             user.getAddress().setDoor(-1);
         }
         
-        String result = Users.createUser(user);
+        Integer result = Users.createUser(user);
         return result;
     }
     
-    public String createUserWorker(Users user){
+    public Integer createUserWorker(Users user){
         //Business logic
         if(user.getAddress().getStaircase() == null){
             user.getAddress().setStaircase("");
@@ -85,7 +102,7 @@ public class UsersService {
             user.getCompany().getAddress().setDoor(-1);
         }
         
-        String result = Users.createUserWorker(user);
+        Integer result = Users.createUserWorker(user);
         return result;
     }
     

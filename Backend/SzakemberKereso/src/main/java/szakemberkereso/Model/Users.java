@@ -114,7 +114,7 @@ public class Users implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "status")
-    private int status;
+    private Integer status;
     @Column(name = "token")
     private String token;
     @Column(name = "token_expired_at")
@@ -139,7 +139,7 @@ public class Users implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "deleted")
-    private int deleted;
+    private Integer deleted;
 
     //jogosultság miatt
     @Transient
@@ -256,7 +256,7 @@ public class Users implements Serializable {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -312,7 +312,7 @@ public class Users implements Serializable {
         return deleted;
     }
 
-    public void setDeleted(int deleted) {
+    public void setDeleted(Integer deleted) {
         this.deleted = deleted;
     }
 
@@ -403,6 +403,10 @@ public class Users implements Serializable {
             List<Object[]> result = spq.getResultList();
             Object[] r = result.get(0);
             Users u = Users.objectToUser(r);
+            
+            u.setPassword(null);
+            u.setToken(null);
+            u.setTokenExpiredAt(null);
             
             return u;
         } 
@@ -573,7 +577,7 @@ public class Users implements Serializable {
         }
     }
     
-    public static String createUser(Users user){
+    public static Integer createUser(Users user){
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -600,6 +604,7 @@ public class Users implements Serializable {
             spq.registerStoredProcedureParameter("floor_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("door_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("token_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("user_id_out", Integer.class, ParameterMode.OUT);
 
             spq.setParameter("first_name_in", user.getFirstName());
             spq.setParameter("last_name_in", user.getLastName());
@@ -619,11 +624,13 @@ public class Users implements Serializable {
             spq.execute();
             registrationEmail(user.getEmail(), token);
             
-            return "Sikeresen létrejött a user";
+            Integer user_id = Integer.parseInt(spq.getOutputParameterValue("user_id_out").toString());
+            
+            return user_id;
         } 
         catch (Exception e) {
             System.out.println(e.getMessage());
-            return "HIBA: " + e.getMessage();
+            return null;
         }
         finally{
             em.clear();
@@ -633,7 +640,7 @@ public class Users implements Serializable {
         
     }
     
-    public static String createUserWorker(Users user){
+    public static Integer createUserWorker(Users user){
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -670,6 +677,7 @@ public class Users implements Serializable {
             spq.registerStoredProcedureParameter("premise_door_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("tax_number_in", String.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("token_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("user_id_out", Integer.class, ParameterMode.OUT);
 
             spq.setParameter("first_name_in", user.getFirstName());
             spq.setParameter("last_name_in", user.getLastName());
@@ -699,11 +707,13 @@ public class Users implements Serializable {
             spq.execute();
             registrationEmail(user.getEmail(), token);
             
-            return "Sikeresen létrejött a workeruser";
+            Integer user_id = Integer.parseInt(spq.getOutputParameterValue("user_id_out").toString());
+            
+            return user_id;
         } 
         catch (Exception e) {
             System.out.println(e.getMessage());
-            return "HIBA: " + e.getMessage();
+            return null;
         }
         finally{
             em.clear();

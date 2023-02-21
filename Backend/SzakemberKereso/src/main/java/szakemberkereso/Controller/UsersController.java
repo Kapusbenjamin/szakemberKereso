@@ -63,7 +63,7 @@ public class UsersController {
     @Path("getUserById")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getUserById(Users user){
-        Users result = us.getUserById(user.getId());
+        Users result = us.getUserById(user);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
@@ -95,7 +95,7 @@ public class UsersController {
     @Path("createUser")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createUser(Users user){
-        String result = us.createUser(user);
+        Integer result = us.createUser(user);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
@@ -103,7 +103,7 @@ public class UsersController {
     @Path("createUserWorker")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createUserWorker(Users user){
-        String result = us.createUserWorker(user);
+        Integer result = us.createUserWorker(user);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     

@@ -12,14 +12,14 @@ public enum Roles {
     
     USER, WORKER, ADMIN;
     
-    public static String getRoleByCode(Integer roleCode){
+    public static Roles getRoleByCode(Integer roleCode){
         switch (roleCode) {
             case 0:
-                return Roles.USER.toString();
+                return Roles.USER;
             case 1:
-                return Roles.WORKER.toString();
+                return Roles.WORKER;
             case 2:
-                return Roles.ADMIN.toString();
+                return Roles.ADMIN;
             default:
                 return null;
         }
