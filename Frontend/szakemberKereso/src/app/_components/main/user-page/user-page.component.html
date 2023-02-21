@@ -1,5 +1,5 @@
-<div class="near">
-  <div *ngIf="user != undefined" class="sideBar">
+<div *ngIf="user != undefined" class="near">
+  <div class="sideBar">
     <ul>
       <li>Adatok</li>
       <li>Értékelések</li>
@@ -8,10 +8,10 @@
       <li *ngIf="user.accessType! > 0" >Referencia képek</li>
     </ul>
   </div>
-  <div *ngIf="user != undefined" class="datas">
+  <div class="datas">
     <div class="userData">
       <p>Név: {{ userName }}</p>
-      <p>Jogosultság: {{ user.accessType }}</p>
+      <p>Jogosultság: {{ userType() }}</p>
       <p>Email: {{ user.email }}</p>
       <p>Telefon Szám: {{ user.phone }}</p>
     </div>

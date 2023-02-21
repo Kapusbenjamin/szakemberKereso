@@ -1,5 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
 *{
   margin: 0;
   box-sizing: border-box;
@@ -12,11 +14,10 @@ html{
 
 html, body { height: 100vh; }
 body {
+  background-color: rgb(65, 65, 187);
   margin: 0;
   /* font-family: Roboto, "Helvetica Neue", sans-serif; */
 }
-
-@import '~bootstrap/dist/css/bootstrap.min.css';
 
 
 .container{
@@ -25,15 +26,7 @@ body {
   width: 320px;
   min-height: 500px;
   padding: 20px;
-  background-color: rgba(40, 185, 40, 0.727)
-}
-
-.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb{
-  background-color: rgb(3, 211, 24);
-}
-
-.mat-slide-toggle.mat-checked .mat-slide-toggle-bar{
-  background-color: rgb(47, 115, 45);
+  background-color: rgba(113, 185, 223, 0.637)
 }
 
 .erroredInput{
