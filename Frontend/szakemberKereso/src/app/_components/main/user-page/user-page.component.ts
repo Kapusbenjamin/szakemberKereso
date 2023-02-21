@@ -19,12 +19,21 @@ export class UserPageComponent implements OnInit {
   professions!: Tag[]
 
   ngOnInit(): void {
+    this.getUserData();
+  }
+
+  getUserData(){
     this.userService.getUserById(this.userService.userData.userId).subscribe((user: User)=>{
       this.userName = this.userService.userData.name;
       this.user = user;
-      console.log(user);
+      if(user.accessType! > 0){
+        this.getJobs(this.user.id!);
+      }
     });
-    this.userJobService.getAllJobsByUser(this.userService.userData.userId).subscribe((tags: Tag[])=>{
+  }
+
+  getJobs(userId:number){
+    this.userJobService.getAllJobsByUser(userId).subscribe((tags: Tag[])=>{
       this.professions = tags;
     });
   }
@@ -32,7 +41,5 @@ export class UserPageComponent implements OnInit {
   userType(){
     return this.user.accessType == 0 ? "Általános felhasználó" : this.user.accessType == 2 ? "Admin" : "Szakember"
   }
-
-
 
 }

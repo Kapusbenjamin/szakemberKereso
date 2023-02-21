@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Field } from 'src/app/_model/Field';
 
 @Component({
@@ -14,8 +14,8 @@ export class CompanyFormComponent implements OnInit, OnDestroy {
   constructor(private cdr: ChangeDetectorRef) { }
 
   company = new FormGroup({
-    name: new FormControl(''),
-    taxNumber: new FormControl(''),
+    name: new FormControl('',[Validators.required]),
+    taxNumber: new FormControl('',[Validators.required,Validators.pattern('[0-9]+')]),
   });
 
 
