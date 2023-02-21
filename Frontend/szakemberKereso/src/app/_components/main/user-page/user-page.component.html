@@ -1,6 +1,26 @@
-<div class="datas">
-  User-component
-  <div class="userData">
-    userData
+<div class="near">
+  <div *ngIf="user != undefined" class="sideBar">
+    <ul>
+      <li>Adatok</li>
+      <li>Értékelések</li>
+      <li>Munkák</li>
+      <li *ngIf="user.accessType! < 1" >Legyél te is szakember</li>
+      <li *ngIf="user.accessType! > 0" >Referencia képek</li>
+    </ul>
+  </div>
+  <div *ngIf="user != undefined" class="datas">
+    <div class="userData">
+      <p>Név: {{ userName }}</p>
+      <p>Jogosultság: {{ user.accessType }}</p>
+      <p>Email: {{ user.email }}</p>
+      <p>Telefon Szám: {{ user.phone }}</p>
+    </div>
+    <div class="professional" *ngIf="user.accessType! > 0" >
+      <p>Foglalkozás(ok):</p>
+      <div class="professons" *ngFor="let item of professions" >
+        <p> {{item.name}} </p>
+      </div>
+      <button> + </button>
+    </div>
   </div>
 </div>

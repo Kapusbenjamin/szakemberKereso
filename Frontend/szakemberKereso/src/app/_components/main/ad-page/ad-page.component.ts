@@ -5,6 +5,8 @@ import { FormBuilder, FormControl } from '@angular/forms';
 import { CountiesService } from 'src/app/_services/counties.service';
 import { JobTagsService } from 'src/app/_services/job-tags.service';
 import { Tag } from 'src/app/_model/Tag';
+import { UserData } from 'src/app/_model/UserData';
+import { UsersService } from 'src/app/_services/users.service';
 
 
 @Component({
@@ -17,6 +19,7 @@ export class AdPageComponent implements OnInit {
   counties: Tag[] = [];
   jobTags: Tag[] = [];
   title:string = "Title";
+  userData!: UserData;
 
   ads!: Ad[];
 
@@ -26,9 +29,12 @@ export class AdPageComponent implements OnInit {
   })
 
   constructor(private adService: AdsService, private fb: FormBuilder,
-    private countiesService: CountiesService, private jobTagsService: JobTagsService) { }
+    private countiesService: CountiesService, private jobTagsService: JobTagsService,
+    private userService: UsersService
+    ) { }
 
   ngOnInit(): void {
+    this.userData = this.userService.userData;
     this.getAllCounties();
     this.getAllJobTags();
     this.getAllAcceptedAds();
