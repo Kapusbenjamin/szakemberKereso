@@ -10,8 +10,8 @@ package szakemberkereso.Configuration;
  */
 public class Email {
     public enum EmailConfig{
-        EMAIL("bkap100@gmail.com"), //SENDER
-        PASSWORD("htmeuzroxpoyvgpo"),
+        EMAIL("szakemberkereso.hu@gmail.com"), //SENDER
+        PASSWORD("ucxowqeuxvskngsu"),
         HOST("smtp.gmail.com"),
         PORT("465"),
         CONFIRMLINK("http://127.0.0.1:8080/SzakemberKereso-1.0-SNAPSHOT/webresources/Users/validateEmailByToken?t="),

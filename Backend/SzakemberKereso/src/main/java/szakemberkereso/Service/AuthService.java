@@ -4,7 +4,6 @@
  */
 package szakemberkereso.Service;
 
-import javax.management.relation.Role;
 import szakemberkereso.Model.Roles;
 import szakemberkereso.Model.Users;
 
@@ -14,10 +13,10 @@ import szakemberkereso.Model.Users;
  */
 public class AuthService {
 
-    public boolean isUserAuthorized(Integer userId, String roleName) {
+    public boolean isUserAuthorized(Integer userId, Roles roleName) {
         Users user = Users.getUserById(userId);
         if (user != null) {
-            String role = Roles.getRoleByCode(user.getAccessType());
+            Roles role = Roles.getRoleByCode(user.getAccessType());
             if (role.equals(roleName)) {
                 return true;
             }

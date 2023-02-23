@@ -37,6 +37,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import szakemberkereso.Configuration.Database;
 import szakemberkereso.Configuration.Email;
@@ -114,7 +115,7 @@ public class Users implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "status")
-    private Integer status;
+    private int status;
     @Column(name = "token")
     private String token;
     @Column(name = "token_expired_at")
@@ -139,7 +140,7 @@ public class Users implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "deleted")
-    private Integer deleted;
+    private int deleted;
 
     //jogosultság miatt
     @Transient
@@ -426,6 +427,8 @@ public class Users implements Serializable {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
+        psw_in = DigestUtils.sha256Hex(psw_in);
+        
         try {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("loginUser");
             
@@ -455,7 +458,6 @@ public class Users implements Serializable {
         } 
         catch (Exception e) {
             System.out.println(e.getMessage());
-            //return new Users();
             return new Users();
         }
         finally{
@@ -587,6 +589,8 @@ public class Users implements Serializable {
         boolean useNumbers = true;
         String token = RandomStringUtils.random(length, useLetters, useNumbers);
 
+        user.setPassword(DigestUtils.sha256Hex(user.getPassword()));
+        
         try {            
             StoredProcedureQuery spq = em.createStoredProcedureQuery("createUser");
             
@@ -649,6 +653,8 @@ public class Users implements Serializable {
         boolean useLetters = true;
         boolean useNumbers = true;
         String token = RandomStringUtils.random(length, useLetters, useNumbers);
+        
+        user.setPassword(DigestUtils.sha256Hex(user.getPassword()));
         
         try {            
             StoredProcedureQuery spq = em.createStoredProcedureQuery("createUserWorker");
@@ -761,6 +767,8 @@ public class Users implements Serializable {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
+        user.setPassword(DigestUtils.sha256Hex(user.getPassword()));
+        
         try {            
             StoredProcedureQuery spq = em.createStoredProcedureQuery("changePassword");
             
@@ -789,6 +797,8 @@ public class Users implements Serializable {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
 
+        password = DigestUtils.sha256Hex(password);
+        
         try{
             StoredProcedureQuery spq = em.createStoredProcedureQuery("resetPassword");
 

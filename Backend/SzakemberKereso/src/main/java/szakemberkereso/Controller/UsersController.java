@@ -86,8 +86,8 @@ public class UsersController {
     @POST
     @Path("logoutUser")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response logoutUser(Users user){
-        Boolean result = us.logoutUser(user.getId());
+    public Response logoutUser(Integer currentUserId){
+        Boolean result = us.logoutUser(currentUserId);
         return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
     }
     
