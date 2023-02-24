@@ -1,0 +1,16 @@
+.userChat{
+  background-color: aquamarine;
+  border-radius: 5px;
+  border: 1px solid aqua;
+  line-height: 40px;
+  width: 100px;
+}
+
+.userChat:hover{
+  background-color:rgba(127, 255, 212, 0.692);
+}
+
+.active{
+  position: relative;
+  left: 5px;
+}

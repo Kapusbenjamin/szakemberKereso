@@ -1,0 +1,4 @@
+<div *ngIf="chats" class="container near">
+  <app-user-chat [chats]="chats" [activeChat]="activeChat"></app-user-chat>
+  <app-chat [chat]="activeChat"></app-chat>
+</div>

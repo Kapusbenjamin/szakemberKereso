@@ -26,6 +26,9 @@ import { UserPageComponent } from './_components/main/user-page/user-page.compon
 import { AdvestComponent } from './_components/advest/advest.component';
 import { AddressFormComponent } from './_components/address-form/address-form.component';
 import { CompanyFormComponent } from './_components/company-form/company-form.component';
+import { UserChatComponent } from './_components/user-chat/user-chat.component';
+import { MessagesPageComponent } from './_components/main/messages-page/messages-page.component';
+import { ChatComponent } from './_components/chat/chat.component';
 
 
 @NgModule({
@@ -43,7 +46,10 @@ import { CompanyFormComponent } from './_components/company-form/company-form.co
     NotFoundComponent,
     AdvestComponent,
     AddressFormComponent,
-    CompanyFormComponent
+    CompanyFormComponent,
+    UserChatComponent,
+    MessagesPageComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,

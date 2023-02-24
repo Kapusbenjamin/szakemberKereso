@@ -51,31 +51,12 @@ a{
   border: 1px solid rgb(255, 255, 255);
 }
 
-.heart {
-  width: 50px;
-  height: 50px;
-  position: relative;
-  transform: rotate(-45deg);
-  border-radius: 25px;
-  border: 2px solid red;
+.near{
+  display: flex;
+  width: 90%;
+  margin: auto;
+  height: auto;
 }
-.heart:before,
-.heart:after {
-  content: "";
-  position: absolute;
-  border-radius: 25px 25px 0 0;
-  border: 2px solid red;
-}
-.heart:before {
-  width: 25px;
-  height: 25px;
-  top: -13px;
-  left: 0;
-}
-.heart:after {
-  width: 25px;
-  height: 25px;
-  top: 0;
-  left: 13px;
-}
+
+
 

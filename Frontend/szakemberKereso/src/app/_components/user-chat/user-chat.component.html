@@ -1,0 +1,6 @@
+<div *ngFor="let chat of chats" class="Chats">
+  <div (click)="chatSelect(chat)"
+  [ngClass]="{ 'active': activeChat === chat }"  class="userChat">
+    {{ chat.name }}
+  </div>
+</div>

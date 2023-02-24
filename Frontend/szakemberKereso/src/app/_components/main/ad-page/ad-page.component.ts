@@ -64,7 +64,7 @@ export class AdPageComponent implements OnInit {
   getAllCounties(){
     this.countiesService.getAllCounties().subscribe((response:Tag[])=>{
       response.forEach((county:Tag)=>{
-          this.counties.push({id: county.id, name: county.name})
+          this.counties.push(county)
       });
     });
   }
