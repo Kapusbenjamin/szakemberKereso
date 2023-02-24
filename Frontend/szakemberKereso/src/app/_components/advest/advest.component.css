@@ -1,11 +1,11 @@
 .ad {
   width: 500px;
-  margin: auto;
+  margin: 10px auto;
   text-align: center;
   padding: 30px;
-  background-color: #f2f2f2;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  background-color: rgba(113, 185, 223, 0.637);
+  border: 1px solid rgba(126, 204, 246, 0.637);
+  border-radius: 20px;
 }
 
 .ad h2 {
@@ -32,4 +32,9 @@
   font-size: 16px;
   color: #333;
   text-align: left;
+}
+
+.tags{
+  display: flex;
+  padding: 5px;
 }

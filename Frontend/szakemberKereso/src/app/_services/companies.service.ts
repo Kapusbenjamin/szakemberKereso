@@ -23,9 +23,7 @@ export class CompaniesService {
   }
 
   getCompanyById(id: number):Observable<Company>{
-    return this.http.post<Company>(`${this.apiUrl}getCompanyById`,{
-      id: id
-    })
+    return this.http.get<Company>(`${this.apiUrl}getCompanyById/${id}`)
   }
 
   updateCompanyById(id: number,name: string, taxNumber: string):Observable<any>{

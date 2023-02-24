@@ -13,7 +13,7 @@ export class UsersService {
   apiUrl: string = "http://127.0.0.1:8080/SzakemberKereso-1.0-SNAPSHOT/webresources/Users/";
   userData: UserData = {userId: -1, name:"", access_type: -1};
 
-  constructor(private http:HttpClient, private router: Router) { }
+  constructor(private http:HttpClient) { }
 
   getUserById(id: number):Observable<User>{
     return this.http.post<User>(`${this.apiUrl}getUserById`,{
@@ -35,12 +35,9 @@ export class UsersService {
     return this.http.post<User>(`${this.apiUrl}loginUser`,user);
   }
 
-  logoutUser(id: number){
+  logoutUser(){
     this.clearUserData();
-    return this.http.post(`${this.apiUrl}logoutUser`,{
-      id,
-      currentUserId: this.userData.userId
-    })
+    return this.http.post(`${this.apiUrl}logoutUser`,this.userData.userId)
   }
 
   createUser(user:any):Observable<any>{

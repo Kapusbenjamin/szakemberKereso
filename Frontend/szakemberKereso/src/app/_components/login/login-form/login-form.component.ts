@@ -34,7 +34,7 @@ export class LoginFormComponent implements OnInit {
         phone = emailNumber;
       }
       let password = this.loginForm.controls['password'].value!;
-      this.usersService.loginUser(email,phone,password).subscribe((response)=>{
+      this.usersService.loginUser(email,phone,password).subscribe((response: any)=>{
         User = response;
         if(User.id! > 0){
           let userData: UserData ={

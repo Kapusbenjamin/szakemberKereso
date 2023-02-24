@@ -7,6 +7,7 @@ import { JobTagsService } from 'src/app/_services/job-tags.service';
 import { Tag } from 'src/app/_model/Tag';
 import { UserData } from 'src/app/_model/UserData';
 import { UsersService } from 'src/app/_services/users.service';
+import { DropdownValidator } from 'src/app/_validators/dropdown-validators';
 
 
 @Component({

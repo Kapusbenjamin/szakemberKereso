@@ -23,7 +23,7 @@ export class MenuComponent implements OnInit {
   }
 
   logOut(){
-    this.userService.logoutUser(this.userService.userData.userId).subscribe((res)=>{
+    this.userService.logoutUser().subscribe((res)=>{
       if(res){
         this.router.navigate(['/login']);
       }

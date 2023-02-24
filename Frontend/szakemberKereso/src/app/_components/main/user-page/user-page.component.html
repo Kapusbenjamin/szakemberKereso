@@ -1,14 +1,25 @@
 <div *ngIf="user != undefined" class="near">
   <div class="sideBar">
-    <ul>
-      <li>Adatok</li>
-      <li>Értékelések</li>
-      <li>Munkák</li>
-      <li *ngIf="user.accessType! < 1" >Legyél te is szakember</li>
-      <li *ngIf="user.accessType! > 0" >Referencia képek</li>
-    </ul>
+    <div class="barElement">
+      Adatok
+    </div>
+    <div class="barElement">
+      Értékelések
+    </div>
+    <div class="barElement">
+      Munkák
+    </div>
+    <div *ngIf="user.accessType! < 1" class="barElement">
+      Legyél te is szakember
+    </div>
+    <div *ngIf="user.accessType! > 0" class="barElement">
+      Referencia képek
+    </div>
+
+
   </div>
   <div class="datas">
+    <h2>Profil adatok</h2>
     <div class="userData">
       <p>Név: {{ userName }}</p>
       <p>Jogosultság: {{ userType() }}</p>
@@ -17,10 +28,42 @@
     </div>
     <div class="professional" *ngIf="user.accessType! > 0" >
       <p>Foglalkozás(ok):</p>
-      <div class="professons" *ngFor="let item of professions" >
-        <p> {{item.name}} </p>
+      <ul class="professons" *ngFor="let item of professions" >
+        <li>
+          {{item.name}}
+        </li>
+      </ul>
+    </div>
+    <div class="Address" *ngIf="address != undefined">
+      <h2>Cím</h2>
+      <p>Megye: {{ address.county }} </p>
+      <p>Irányítószám: {{ address.zipCode }} </p>
+      <p>Város: {{ address.city }} </p>
+      <p>Utca: {{ address.street }} </p>
+      <p>Ház szám: {{ address.number }} </p>
+      <div *ngIf="address.staircase != null" >
+        <p>Lépcsőház: {{ address.staircase }} </p>
+        <p>Emelet: {{ address.floor }} </p>
+        <p>Ajtó: {{ address.door }} </p>
       </div>
-      <button> + </button>
+    </div>
+    <div *ngIf="company != undefined" class="company">
+      <h2>Cég</h2>
+      <p>Cég név: {{ company.name }}</p>
+      <p>Adószám: {{ company.taxNumber }}</p>
+      <div class="Address" *ngIf="company.address != undefined">
+        <h2>Cég cím</h2>
+        <p>Megye: {{ company.address.county }} </p>
+        <p>Irányítószám: {{ company.address.zipCode }} </p>
+        <p>Város: {{ company.address.city }} </p>
+        <p>Utca: {{ company.address.street }} </p>
+        <p>Ház szám: {{ company.address.number }} </p>
+        <div *ngIf="company.address.staircase != null" >
+          <p>Lépcsőház: {{ company.address.staircase }} </p>
+          <p>Emelet: {{ company.address.floor }} </p>
+          <p>Ajtó: {{ company.address.door }} </p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
