@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 21, 2023 at 04:51 PM
+-- Generation Time: Feb 24, 2023 at 01:08 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.0.13
 
@@ -588,21 +588,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getRatingById` (IN `id_in` INT(11))
 WHERE `ratings`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `getUserById`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserById` (IN `id_in` INT(11))  SELECT `users`.`id`,
-	   `users`.`first_name`,
-	   `users`.`last_name`,
-	   `users`.`access_type`,
-	   `users`.`email`,
-	   `users`.`phone`,
-	   `users`.`company_id`,
-	   `users`.`address_id`,
-	   `users`.`created_at`,
-       `users`.`status`,
-       `users`.`last_login_at`,
-       `users`.`activated_at`,
-       `users`.`updated_at`,
-       `users`.`deleted`
-FROM `users`
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserById` (IN `id_in` INT(11))  SELECT * FROM `users`
 WHERE `users`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `integerToNull`$$
@@ -782,7 +768,11 @@ INSERT INTO `addresses` (`id`, `county_id`, `zip_code`, `city`, `street`, `numbe
 (57, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
 (58, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
 (59, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(60, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL);
+(60, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
+(61, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
+(62, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
+(63, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
+(64, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -888,7 +878,9 @@ INSERT INTO `companies` (`id`, `name`, `address_id`, `tax_number`) VALUES
 (8, 'A kft.', 52, '2132165465'),
 (9, 'A kft.', 55, '2132165465'),
 (10, 'A kft.', 58, '2132165465'),
-(11, 'A kft.', 60, '2132165465');
+(11, 'A kft.', 60, '2132165465'),
+(12, 'A kft.', 62, '2132165465'),
+(13, 'A kft.', 64, '2132165465');
 
 -- --------------------------------------------------------
 
@@ -1140,14 +1132,14 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `access_type`, `email`, `phone`, `password`, `company_id`, `address_id`, `status`, `token`, `token_expired_at`, `last_login_at`, `created_at`, `activated_at`, `updated_at`, `deleted`) VALUES
-(1, 'Teszt', 'Ferenc', 0, 'tesztf@teszt-user.com', '+36202567896', '1234', NULL, 0, -1, NULL, NULL, NULL, '2023-01-05 15:57:39', NULL, '2023-01-05 15:57:39', 0),
-(2, 'Teszt', 'László', 1, 'tesztl@teszt-user.com', '+36202567894', '1234', 1, 0, 0, NULL, NULL, '2023-02-16 16:16:19', '2023-01-05 15:57:39', '2023-01-05 15:48:18', '2023-02-16 16:16:22', 0),
-(3, 'Teszt', 'Izabella', 0, 'tesztiza@teszt-user.com', '+36302987764', '1234', NULL, 0, 0, NULL, NULL, '2023-01-05 15:55:18', '2023-01-05 15:57:39', '2023-01-04 15:48:18', '2023-02-21 14:51:53', 0),
-(4, 'Teszt', 'Admin', 2, 'teszta@teszt-user.com', '+36702753456', '1234', NULL, 0, 0, NULL, NULL, '2023-01-06 15:48:18', '2023-01-05 15:57:39', '2023-01-01 15:48:18', '2023-01-05 15:57:39', 0),
-(8, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', 'jelszo123', 3, 39, -1, NULL, NULL, NULL, '2023-01-28 15:00:51', NULL, '2023-01-28 15:00:51', 0),
-(9, 'TESZT', 'AA', 0, 'A@gmail.com', '+36123456789', 'jelszo123', NULL, 43, -1, NULL, NULL, NULL, '2023-02-16 16:16:26', NULL, '2023-02-16 16:16:26', 0),
-(10, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', 'jelszo123', 5, 44, -1, NULL, NULL, NULL, '2023-02-16 16:16:31', NULL, '2023-02-16 16:16:31', 0),
-(18, 'TESZT', 'AA', 1, 'bkap100@gmail.com', '+36123456789', '1234', 11, 59, 0, NULL, NULL, NULL, '2023-02-21 14:17:47', '2023-02-21 14:19:40', '2023-02-21 14:19:40', 0);
+(1, 'Teszt', 'Ferenc', 0, 'tesztf@teszt-user.com', '+36202567896', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 0, -1, NULL, NULL, NULL, '2023-01-05 15:57:39', NULL, '2023-02-24 12:08:31', 0),
+(2, 'Teszt', 'László', 1, 'tesztl@teszt-user.com', '+36202567894', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 1, 0, 0, NULL, NULL, '2023-02-16 16:16:19', '2023-01-05 15:57:39', '2023-01-05 15:48:18', '2023-02-24 12:08:29', 0),
+(3, 'Teszt', 'Izabella', 0, 'tesztiza@teszt-user.com', '+36302987764', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 0, 0, NULL, NULL, '2023-01-05 15:55:18', '2023-01-05 15:57:39', '2023-01-04 15:48:18', '2023-02-24 12:08:26', 0),
+(4, 'Teszt', 'Admin', 2, 'teszta@teszt-user.com', '+36702753456', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 0, 0, NULL, NULL, '2023-01-06 15:48:18', '2023-01-05 15:57:39', '2023-01-01 15:48:18', '2023-02-24 12:08:24', 0),
+(8, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 3, 39, -1, NULL, NULL, NULL, '2023-01-28 15:00:51', NULL, '2023-02-24 12:08:22', 0),
+(9, 'TESZT', 'AA', 0, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 43, -1, NULL, NULL, NULL, '2023-02-16 16:16:26', NULL, '2023-02-24 12:08:19', 0),
+(10, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 5, 44, -1, NULL, NULL, NULL, '2023-02-16 16:16:31', NULL, '2023-02-24 12:08:16', 0),
+(19, 'TESZT', 'AA', 1, 'bkap100@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 12, 61, 1, NULL, NULL, '2023-02-24 10:59:18', '2023-02-23 18:29:08', '2023-02-23 18:30:16', '2023-02-24 10:59:18', 0);
 
 -- --------------------------------------------------------
 
@@ -1266,7 +1258,7 @@ ALTER TABLE `users_jobs`
 -- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT for table `ads`
@@ -1290,7 +1282,7 @@ ALTER TABLE `chats`
 -- AUTO_INCREMENT for table `companies`
 --
 ALTER TABLE `companies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `counties`
@@ -1338,7 +1330,7 @@ ALTER TABLE `ratings`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `users_jobs`

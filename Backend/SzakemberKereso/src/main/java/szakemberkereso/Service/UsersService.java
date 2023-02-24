@@ -18,7 +18,8 @@ public class UsersService {
         Users result = Users.getUserById(user.getId());
         
         //aktuális felhasználó jogosultsága alapján mit kaphat meg
-        Roles role = Roles.getRoleByCode(Users.getUserById(user.getCurrentUserId()).getAccessType());
+        Users currentUser = Users.getUserById(user.getCurrentUserId());
+        Roles role = Roles.getRoleByCode(currentUser.getAccessType());
         
         if(!role.equals(Roles.ADMIN)){
             if(result.getDeleted() != 1){

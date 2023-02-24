@@ -4,9 +4,12 @@
  */
 package szakemberkereso.Model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -88,7 +91,7 @@ public class Users implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "access_type")
-    private int accessType;
+    private Integer accessType;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Basic(optional = false)
     @NotNull
@@ -111,11 +114,11 @@ public class Users implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "address_id")
-    private int addressId;
+    private Integer addressId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "status")
-    private int status;
+    private Integer status;
     @Column(name = "token")
     private String token;
     @Column(name = "token_expired_at")
@@ -140,7 +143,7 @@ public class Users implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "deleted")
-    private int deleted;
+    private Integer deleted;
 
     //jogosultság miatt
     @Transient
@@ -161,7 +164,7 @@ public class Users implements Serializable {
         this.id = id;
     }
 
-    public Users(Integer id, String firstName, String lastName, int accessType, String email, String phone, String password, Integer companyId, int addressId, int status, String token, Date tokenExpiredAt, Date lastLoginAt, Date createdAt, Date activatedAt, Date updatedAt, int deleted) {
+    public Users(Integer id, String firstName, String lastName, Integer accessType, String email, String phone, String password, Integer companyId, Integer addressId, Integer status, String token, Date tokenExpiredAt, Date lastLoginAt, Date createdAt, Date activatedAt, Date updatedAt, Integer deleted) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -205,11 +208,11 @@ public class Users implements Serializable {
         this.lastName = lastName;
     }
 
-    public int getAccessType() {
+    public Integer getAccessType() {
         return accessType;
     }
 
-    public void setAccessType(int accessType) {
+    public void setAccessType(Integer accessType) {
         this.accessType = accessType;
     }
 
@@ -245,15 +248,15 @@ public class Users implements Serializable {
         this.companyId = companyId;
     }
 
-    public int getAddressId() {
+    public Integer getAddressId() {
         return addressId;
     }
 
-    public void setAddressId(int addressId) {
+    public void setAddressId(Integer addressId) {
         this.addressId = addressId;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
@@ -309,7 +312,7 @@ public class Users implements Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public int getDeleted() {
+    public Integer getDeleted() {
         return deleted;
     }
 
@@ -366,7 +369,7 @@ public class Users implements Serializable {
         return "szakemberkereso.Model.Users[ id=" + id + " ]";
     }
     
-    public static Users objectToUser(Object[] o){
+    public static Users objectToUser(Object[] o) throws ParseException{
         Integer o_id = o[0] != null ? Integer.parseInt(o[0].toString()) : null;
         String o_first_name = o[1].toString();
         String o_last_name = o[2].toString();
@@ -413,7 +416,6 @@ public class Users implements Serializable {
         } 
         catch (Exception e) {
             System.out.println(e.getMessage());
-            //return new Users();
             return new Users();
         }
         finally{
