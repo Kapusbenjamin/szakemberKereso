@@ -2,8 +2,9 @@
   background-color: aquamarine;
   border-radius: 5px;
   border: 1px solid aqua;
-  line-height: 40px;
-  width: 100px;
+  line-height: 30px;
+  width: 140px;
+  display: flex;
 }
 
 .userChat:hover{
@@ -13,4 +14,17 @@
 .active{
   position: relative;
   left: 5px;
+}
+
+.unread{
+  color: white;
+  margin-left: 10px;
+  width: 100%;
+  line-height: normal;
+  background-color: red;
+  border-radius: 50%;
+  border: 1px brown solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

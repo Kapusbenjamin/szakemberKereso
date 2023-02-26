@@ -1,0 +1,9 @@
+.chat{
+  width: 80%;
+  margin: 10px;
+}
+app-user-chat{
+  overflow: auto;
+  max-height: 600px;
+  margin-top: 10px;
+}

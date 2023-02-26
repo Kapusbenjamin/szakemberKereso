@@ -1,0 +1,15 @@
+input{
+  width: 90%;
+  height: auto;
+}
+
+button{
+  width: 10%;
+}
+
+textarea {
+  height: 50px; /* default height */
+  min-height: 50px; /* prevent collapsing */
+  max-height: 150px; /* prevent expanding beyond this height */
+  overflow-y: hidden; /* hide scrollbar by default */
+}

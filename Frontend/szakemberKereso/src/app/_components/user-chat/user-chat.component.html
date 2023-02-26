@@ -1,6 +1,14 @@
 <div *ngFor="let chat of chats" class="Chats">
   <div (click)="chatSelect(chat)"
   [ngClass]="{ 'active': activeChat === chat }"  class="userChat">
-    {{ chat.name }}
+  <div>
+    <p>
+      {{ chat.name }}
+    </p>
+  </div>
+  <div>
+    <p *ngIf="chat.unreadNumber! > 0"  class="unread">
+      {{ chat.unreadNumber }}
+    </p>
   </div>
 </div>

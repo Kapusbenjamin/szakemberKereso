@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Message } from '../_model/Message';
 import { UsersService } from './users.service';
 
 @Injectable({
@@ -23,21 +24,15 @@ export class MessagesService {
   });
   }
 
-  createMessage(){
-    return this.http.post(`${this.apiUrl}createMessage`,{
-      "chatId": 3,
-      "senderId": 2,
-      "receiverId": 3,
-      "message": "Uzi",
-      "currentUserId": 4
-  });
+  createMessage(message: Message){
+    return this.http.post(`${this.apiUrl}createMessage`,message);
   }
 
-  checkMessage(){
+  checkMessage(chatId: number, receiverId: number){
     return this.http.post(`${this.apiUrl}checkMessage`,{
-      "chatId": 4,
-      "receiverId": 2,
-      "currentUserId": 4
+      chatId,
+      receiverId,
+      currentUserId: this.userService.userData.userId
   });
   }
 

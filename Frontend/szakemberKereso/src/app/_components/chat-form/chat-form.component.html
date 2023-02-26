@@ -1,0 +1,3 @@
+<input class="textarea" [formControl]="chatControl" type="text">
+<button mat-raised-button color="primary" (click)="sendMessage()"
+ [disabled]="hasSelectedChat == false || chatControl.invalid">Küldés</button>

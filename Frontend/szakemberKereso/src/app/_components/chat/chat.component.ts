@@ -12,12 +12,13 @@ export class ChatComponent implements OnInit {
 
   @Input() chat!:any;
   messages:any[] = [];
+  userId!:number;
 
   constructor(private userService: UsersService, private messagesService: MessagesService) { }
 
   ngOnInit(): void {
+    this.userId = this.userService.userData.userId;
     this.chat.subscribe((chat:Chat)=>{
-      console.log("change");
       this.getMessegesByChat(chat);
     })
   }
@@ -25,9 +26,6 @@ export class ChatComponent implements OnInit {
   getMessegesByChat(chat: Chat){
     this.messagesService.getAllMessagesBetweenUsers(chat.senderId,chat.receiverId).subscribe((messages: any)=>{
       this.messages = messages;
-      messages.forEach((message:any)=>{
-        console.log(message);
-      })
     })
   }
 

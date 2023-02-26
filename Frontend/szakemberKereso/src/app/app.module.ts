@@ -29,6 +29,7 @@ import { CompanyFormComponent } from './_components/company-form/company-form.co
 import { UserChatComponent } from './_components/user-chat/user-chat.component';
 import { MessagesPageComponent } from './_components/main/messages-page/messages-page.component';
 import { ChatComponent } from './_components/chat/chat.component';
+import { ChatFormComponent } from './_components/chat-form/chat-form.component';
 
 
 @NgModule({
@@ -49,7 +50,8 @@ import { ChatComponent } from './_components/chat/chat.component';
     CompanyFormComponent,
     UserChatComponent,
     MessagesPageComponent,
-    ChatComponent
+    ChatComponent,
+    ChatFormComponent
   ],
   imports: [
     BrowserModule,
