@@ -4,6 +4,7 @@
  */
 package szakemberkereso.Service;
 
+import com.helix.pecscinemaweb.Exceptions.PasswordException;
 import java.util.List;
 import szakemberkereso.Model.Roles;
 import szakemberkereso.Model.Users;
@@ -13,6 +14,32 @@ import szakemberkereso.Model.Users;
  * @author Sharkz
  */
 public class UsersService {
+    
+    public static boolean validatePassword(String pw) throws PasswordException {
+        // 8 character
+        if(pw.length() < 8){
+            throw new PasswordException("The password is not long enough");
+        }
+        // lowercase letter
+        else if(!pw.matches(".*[a-z].*")){
+            throw new PasswordException("It must be a lowercase character");
+        }
+        // uppercase letter
+        else if(!pw.matches(".*[A-Z].*")){
+            throw new PasswordException("It must be a uppercase character");
+        }
+        // number
+        else if(!pw.matches(".*[0-9].*")){
+            throw new PasswordException("It must be a numeric character");
+        }
+        // Special character
+        else if(!pw.matches(".*[!@#$%&*()_+=|<>?{}\\\\[\\\\]~-].*")){
+            throw new PasswordException("It must be a special character");
+        }
+        else{
+            return true;
+        }
+    }
     
     public Users getUserById(Users user){
         Users result = Users.getUserById(user.getId());
