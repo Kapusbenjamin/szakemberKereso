@@ -3,7 +3,7 @@
   border-radius: 5px;
   border: 1px solid aqua;
   line-height: 30px;
-  width: 140px;
+  width: 120px;
   display: flex;
 }
 
@@ -11,9 +11,10 @@
   background-color:rgba(127, 255, 212, 0.692);
 }
 
-.active{
+.selected {
   position: relative;
-  left: 5px;
+  background-color:rgba(127, 255, 212, 0.692);
+  left: 3px;
 }
 
 .unread{

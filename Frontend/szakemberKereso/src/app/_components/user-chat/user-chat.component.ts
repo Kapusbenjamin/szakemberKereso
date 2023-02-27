@@ -22,6 +22,9 @@ export class UserChatComponent implements OnInit {
   chatSelect(chat:Chat){
     this.activeChat.next(chat);
     this.messagesService.checkMessage(chat.id,this.userId).subscribe((res)=>{
+      if(res){
+        chat.unreadNumber = 0;
+      }
     });
   }
 
