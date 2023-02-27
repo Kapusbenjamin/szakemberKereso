@@ -45,8 +45,8 @@ export class ChatFormComponent implements OnInit {
       currentUserId: this.userId
     }
     this.messages.push(message);
+    this.chatControl.setValue("");
     this.messageService.createMessage(message).subscribe((res)=>{
-      console.log(res);
     });
   }
 }

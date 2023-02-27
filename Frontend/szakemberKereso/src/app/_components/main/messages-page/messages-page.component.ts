@@ -21,7 +21,7 @@ export class MessagesPageComponent implements OnInit {
   activeChat = new BehaviorSubject<string>('');
 
   ngOnInit(): void {
-    this.getAllChats();
+      this.getAllChats();
   }
 
   getAllChats(){
@@ -51,12 +51,11 @@ export class MessagesPageComponent implements OnInit {
     this.messageService.getAllMessagesBetweenUsers(chat.senderId,chat.receiverId).subscribe((messages: any)=>{
       let unreadNumber = 0;
       messages.forEach((message: Message)=>{
-        if(message.checked == 0){
+        if(message.checked == 0 && message.receiverId == this.userId){
           unreadNumber++;
         }
         chat.unreadNumber = unreadNumber;
       })
-      console.log(chat.name! + chat.unreadNumber);
       this.chats.push(chat);
     })
   }

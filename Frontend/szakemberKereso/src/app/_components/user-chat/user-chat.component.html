@@ -1,14 +1,17 @@
 <div *ngFor="let chat of chats" class="Chats">
   <div (click)="chatSelect(chat)"
-  [ngClass]="{ 'active': activeChat === chat }"  class="userChat">
-  <div>
-    <p>
-      {{ chat.name }}
-    </p>
-  </div>
-  <div>
-    <p *ngIf="chat.unreadNumber! > 0"  class="unread">
-      {{ chat.unreadNumber }}
-    </p>
+    [ngClass]="{ 'selected': activeChat.value.id == chat.id ,'userChat' : true }">
+    <div>
+      <p>
+        {{ chat.name }}
+      </p>
+    </div>
+    <div>
+      <p *ngIf="chat.unreadNumber! > 0" class="unread">
+        {{ chat.unreadNumber }}
+      </p>
+    </div>
   </div>
 </div>
+
+
