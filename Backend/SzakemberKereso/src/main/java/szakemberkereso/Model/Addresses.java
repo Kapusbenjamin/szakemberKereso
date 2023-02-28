@@ -250,46 +250,46 @@ public class Addresses implements Serializable {
         }
     }
     
-    public static String createAddress(Addresses a){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
-        EntityManager em = emf.createEntityManager();
-        
-        try {            
-            StoredProcedureQuery spq = em.createStoredProcedureQuery("createAddress");
-            
-            spq.registerStoredProcedureParameter("county_id_in", Integer.class, ParameterMode.IN);
-            spq.registerStoredProcedureParameter("zip_code_in", Integer.class, ParameterMode.IN);
-            spq.registerStoredProcedureParameter("city_in", String.class, ParameterMode.IN);
-            spq.registerStoredProcedureParameter("street_in", String.class, ParameterMode.IN);
-            spq.registerStoredProcedureParameter("number_in", String.class, ParameterMode.IN);
-            spq.registerStoredProcedureParameter("staircase_in", String.class, ParameterMode.IN);
-            spq.registerStoredProcedureParameter("floor_in", Integer.class, ParameterMode.IN);
-            spq.registerStoredProcedureParameter("door_in", Integer.class, ParameterMode.IN);
-
-            spq.setParameter("county_id_in", a.getCountyId());
-            spq.setParameter("zip_code_in", a.getZipCode());
-            spq.setParameter("city_in", a.getCity());
-            spq.setParameter("street_in", a.getStreet());
-            spq.setParameter("number_in", a.getNumber());
-            spq.setParameter("staircase_in", a.getStaircase());
-            spq.setParameter("floor_in", a.getFloor());
-            spq.setParameter("door_in", a.getDoor());
-
-            spq.execute();
-            return "Sikeresen létrejött az address";
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "HIBA: " + e.getMessage();
-        }
-        finally{
-            em.clear();
-            em.close();
-            emf.close();
-        }
-        
-    }
-    
+//    public static String createAddress(Addresses a){
+//        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+//        EntityManager em = emf.createEntityManager();
+//        
+//        try {            
+//            StoredProcedureQuery spq = em.createStoredProcedureQuery("createAddress");
+//            
+//            spq.registerStoredProcedureParameter("county_id_in", Integer.class, ParameterMode.IN);
+//            spq.registerStoredProcedureParameter("zip_code_in", Integer.class, ParameterMode.IN);
+//            spq.registerStoredProcedureParameter("city_in", String.class, ParameterMode.IN);
+//            spq.registerStoredProcedureParameter("street_in", String.class, ParameterMode.IN);
+//            spq.registerStoredProcedureParameter("number_in", String.class, ParameterMode.IN);
+//            spq.registerStoredProcedureParameter("staircase_in", String.class, ParameterMode.IN);
+//            spq.registerStoredProcedureParameter("floor_in", Integer.class, ParameterMode.IN);
+//            spq.registerStoredProcedureParameter("door_in", Integer.class, ParameterMode.IN);
+//
+//            spq.setParameter("county_id_in", a.getCountyId());
+//            spq.setParameter("zip_code_in", a.getZipCode());
+//            spq.setParameter("city_in", a.getCity());
+//            spq.setParameter("street_in", a.getStreet());
+//            spq.setParameter("number_in", a.getNumber());
+//            spq.setParameter("staircase_in", a.getStaircase());
+//            spq.setParameter("floor_in", a.getFloor());
+//            spq.setParameter("door_in", a.getDoor());
+//
+//            spq.execute();
+//            return "Sikeresen létrejött az address";
+//        } 
+//        catch (Exception e) {
+//            System.out.println(e.getMessage());
+//            return "HIBA: " + e.getMessage();
+//        }
+//        finally{
+//            em.clear();
+//            em.close();
+//            emf.close();
+//        }
+//        
+//    }
+//    
     public static String updateAddressById(Addresses a){
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();

@@ -6,7 +6,7 @@ package szakemberkereso.Service;
 
 import com.helix.pecscinemaweb.Exceptions.PasswordException;
 import java.util.List;
-import szakemberkereso.Model.Roles;
+import szakemberkereso.Configuration.Roles;
 import szakemberkereso.Model.Users;
 
 /**

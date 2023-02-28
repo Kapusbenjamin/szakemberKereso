@@ -4,7 +4,7 @@
  */
 package szakemberkereso.Service;
 
-import szakemberkereso.Model.Roles;
+import szakemberkereso.Configuration.Roles;
 import szakemberkereso.Model.Users;
 
 /**
@@ -13,12 +13,14 @@ import szakemberkereso.Model.Users;
  */
 public class AuthService {
 
-    public boolean isUserAuthorized(Integer userId, Roles roleName) {
+    public boolean isUserAuthorized(Integer userId, Roles[] roles) {
         Users user = Users.getUserById(userId);
         if (user != null) {
             Roles role = Roles.getRoleByCode(user.getAccessType());
-            if (role.equals(roleName)) {
-                return true;
+            for (Roles roleName : roles) {
+                if(role.equals(roleName)) {
+                    return true;
+                }
             }
         }
         return false;
