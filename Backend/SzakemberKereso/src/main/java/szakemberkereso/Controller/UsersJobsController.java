@@ -5,6 +5,7 @@
 package szakemberkereso.Controller;
 
 import java.util.List;
+import java.util.Objects;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
@@ -16,8 +17,10 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import szakemberkereso.Configuration.Roles;
 import szakemberkereso.Model.JobTags;
 import szakemberkereso.Model.UsersJobs;
+import szakemberkereso.Service.AuthService;
 import szakemberkereso.Service.UsersJobsService;
 
 /**
@@ -71,16 +74,30 @@ public class UsersJobsController {
     @Path("addNewJobToUser")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addNewJobToUser(UsersJobs user_job){
-        String result = ujs.addNewJobToUser(user_job);
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+        if (AuthService.isUserAuthorized(user_job.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.WORKER})) {
+            //a user-ek csak maguknak adhatnak hozzá job_taget/szakmát
+            if(!Objects.equals(user_job.getUserId(), user_job.getCurrentUserId())){
+                return Response.status(Response.Status.FORBIDDEN).entity("Nincs jogosultsága ehhez a kéréshez.").build();
+            }
+            String result = ujs.addNewJobToUser(user_job);
+            return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+        }
+        return Response.status(Response.Status.UNAUTHORIZED).entity("Nem sikerült azonosítani.").build();
     }
     
     @POST
     @Path("deleteUserJob")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deleteUserJob(UsersJobs user_job){
-        String result = ujs.deleteUserJob(user_job);
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+        if (AuthService.isUserAuthorized(user_job.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.WORKER})) {
+            //a user-ek csak maguktól vehetnek el job_taget/szakmát
+            if(!Objects.equals(user_job.getUserId(), user_job.getCurrentUserId())){
+                return Response.status(Response.Status.FORBIDDEN).entity("Nincs jogosultsága ehhez a kéréshez.").build();
+            }
+            String result = ujs.deleteUserJob(user_job);
+            return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+        }
+        return Response.status(Response.Status.UNAUTHORIZED).entity("Nem sikerült azonosítani.").build();
     }
     
 }

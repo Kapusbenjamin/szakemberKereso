@@ -37,8 +37,6 @@ public class AddressesController {
     
     AddressesService as = new AddressesService();
     
-    AuthService authService = new AuthService();
-    
     /**
      * Creates a new instance of Addresses
      */
@@ -84,8 +82,8 @@ public class AddressesController {
     @Path("updateAddressById")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateAddressById(Addresses address){
-        if (authService.isUserAuthorized(address.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.USER, Roles.WORKER})) {
-            if(!authService.isUserAuthorized(address.getCurrentUserId(), new Roles[]{Roles.ADMIN})){
+        if (AuthService.isUserAuthorized(address.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.USER, Roles.WORKER})) {
+            if(!AuthService.isUserAuthorized(address.getCurrentUserId(), new Roles[]{Roles.ADMIN})){
                 //a nem ADMIN jogosultságú user-ek csak a saját address-üket módosíthatják
                 if(!Objects.equals(address.getId(), Users.getUserById(address.getCurrentUserId()).getAddressId())){
                     return Response.status(Response.Status.FORBIDDEN).entity("Nincs jogosultsága ehhez a kéréshez.").build();
@@ -101,8 +99,8 @@ public class AddressesController {
     @Path("deleteAddressById")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deleteAddressById(Addresses address){
-        if (authService.isUserAuthorized(address.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.USER, Roles.WORKER})) {
-            if(!authService.isUserAuthorized(address.getCurrentUserId(), new Roles[]{Roles.ADMIN})){
+        if (AuthService.isUserAuthorized(address.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.USER, Roles.WORKER})) {
+            if(!AuthService.isUserAuthorized(address.getCurrentUserId(), new Roles[]{Roles.ADMIN})){
                 //a nem ADMIN jogosultságú user-ek csak a saját address-üket törölhetik
                 if(!Objects.equals(address.getId(), Users.getUserById(address.getCurrentUserId()).getAddressId())){
                     return Response.status(Response.Status.FORBIDDEN).entity("Nincs jogosultsága ehhez a kéréshez.").build();

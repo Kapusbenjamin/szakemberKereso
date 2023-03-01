@@ -50,11 +50,11 @@ public class UsersJobs implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "user_id")
-    private int userId;
+    private Integer userId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "job_tag_id")
-    private int jobTagId;
+    private Integer jobTagId;
 
     //jogosultság miatt
     @Transient
@@ -68,7 +68,7 @@ public class UsersJobs implements Serializable {
         this.id = id;
     }
 
-    public UsersJobs(Integer id, int userId, int jobTagId) {
+    public UsersJobs(Integer id, Integer userId, Integer jobTagId) {
         this.id = id;
         this.userId = userId;
         this.jobTagId = jobTagId;
@@ -82,19 +82,19 @@ public class UsersJobs implements Serializable {
         this.id = id;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
-    public int getJobTagId() {
+    public Integer getJobTagId() {
         return jobTagId;
     }
 
-    public void setJobTagId(int jobTagId) {
+    public void setJobTagId(Integer jobTagId) {
         this.jobTagId = jobTagId;
     }
 

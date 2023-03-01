@@ -6,6 +6,7 @@ package szakemberkereso.Service;
 
 import com.helix.pecscinemaweb.Exceptions.PasswordException;
 import java.util.List;
+import javax.ws.rs.NotFoundException;
 import szakemberkereso.Configuration.Roles;
 import szakemberkereso.Model.Users;
 
@@ -44,11 +45,8 @@ public class UsersService {
     public Users getUserById(Users user){
         Users result = Users.getUserById(user.getId());
         
-        //aktuális felhasználó jogosultsága alapján mit kaphat meg
-        Users currentUser = Users.getUserById(user.getCurrentUserId());
-        Roles role = Roles.getRoleByCode(currentUser.getAccessType());
-        
-        if(!role.equals(Roles.ADMIN)){
+        //aktuális felhasználó jogosultsága alapján mit kaphat meg        
+        if(!AuthService.isUserAuthorized(user.getCurrentUserId(), new Roles[]{Roles.ADMIN})){
             if(result.getDeleted() != 1){
                 result.setStatus(null);
                 result.setLastLoginAt(null);
@@ -57,7 +55,7 @@ public class UsersService {
                 result.setDeleted(null);
                 return result;
             }
-            return null;
+            throw new NotFoundException("Ezt a felhasználót törölték vagy nem létezik!");
         }
         
         return result;

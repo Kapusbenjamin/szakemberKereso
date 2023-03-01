@@ -5,18 +5,22 @@
 package szakemberkereso.Controller;
 
 import java.util.List;
+import java.util.Objects;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import szakemberkereso.Configuration.Roles;
 import szakemberkereso.Model.Users;
+import szakemberkereso.Service.AuthService;
 import szakemberkereso.Service.UsersService;
 
 /**
@@ -63,16 +67,26 @@ public class UsersController {
     @Path("getUserById")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getUserById(Users user){
-        Users result = us.getUserById(user);
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+        try{
+            Users result = us.getUserById(user);
+            return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();            
+        }
+        catch(NotFoundException | NullPointerException e){
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
     }
     
     @POST
     @Path("getAllUsers")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getAllUsers(Integer userId){
-        List<Users> result = us.getAllUsers();
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+        if(AuthService.isUserAuthorized(userId, new Roles[]{Roles.ADMIN})){
+            List<Users> result = us.getAllUsers();
+            return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();            
+        }
+        else{
+            return Response.status(Response.Status.FORBIDDEN).entity("Nincs jogosultsága ehhez a kéréshez.").build();
+        }
     }
     
     @POST
@@ -111,32 +125,61 @@ public class UsersController {
     @Path("updateUser")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateUser(Users user){
-        String result = us.updateUser(user);
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+        if (AuthService.isUserAuthorized(user.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.USER, Roles.WORKER})) {
+            //a user-ek csak a saját adataikat módosíthatják
+            if(!Objects.equals(user.getId(), user.getCurrentUserId())){
+                return Response.status(Response.Status.FORBIDDEN).entity("Nincs jogosultsága ehhez a kéréshez.").build();
+            }
+            String result = us.updateUser(user);
+            return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+        }
+        return Response.status(Response.Status.UNAUTHORIZED).entity("Nem sikerült azonosítani.").type(MediaType.APPLICATION_JSON).build();
     }
     
     @POST
     @Path("deleteUser")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deleteUser(Users user){
-        Boolean result = us.deleteUser(user.getId());
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+        if(AuthService.isUserAuthorized(user.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.USER, Roles.WORKER})) {
+            if(!AuthService.isUserAuthorized(user.getCurrentUserId(), new Roles[]{Roles.ADMIN})){
+                //a nem ADMIN jogosultságú user-ek csak saját magukat törölhetik
+                if(!Objects.equals(user.getId(), user.getCurrentUserId())){
+                    return Response.status(Response.Status.FORBIDDEN).entity("Nincs jogosultsága ehhez a kéréshez.").build();
+                }
+            }
+            Boolean result = us.deleteUser(user.getId());
+            return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+        }
+        return Response.status(Response.Status.UNAUTHORIZED).entity("Nem sikerült azonosítani.").build();
     }
     
     @POST
     @Path("changeAccess")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response changeAccess(Users user){
-        Boolean result = us.changeAccess(user.getId());
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+        //csak USER jogosultságú user-ek változtathatnak hozzáférést (csak worker-re)
+        if(AuthService.isUserAuthorized(user.getCurrentUserId(), new Roles[]{Roles.USER})) {
+            Boolean result = us.changeAccess(user.getId());
+            return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+        }
+        else{
+            return Response.status(Response.Status.FORBIDDEN).entity("Nincs jogosultsága ehhez a kéréshez.").build();
+        }
     }
     
     @POST
     @Path("changePassword")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response changePassword(Users user){
-        String result = us.changePassword(user);
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+        if(AuthService.isUserAuthorized(user.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.USER, Roles.WORKER})) {
+            //a user-ek csak a saját jelszavukat módosíthatják
+            if(!Objects.equals(user.getId(), user.getCurrentUserId())){
+                return Response.status(Response.Status.FORBIDDEN).entity("Nincs jogosultsága ehhez a kéréshez.").build();
+            }
+            String result = us.changePassword(user);
+            return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+        }
+        return Response.status(Response.Status.UNAUTHORIZED).entity("Nem sikerült azonosítani.").build();
     }
     
     @POST
