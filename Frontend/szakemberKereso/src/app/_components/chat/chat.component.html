@@ -1,4 +1,4 @@
-<div class="chatMessages">
+<div #scrollMe class="chatMessages">
   <div *ngFor="let message of messages" class="message-row">
     <div [ngClass]="{'sended': message.senderId === userId, 'received': message.senderId !== userId}" class="message">
       <p>{{ message.message }}</p>

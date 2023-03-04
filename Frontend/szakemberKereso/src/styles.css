@@ -23,8 +23,8 @@ body {
 .container{
   margin: auto;
   border-radius: 20px;
-  width: 320px;
-  min-height: 500px;
+  /* width: 320px;
+  min-height: 500px; */
   padding: 20px;
   background-color: rgba(113, 185, 223, 0.637)
 }
