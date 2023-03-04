@@ -1,19 +1,21 @@
-<div class="ad">
-  <h2> {{ name }} </h2>
-  <p class="rating">
-     *****
-  </p>
-  <div class="tags" >
-    <div class="tag">
-      {{ jobTag }}
-    </div>
-    <div *ngFor="let countyname of countiesNames">
+<div class="container">
+  <div class="row">
+    <h2> {{ name }} </h2>
+    <p class="rating">
+      Értékelés: {{ rating }}
+    </p>
+    <div class="tags" >
       <div class="tag">
-        {{ countyname }}
+        {{ jobTag }}
+      </div>
+      <div class="tags" *ngFor="let countyname of countiesNames">
+        <div class="tag">
+          {{ countyname }}
+        </div>
       </div>
     </div>
-  </div>
-  <div class="discription">
-    <p>Leírás: {{ ad.description }}</p>
+    <div class="discription">
+      <p>Leírás: {{ ad.description }}</p>
+    </div>
   </div>
 </div>

@@ -21,6 +21,7 @@ export class AdPageComponent implements OnInit {
   jobTags: Tag[] = [];
   title:string = "Title";
   userData!: UserData;
+  modalOpen:boolean = false;
 
   ads!: Ad[];
 

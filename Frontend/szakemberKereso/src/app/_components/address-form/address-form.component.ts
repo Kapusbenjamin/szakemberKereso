@@ -33,16 +33,6 @@ export class AddressFormComponent implements OnInit {
     door: new FormControl(null),
   });
 
-
-  fields: Field[] = [
-    {control: this.address.controls['zipCode'], name:'Irányítószám', type:"text", errorMessage:"Csak számokat tartalmazhat"},
-    {control: this.address.controls['number'], name:'Házszám', type:"text"},
-    {control: this.address.controls['staircase'], name:'Lépcsőház', type:"text"},
-    {control: this.address.controls['floor'], name:'Emelet', type:"text", errorMessage:"Csak számokat tartalmazhat"},
-    {control: this.address.controls['door'], name:'Ajtó', type:"text", errorMessage:"Csak számokat tartalmazhat"},
-  ]
-
-
   constructor(private countiesService: CountiesService, private http: HttpService,private cdr: ChangeDetectorRef) { }
   ngOnDestroy(): void {
     setTimeout(() => {

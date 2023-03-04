@@ -12,21 +12,17 @@ html{
   scroll-snap-type: y proximity;
 }
 
-html, body { height: 100vh; }
+html, body { min-height: 100vh; }
 body {
-  background-color: rgb(65, 65, 187);
   margin: 0;
+  background-repeat: no-repeat;
+  background: rgb(222,88,255);
+  background: linear-gradient(142deg, rgba(222,88,255,1) 0%, rgba(89,102,255,1) 34%, rgba(131,135,255,1) 100%);
   /* font-family: Roboto, "Helvetica Neue", sans-serif; */
 }
 
-
-.container{
+.center{
   margin: auto;
-  border-radius: 20px;
-  /* width: 320px;
-  min-height: 500px; */
-  padding: 20px;
-  background-color: rgba(113, 185, 223, 0.637)
 }
 
 .erroredInput{
@@ -42,21 +38,10 @@ a{
   color: rgb(0, 46, 90);
 }
 
-.tag{
-  background-color: blue;
-  color: aliceblue;
-  border-radius: 10px;
-  padding: 2px 5px;
-  margin: 3px;
-  border: 1px solid rgb(255, 255, 255);
-}
-
 .near{
   display: flex;
   width: 90%;
   margin: auto;
   height: auto;
 }
-
-
 

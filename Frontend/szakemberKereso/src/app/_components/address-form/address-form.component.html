@@ -1,39 +1,65 @@
 <h2>Cím</h2>
     <!-- search dropdown -->
-      <div class="dropdown">
+    <div class="row">
+      <div class="dropdown col-12">
         <app-search-dropdown [options]="counties" name="Megye"
         [control]="county"></app-search-dropdown>
         <mat-error *ngIf="
         county.hasError('required') &&
         county.hasError('notContains') &&
         county.dirty">
-          Érvénytelen név
-        </mat-error>
-        <mat-error *ngIf="county.hasError('required') &&
-        county.touched">Mező kitöltése kötelező</mat-error>
+        Érvénytelen név
+      </mat-error>
+      <mat-error *ngIf="county.hasError('required') &&
+      county.touched">Mező kitöltése kötelező</mat-error>
+    </div>
+    <div class="row center">
+      <div class="col-4">
+        <app-input [control]="address.controls['zipCode']" type="text" name="Irányítószám"></app-input>
+        <mat-error *ngIf="address.controls['zipCode'].hasError('pattern')">Csak számokat tartalmazhat</mat-error>
+        <mat-error *ngIf="address.controls['zipCode'].hasError('required') &&
+        address.controls['zipCode'].touched">Mező kitöltése kötelező</mat-error>
       </div>
-
-    <div class="dropdown">
-      <app-search-dropdown  [options]="cities" name="Város"
-      [control]="address.controls['city']"></app-search-dropdown>
-      <mat-error *ngIf="!address.controls['city'].hasError('required') &&
-      address.controls['city'].hasError('notContains') && address.controls['city'].dirty">
+      <div class="dropdown col-8">
+        <app-search-dropdown  [options]="cities" name="Város"
+        [control]="address.controls['city']"></app-search-dropdown>
+        <mat-error *ngIf="!address.controls['city'].hasError('required') &&
+        address.controls['city'].hasError('notContains') && address.controls['city'].dirty">
         Érvénytelen név
       </mat-error>
       <mat-error *ngIf="address.controls['city'].hasError('required') &&
       address.controls['city'].touched">Mező kitöltése kötelező</mat-error>
     </div>
-
-    <div class="dropdown">
-      <app-search-dropdown [options]="streetsNames" name="Utca"
-      [control]="address.controls['street']"></app-search-dropdown>
-      <mat-error *ngIf="address.controls['street'].hasError('required') &&
-      address.controls['street'].touched">Mező kitöltése kötelező</mat-error>
+  </div>
+    <div class="dropdown col-12">
+    <app-search-dropdown [options]="streetsNames" name="Utca"
+    [control]="address.controls['street']"></app-search-dropdown>
+    <mat-error *ngIf="address.controls['street'].hasError('required') &&
+    address.controls['street'].touched">Mező kitöltése kötelező</mat-error>
+  </div>
+  <div class="row center">
+    <div class="col-6">
+      <app-input [control]="address.controls['number']" type="text" name="Házszám"></app-input>
+      <mat-error *ngIf="address.controls['number'].hasError('required') &&
+      address.controls['number'].touched">Mező kitöltése kötelező</mat-error>
     </div>
-
-    <!-- search dropdown -->
-    <div *ngFor="let field of fields">
-      <app-input [control]="field.control" [type]="field.type" [name]="field.name"></app-input>
-      <mat-error *ngIf="field.control.hasError('pattern')">{{ field.errorMessage }}</mat-error>
-      <mat-error *ngIf="field.control.hasError('required') && field.control.touched">Mező kitöltése kötelező</mat-error>
+    <div class="col-6">
+      <app-input [control]="address.controls['staircase']" type="text" name="Lépcsőház"></app-input>
+      <mat-error *ngIf="address.controls['staircase'].hasError('pattern')">Csak számokat tartalmazhat</mat-error>
+      <mat-error *ngIf="address.controls['staircase'].hasError('required') &&
+      address.controls['staircase'].touched">Mező kitöltése kötelező</mat-error>
     </div>
+    <div class="col-6">
+      <app-input [control]="address.controls['floor']" type="text" name="Emelet"></app-input>
+      <mat-error *ngIf="address.controls['floor'].hasError('pattern')">Csak számokat tartalmazhat</mat-error>
+      <mat-error *ngIf="address.controls['floor'].hasError('required') &&
+      address.controls['floor'].touched">Mező kitöltése kötelező</mat-error>
+    </div>
+    <div class="col-6">
+      <app-input [control]="address.controls['door']" type="text" name="Ajtó"></app-input>
+      <mat-error *ngIf="address.controls['door'].hasError('pattern')">Csak számokat tartalmazhat</mat-error>
+      <mat-error *ngIf="address.controls['door'].hasError('required') &&
+      address.controls['door'].touched">Mező kitöltése kötelező</mat-error>
+    </div>
+  </div>
+</div>

@@ -3,6 +3,8 @@ import { Ad } from 'src/app/_model/Ad';
 import { JobTagsService } from 'src/app/_services/job-tags.service';
 import { UsersService } from 'src/app/_services/users.service';
 import { AdsCountiesService } from 'src/app/_services/ads-counties.service'
+import { RatingsService } from 'src/app/_services/ratings.service';
+import { Rating } from 'src/app/_model/Rating';
 
 @Component({
   selector: 'app-advest',
@@ -15,13 +17,33 @@ export class AdvestComponent implements OnInit {
   name:string = "";
   jobTag: string = "";
   countiesNames: string[] = [];
+  rating:number = 4.8;
 
-  constructor(private userService: UsersService, private jobTagsService: JobTagsService, private adsCountiesService: AdsCountiesService) { }
+  constructor(private userService: UsersService,
+     private jobTagsService: JobTagsService,
+     private adsCountiesService: AdsCountiesService,
+     private ratingService: RatingsService
+     ) { }
 
   ngOnInit(): void {
     this.getUsernameByAd();
+    this.getRatingsByUserId();
     this.getTagsByAd();
     this.getCountiesByAd();
+  }
+
+  getRatingsByUserId(){
+    this.ratingService.getAllRatingsByRatinged(this.ad.userId).subscribe((ratings)=>{
+      let sum = 0;
+      ratings.forEach((rating: Rating)=>{
+        sum =+ rating.ratingsStars;
+      })
+      if(ratings.length == 0){
+        this.rating = 0;
+      }else{
+        this.rating = (sum / ratings.length)
+      }
+    })
   }
 
   getTagsByAd(){

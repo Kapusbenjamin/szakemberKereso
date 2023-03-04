@@ -1,9 +1,15 @@
 <div class="company">
-  <h2>Cég Információ</h2>
-  <div *ngFor="let field of fields">
-    <app-input [control]="field.control" [type]="field.type" [name]="field.name"></app-input>
-    <mat-error *ngIf="field.control.hasError('required') && field.control.touched">Mező kitöltése kötelező</mat-error>
-    <mat-error *ngIf="field.control.hasError('pattern') && field.control.touched">csak számokat tartalmazhat</mat-error>
+  <div class="row">
+    <div class="col-lg-6">
+      <h2>Cég Információ</h2>
+      <div *ngFor="let field of fields">
+        <app-input [control]="field.control" [type]="field.type" [name]="field.name"></app-input>
+        <mat-error *ngIf="field.control.hasError('required') && field.control.touched">Mező kitöltése kötelező</mat-error>
+        <mat-error *ngIf="field.control.hasError('pattern') && field.control.touched">csak számokat tartalmazhat</mat-error>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <app-address-form [formGroup]="company" ></app-address-form>
+    </div>
   </div>
-  <app-address-form [formGroup]="company" ></app-address-form>
 </div>

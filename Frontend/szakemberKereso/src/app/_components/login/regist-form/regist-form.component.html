@@ -3,41 +3,55 @@
     <h2>Sign up / Regisztrálj</h2>
     <a routerLink="/login">Bejelentkezés létező fiókba</a>
     <hr>
-    <h2>Felhasználói adatok</h2>
-    <!-- User -->
-    <div *ngFor="let field of fields">
-      <app-input [control]="field.control" [type]="field.type" [name]="field.name"></app-input>
-      <mat-error *ngIf="field.control.hasError('required') && field.control.touched">Mező kitöltése kötelező</mat-error>
-    </div>
-    <mat-error *ngIf="registForm.hasError('notSame') &&
-    registForm.controls['passwordConfirm'].value != '' ">A jelszavak nem egyeznek</mat-error>
-    <!-- Address -->
-    <app-address-form
-    [formGroup]="registForm"
-    ></app-address-form>
-    <!-- Address -->
-    <!-- Professional -->
-    <mat-slide-toggle (click)="professionalSlide()">Regisztrálás szakemberként</mat-slide-toggle>
-    <div *ngIf="professional">
-      <h2>Szakember adatok</h2>
-      <div class="dropdown">
-        <app-search-dropdown [options]="professions" name="Foglalkozás" [control]="professionControl"></app-search-dropdown>
-        <mat-error *ngIf="!professionControl.hasError('required') &&
-        professionControl.hasError('notContains') && professionControl.dirty">
-        Érvénytelen név
-      </mat-error>
-      <mat-error *ngIf="professionControl.hasError('required') &&
-      professionControl.touched">Mező kitöltése kötelező</mat-error>
+    <div class="row">
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <h2>Felhasználói adatok</h2>
+        <!-- User -->
+        <div class="col-sm-10 center">
+          <div *ngFor="let field of fields">
+            <app-input [control]="field.control" [type]="field.type" [name]="field.name"></app-input>
+            <mat-error *ngIf="field.control.hasError('required') && field.control.touched">Mező kitöltése
+              kötelező</mat-error>
+            </div>
+            <mat-error *ngIf="registForm.hasError('notSame') &&
+            registForm.controls['passwordConfirm'].value != '' ">A jelszavak nem egyeznek</mat-error>
+          </div>
+          <!-- Address -->
+        </div>
+      <div class="col-lg-6 col-md-6">
+        <app-address-form [formGroup]="registForm"></app-address-form>
       </div>
-      <mat-slide-toggle (click)="companySlide()">Cég regisztálása</mat-slide-toggle>
-      <!-- Company -->
-      <div *ngIf="hasCompany">
-        <app-company-form [formGroup]="registForm"></app-company-form>
-      </div>
-      <!-- Company -->
+      <!-- Address -->
       <!-- Professional -->
+      <div class="col-lg-12" >
+        <mat-slide-toggle (click)="professionalSlide()">Regisztrálás szakemberként</mat-slide-toggle>
+        <div *ngIf="professional">
+          <hr>
+          <h2>Szakember adatok</h2>
+          <div class="dropdown">
+            <app-search-dropdown [options]="professions" name="Foglalkozás"
+            [control]="professionControl"></app-search-dropdown>
+            <mat-error *ngIf="!professionControl.hasError('required') &&
+            professionControl.hasError('notContains') && professionControl.dirty">
+            Érvénytelen név
+          </mat-error>
+          <mat-error *ngIf="professionControl.hasError('required') &&
+          professionControl.touched">Mező kitöltése kötelező</mat-error>
+        </div>
+        <mat-slide-toggle (click)="companySlide()">Cég regisztálása</mat-slide-toggle>
+        <!-- Company -->
+        <div *ngIf="hasCompany">
+          <hr>
+          <app-company-form [formGroup]="registForm"></app-company-form>
+        </div>
+        <!-- Company -->
+        <!-- Professional -->
+      </div>
     </div>
-  <p>a *-gal jelölt mezők kitöltése kötelező</p>
-  <button mat-raised-button color="primary" (click)="regist()">Regisztráció</button>
-</form>
+  </div>
+  <hr>
+    <p>a *-gal jelölt mezők kitöltése kötelező</p>
+    <button mat-raised-button color="primary" (click)="regist()">Regisztráció</button>
+  </form>
+  <hr>
 </div>
