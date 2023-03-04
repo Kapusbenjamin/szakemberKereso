@@ -30,7 +30,8 @@ import { UserChatComponent } from './_components/user-chat/user-chat.component';
 import { MessagesPageComponent } from './_components/main/messages-page/messages-page.component';
 import { ChatComponent } from './_components/chat/chat.component';
 import { ChatFormComponent } from './_components/chat-form/chat-form.component';
-
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogComponent } from './_components/mat-dialog/mat-dialog.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { ChatFormComponent } from './_components/chat-form/chat-form.component';
     UserChatComponent,
     MessagesPageComponent,
     ChatComponent,
-    ChatFormComponent
+    ChatFormComponent,
+    MatDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -65,6 +67,7 @@ import { ChatFormComponent } from './_components/chat-form/chat-form.component';
     MatAutocompleteModule,
     MatButtonModule,
     MatSlideToggleModule,
+    MatDialogModule
   ],
   providers: [
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}

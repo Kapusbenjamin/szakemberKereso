@@ -1,0 +1,11 @@
+  <h2 mat-dialog-title>Új hirdetés Feladása</h2>
+  <mat-dialog-content>
+    <form [formGroup]="adForm">
+      <label for="description">Leírás</label>
+      <textarea class="textArea" type="text" [formControl]="adForm.controls['description']"></textarea>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button [mat-dialog-close]="adForm.value">Ok</button>
+  </mat-dialog-actions>

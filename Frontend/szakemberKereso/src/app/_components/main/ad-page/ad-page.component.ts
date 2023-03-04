@@ -8,6 +8,8 @@ import { Tag } from 'src/app/_model/Tag';
 import { UserData } from 'src/app/_model/UserData';
 import { UsersService } from 'src/app/_services/users.service';
 import { DropdownValidator } from 'src/app/_validators/dropdown-validators';
+import { MatDialog } from '@angular/material/dialog';
+import { MatDialogComponent } from '../../mat-dialog/mat-dialog.component';
 
 
 @Component({
@@ -32,7 +34,7 @@ export class AdPageComponent implements OnInit {
 
   constructor(private adService: AdsService, private fb: FormBuilder,
     private countiesService: CountiesService, private jobTagsService: JobTagsService,
-    private userService: UsersService
+    private userService: UsersService, private dialog: MatDialog
     ) { }
 
   ngOnInit(): void {
@@ -99,6 +101,16 @@ export class AdPageComponent implements OnInit {
       }
     });
     return id;
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(MatDialogComponent, {
+      width: '250px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Dialog closed with result:', result);
+    });
   }
 
 }

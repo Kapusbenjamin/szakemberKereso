@@ -26,10 +26,14 @@
 .chatMessages{
   display: block;
   width: 100%;
-  background-color: rgba(248, 248, 248, 0.877);
+  background-color: rgba(187, 187, 187, 0.877);
   border-radius: 5px;
   padding: 5px;
   overflow: auto;
   height: 400px;
+}
+
+p{
+  white-space: pre-line
 }
 

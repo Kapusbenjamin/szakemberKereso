@@ -18,7 +18,7 @@ export class ChatFormComponent implements OnInit {
   anotherUserId!: number;
   userId!: number
 
-  chatControl =  new FormControl<string>('',[Validators.required]);
+  chatControl =  new FormControl<string>('');
 
   constructor(private userService: UsersService, private messageService: MessagesService) { }
 

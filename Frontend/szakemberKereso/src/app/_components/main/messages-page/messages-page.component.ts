@@ -27,7 +27,7 @@ export class MessagesPageComponent implements OnInit {
   getAllChats(){
     this.userId = this.userService.userData.userId;
     this.chatService.getAllChatsByUserId(this.userId).subscribe((chats: Chat[])=>{
-    this.loadChats(chats)
+    this.loadChats(chats);
     })
   }
 

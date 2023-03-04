@@ -17,6 +17,7 @@ export class UserChatComponent implements OnInit {
 
   ngOnInit(): void {
     this.userId = this.UserService.userData.userId;
+    console.log(this.chats[0]);
   }
 
   chatSelect(chat:Chat){
