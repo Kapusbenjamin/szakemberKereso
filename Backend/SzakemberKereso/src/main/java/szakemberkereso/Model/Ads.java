@@ -59,7 +59,7 @@ public class Ads implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "user_id")
-    private int userId;
+    private Integer userId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "job_tag_id")
@@ -78,11 +78,11 @@ public class Ads implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "status")
-    private int status;
+    private Integer status;
     @Basic(optional = false)
     @NotNull
     @Column(name = "deleted")
-    private int deleted;
+    private Integer deleted;
 
     //jogosultság miatt
     @Transient
@@ -99,7 +99,7 @@ public class Ads implements Serializable {
         this.id = id;
     }
 
-    public Ads(Integer id, int userId, Integer jobTagId, String description, Date updatedAt, int status, int deleted) {
+    public Ads(Integer id, Integer userId, Integer jobTagId, String description, Date updatedAt, Integer status, Integer deleted) {
         this.id = id;
         this.userId = userId;
         this.jobTagId = jobTagId;
@@ -117,11 +117,11 @@ public class Ads implements Serializable {
         this.id = id;
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -149,19 +149,19 @@ public class Ads implements Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
-    public int getDeleted() {
+    public Integer getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(int deleted) {
+    public void setDeleted(Integer deleted) {
         this.deleted = deleted;
     }
 
