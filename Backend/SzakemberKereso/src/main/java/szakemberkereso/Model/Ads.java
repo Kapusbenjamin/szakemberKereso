@@ -30,6 +30,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.NotFoundException;
 import javax.xml.bind.annotation.XmlRootElement;
 import szakemberkereso.Configuration.Database;
 
@@ -218,7 +219,7 @@ public class Ads implements Serializable {
         return new Ads(o_id, o_user_id, o_job_tag_id, o_desc, o_updated_at, o_status, o_deleted);
     }
             
-    public static Integer createAd(Ads ad){
+    public static Integer createAd(Ads ad) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -239,9 +240,8 @@ public class Ads implements Serializable {
             Integer result = Integer.parseInt(spq.getOutputParameterValue("last_id_out").toString());
             return result;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -251,7 +251,7 @@ public class Ads implements Serializable {
         
     }
     
-    public static String updateAd(Ads ad){
+    public static void updateAd(Ads ad) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -266,11 +266,15 @@ public class Ads implements Serializable {
 
             spq.execute();
             
-            return "Sikeresen módosult a hirdetés";
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen hirdetés!");
+            }
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -280,7 +284,7 @@ public class Ads implements Serializable {
         
     }
     
-    public static List<Ads> getAllAcceptedAds(){
+    public static List<Ads> getAllAcceptedAds() throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -299,9 +303,8 @@ public class Ads implements Serializable {
             
             return ads;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ads;
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -311,7 +314,7 @@ public class Ads implements Serializable {
         
     }
     
-    public static List<Ads> getAllNonAcceptedAds(){
+    public static List<Ads> getAllNonAcceptedAds() throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -329,10 +332,9 @@ public class Ads implements Serializable {
             }
             
             return ads;
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ads;
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -342,7 +344,7 @@ public class Ads implements Serializable {
         
     }
     
-    public static Boolean acceptAd(Integer id_in){
+    public static void acceptAd(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -354,11 +356,15 @@ public class Ads implements Serializable {
             
             spq.execute();
             
-            return true;
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen hirdetés!");
+            }
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -368,7 +374,7 @@ public class Ads implements Serializable {
         
     }
     
-    public static List<Ads> getAllAds(){
+    public static List<Ads> getAllAds() throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -386,9 +392,8 @@ public class Ads implements Serializable {
             
             return ads;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -398,7 +403,7 @@ public class Ads implements Serializable {
         
     }
     
-    public static Ads getAdsById(Integer id_in){
+    public static Ads getAdsById(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -411,12 +416,19 @@ public class Ads implements Serializable {
             spq.execute();
             
             List<Object[]> result = spq.getResultList();
-            Ads ad = Ads.objectToAd(result.get(0));
-            return ad;
+            if(!result.isEmpty()){
+                Ads ad = Ads.objectToAd(result.get(0));
+                return ad;
+            }
+            else{
+                throw new NotFoundException("Nincs ilyen hirdetés!");
+            }
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -426,7 +438,7 @@ public class Ads implements Serializable {
         
     }
     
-    public static List<Ads> getAllAdsByUserId(Integer user_id_in){
+    public static List<Ads> getAllAdsByUserId(Integer user_id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -448,9 +460,8 @@ public class Ads implements Serializable {
             
             return ads;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -460,7 +471,7 @@ public class Ads implements Serializable {
         
     }
     
-    public static List<Ads> filteringAds(Ads ad_in){
+    public static List<Ads> filteringAds(Ads ad_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -506,9 +517,8 @@ public class Ads implements Serializable {
             
             return ads;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -518,7 +528,7 @@ public class Ads implements Serializable {
         
     }
     
-    public static Boolean deleteAd(Integer id_in){
+    public static void deleteAd(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -531,11 +541,15 @@ public class Ads implements Serializable {
 
             spq.execute();
             
-            return true;
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen hirdetés!");
+            }
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();

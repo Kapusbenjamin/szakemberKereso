@@ -24,6 +24,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.NotFoundException;
 import javax.xml.bind.annotation.XmlRootElement;
 import szakemberkereso.Configuration.Database;
 /**
@@ -212,7 +213,7 @@ public class Addresses implements Serializable {
         return "szakemberkereso.Model.Addresses[ id=" + id + " ]";
     }
     
-    public static Addresses getAddressById(Integer id_in){
+    public static Addresses getAddressById(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -225,23 +226,30 @@ public class Addresses implements Serializable {
             
             spq.execute();
             List<Object[]> result = spq.getResultList();
-            Object[] r = result.get(0);
-            
-            Integer r_id = Integer.parseInt(r[0].toString());
-            Integer r_county_id = Integer.parseInt(r[1].toString());
-            Integer r_zip_code = Integer.parseInt(r[2].toString());
-            String r_city = r[3].toString();
-            String r_street = r[4].toString();
-            String r_number = r[5].toString();
-            String r_staircase = r[6] != null ? r[6].toString() : null;
-            Integer r_floor = r[7] != null ? Integer.parseInt(r[7].toString()) : null;
-            Integer r_door = r[8] != null ? Integer.parseInt(r[8].toString()) : null;
-            
-            return new Addresses(r_id, r_county_id, r_zip_code, r_city, r_street, r_number, r_staircase, r_floor, r_door);
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new Addresses();
+            if(!result.isEmpty()){
+                Object[] r = result.get(0);
+
+                Integer r_id = Integer.parseInt(r[0].toString());
+                Integer r_county_id = Integer.parseInt(r[1].toString());
+                Integer r_zip_code = Integer.parseInt(r[2].toString());
+                String r_city = r[3].toString();
+                String r_street = r[4].toString();
+                String r_number = r[5].toString();
+                String r_staircase = r[6] != null ? r[6].toString() : null;
+                Integer r_floor = r[7] != null ? Integer.parseInt(r[7].toString()) : null;
+                Integer r_door = r[8] != null ? Integer.parseInt(r[8].toString()) : null;
+
+                return new Addresses(r_id, r_county_id, r_zip_code, r_city, r_street, r_number, r_staircase, r_floor, r_door);
+            }
+            else{
+                throw new NotFoundException("Nincs ilyen cím!");
+            }
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -290,7 +298,7 @@ public class Addresses implements Serializable {
 //        
 //    }
 //    
-    public static String updateAddressById(Addresses a){
+    public static void updateAddressById(Addresses a) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -318,11 +326,15 @@ public class Addresses implements Serializable {
             spq.setParameter("door_in", a.getDoor());
 
             spq.execute();
-            return "Sikeresen módosult az address";
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen cím!");
+            }
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "HIBA: " + e.getMessage();
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -332,7 +344,7 @@ public class Addresses implements Serializable {
         
     }
     
-    public static Boolean deleteAddressById(Integer id_in){
+    public static void deleteAddressById(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -344,11 +356,15 @@ public class Addresses implements Serializable {
             spq.setParameter("id_in", id_in);
 
             spq.execute();
-            return true;
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen cím!");
+            }
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();

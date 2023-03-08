@@ -42,7 +42,7 @@ public class UsersService {
         }
     }
     
-    public Users getUserById(Users user){
+    public Users getUserById(Users user) throws Exception{
         Users result = Users.getUserById(user.getId());
         
         //aktuális felhasználó jogosultsága alapján mit kaphat meg        

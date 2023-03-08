@@ -31,18 +31,14 @@ public class ApplicationConfig extends Application {
         resources.add(szakemberkereso.Configuration.CorsFilter.class);
         resources.add(szakemberkereso.Controller.AddressesController.class);
         resources.add(szakemberkereso.Controller.AdsController.class);
-        resources.add(szakemberkereso.Controller.AdsCountiesController.class);
         resources.add(szakemberkereso.Controller.ChatsController.class);
         resources.add(szakemberkereso.Controller.CompaniesController.class);
         resources.add(szakemberkereso.Controller.CountiesController.class);
         resources.add(szakemberkereso.Controller.FavoritesController.class);
         resources.add(szakemberkereso.Controller.ImagesController.class);
         resources.add(szakemberkereso.Controller.JobTagsController.class);
-        resources.add(szakemberkereso.Controller.JobsController.class);
         resources.add(szakemberkereso.Controller.MessagesController.class);
         resources.add(szakemberkereso.Controller.RatingsController.class);
-        resources.add(szakemberkereso.Controller.UsersController.class);
-        resources.add(szakemberkereso.Controller.UsersJobsController.class);
     }
     
 }

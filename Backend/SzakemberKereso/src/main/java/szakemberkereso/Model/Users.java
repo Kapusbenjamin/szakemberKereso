@@ -4,12 +4,10 @@
  */
 package szakemberkereso.Model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -39,6 +37,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.NotFoundException;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.RandomStringUtils;
@@ -391,7 +390,7 @@ public class Users implements Serializable {
         return new Users(o_id, o_first_name, o_last_name, o_access_type, o_email, o_phone, o_password, o_company_id, o_address_id, o_status, o_token, o_token_expired_at, o_last_login_at, o_created_at, o_activated_at, o_updated_at, o_deleted);
     }
     
-    public static Users getUserById(Integer id_in){
+    public static Users getUserById(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -405,18 +404,26 @@ public class Users implements Serializable {
             spq.execute();
             
             List<Object[]> result = spq.getResultList();
-            Object[] r = result.get(0);
-            Users u = Users.objectToUser(r);
+            if(!result.isEmpty()){
+                Object[] r = result.get(0);
+                Users u = Users.objectToUser(r);
+
+                u.setPassword(null);
+                u.setToken(null);
+                u.setTokenExpiredAt(null);
+                
+                return u;
+            }
+            else{
+                throw new NotFoundException("Nincs ilyen felhasználó!");
+            }
             
-            u.setPassword(null);
-            u.setToken(null);
-            u.setTokenExpiredAt(null);
-            
-            return u;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new Users();
+        catch (NotFoundException e) {
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception(e.getMessage());
         }
         finally{
             em.clear();

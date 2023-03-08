@@ -4,8 +4,14 @@
  */
 package szakemberkereso.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import javax.mail.AuthenticationFailedException;
+import javax.ws.rs.ForbiddenException;
+import szakemberkereso.Configuration.Roles;
 import szakemberkereso.Model.Ads;
+import szakemberkereso.Model.Users;
 
 /**
  *
@@ -13,58 +19,127 @@ import szakemberkereso.Model.Ads;
  */
 public class AdsService {
     
-    public Integer createAd(Ads ad){
-        Integer result = Ads.createAd(ad);
-        return result;
+    public Integer createAd(Ads ad) throws Exception{
+        //a USER jogosultságú user-ek nem hozhatnak létre hirdetéseket
+        if (AuthService.isUserAuthorized(ad.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.WORKER})){
+            //a user-ek csak saját maguknak hozhatnak létre hirdetéseket
+            if(!Objects.equals(ad.getCurrentUserId(), ad.getUserId())){
+                throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
+            }
+            Integer result = Ads.createAd(ad);
+            return result;
+        }
+        else{
+            throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez!");
+        }
     }
     
-    public String updateAd(Ads ad){
-        String result = Ads.updateAd(ad);
-        return result;
+    public void updateAd(Ads ad) throws Exception{
+        //a USER jogosultságú user-ek nem módosíthatnak hirdetéseket
+        if (AuthService.isUserAuthorized(ad.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.WORKER})){
+            //a user-ek csak a saját hirdetésüket módosíthatják
+            if(!Objects.equals(ad.getCurrentUserId(), Ads.getAdsById(ad.getId()).getUserId())){
+                throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
+            }
+            Ads.updateAd(ad);
+        }
+        else{
+            throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez!");
+        }
     }
     
-    public List<Ads> getAllAcceptedAds(){
+    public List<Ads> getAllAcceptedAds() throws Exception{
         List<Ads> result = Ads.getAllAcceptedAds();
         return result;
     }
     
-    public List<Ads> getAllNonAcceptedAds(){
-        List<Ads> result = Ads.getAllNonAcceptedAds();
-        return result;
+    public List<Ads> getAllNonAcceptedAds(Integer userId) throws Exception{
+        //a nem ADMIN jogosultságú user-ek nem kérhetik le
+        if (AuthService.isUserAuthorized(userId, new Roles[]{Roles.ADMIN})) {
+            List<Ads> result = Ads.getAllNonAcceptedAds();
+            return result;
+        }
+        else{
+            throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
+        }
     }
     
-    public Boolean acceptAd(Integer id){
-        Boolean result = Ads.acceptAd(id);
-        return result;
+    public void acceptAd(Ads ad) throws Exception{
+        //a nem ADMIN jogosultságú user-ek nem fogadhatják el
+        if (AuthService.isUserAuthorized(ad.getCurrentUserId(), new Roles[]{Roles.ADMIN})) {
+            Ads.acceptAd(ad.getId());
+        }
+        else{
+            throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
+        }
     }
     
-    public List<Ads> getAllAds(){
-        List<Ads> result = Ads.getAllAds();
-        return result;
+    public List<Ads> getAllAds(Integer userId) throws Exception{
+        //a nem ADMIN jogosultságú user-ek nem kérhetik le
+        if (AuthService.isUserAuthorized(userId, new Roles[]{Roles.ADMIN})) {
+            List<Ads> result = Ads.getAllAds();
+            return result;
+        }
+        else{
+            throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
+        }
+        
     }
     
-    public List<Ads> getAllAdsByUserId(Integer user_id){
-        List<Ads> result = Ads.getAllAdsByUserId(user_id);
-        return result;
+    public List<Ads> getAllAdsByUserId(Ads ad) throws Exception{
+        //a USER jogosultságú user-ek nem módosíthatnak hirdetéseket
+        if (AuthService.isUserAuthorized(ad.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.WORKER, Roles.USER})){
+            if(AuthService.isUserAuthorized(ad.getCurrentUserId(), new Roles[]{Roles.WORKER, Roles.USER})){
+                if(AuthService.isUserAuthorized(ad.getCurrentUserId(), new Roles[]{Roles.WORKER})){
+                    //a WORKER-ek csak a saját hirdetésüknél kérhetik le a még nem elfogadottakat is
+                    if(Objects.equals(ad.getCurrentUserId(), Users.getUserById(ad.getUserId()).getId())){
+                        List<Ads> result = Ads.getAllAdsByUserId(ad.getUserId());
+                        return result;
+                    }
+                }
+                //a USER jogosultságú user-ek és azok a WORKER-ek akik más hirdetéseit akarják lekérni csak az elfogadott hirdetéseket láthatják
+                List<Ads> ads = Ads.getAllAdsByUserId(Users.getUserById(ad.getUserId()).getId());
+                List<Ads> result = new ArrayList<>();
+                for(Ads a : ads){
+                    if(a.getStatus() == 1){
+                        result.add(a);
+                    }
+                }
+                return result;
+            }
+            List<Ads> result = Ads.getAllAdsByUserId(Users.getUserById(ad.getUserId()).getId());
+            return result;
+        }
+        else{
+            throw new AuthenticationFailedException("Nem sikerült azonosítani!");
+        }
     }
     
-    public List<Ads> filteringAds(Ads ad){
+    public List<Ads> filteringAds(Ads ad) throws Exception{
         List<Ads> result = Ads.filteringAds(ad);
         return result;
     }
     
-    public Ads getAdsById(Integer id){
+    public Ads getAdsById(Integer id) throws Exception{
         Ads result = Ads.getAdsById(id);
         return result;
     }
     
-    public Boolean deleteAd(Integer id){
-        Boolean result = Ads.deleteAd(id);
-        return result;
+    public void deleteAd(Ads ad) throws Exception{
+        //a USER jogosultságú user-ek nem törölhetnek hirdetéseket
+        //a nem ADMIN jogosultságú user-ek csak a saját hirdetésüket törölhetik
+        if (AuthService.isUserAuthorized(ad.getCurrentUserId(), new Roles[]{Roles.ADMIN})){
+            Ads.deleteAd(ad.getId());
+        }
+        else if(AuthService.isUserAuthorized(ad.getCurrentUserId(), new Roles[]{Roles.WORKER})){
+            if(!Objects.equals(ad.getCurrentUserId(), Ads.getAdsById(ad.getId()).getUserId())){
+                throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
+            }
+            Ads.deleteAd(ad.getId());
+        }
+        else{
+            throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez!");
+        }        
     }
-    
-    
-    
-    
     
 }
