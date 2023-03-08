@@ -30,8 +30,14 @@ import { UserChatComponent } from './_components/user-chat/user-chat.component';
 import { MessagesPageComponent } from './_components/main/messages-page/messages-page.component';
 import { ChatComponent } from './_components/chat/chat.component';
 import { ChatFormComponent } from './_components/chat-form/chat-form.component';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatDialogComponent } from './_components/mat-dialog/mat-dialog.component';
+import { DialogComponent } from './_components/dialog/dialog.component';
+import { FavoritesPageComponent } from './_components/main/favorites-page/favorites-page.component';
+import { AdminPageComponent } from './_components/admin/admin-page/admin-page.component';
+import { MatMenuModule } from '@angular/material/menu'; 
+import { AdsAdminPageComponent } from './_components/admin/ads-admin-page/ads-admin-page.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { UsersAdminPageComponent } from './_components/admin/users-admin-page/users-admin-page.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +59,11 @@ import { MatDialogComponent } from './_components/mat-dialog/mat-dialog.componen
     MessagesPageComponent,
     ChatComponent,
     ChatFormComponent,
-    MatDialogComponent,
+    DialogComponent,
+    FavoritesPageComponent,
+    AdminPageComponent,
+    AdsAdminPageComponent,
+    UsersAdminPageComponent
   ],
   imports: [
     BrowserModule,
@@ -67,7 +77,9 @@ import { MatDialogComponent } from './_components/mat-dialog/mat-dialog.componen
     MatAutocompleteModule,
     MatButtonModule,
     MatSlideToggleModule,
-    MatDialogModule
+    MatMenuModule,
+    MatTableModule,
+    MatPaginatorModule
   ],
   providers: [
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}

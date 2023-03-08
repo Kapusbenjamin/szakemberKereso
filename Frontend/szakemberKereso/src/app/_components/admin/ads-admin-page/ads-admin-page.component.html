@@ -1,0 +1,14 @@
+<div class="container">
+    <div class="row">
+        <div *ngFor="let ad of ads" class="ads col-12">
+            <app-advest [ad]="ad"></app-advest>
+            <div>
+                <button mat-raised-button (click)="acceptAd(ad)" >Elfogad</button>
+                <button mat-raised-button color="warn" (click)="deleteAd(ad)" >Elutasít</button>
+            </div>
+        </div>
+        <div *ngIf="ads">
+            Nincs elfogadásra váró hirdetés
+        </div>
+    </div>
+</div>

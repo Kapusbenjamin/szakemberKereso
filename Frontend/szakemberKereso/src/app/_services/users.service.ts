@@ -36,7 +36,6 @@ export class UsersService {
   }
 
   logoutUser(){
-    this.clearUserData();
     return this.http.post(`${this.apiUrl}logoutUser`,this.userData.userId)
   }
 

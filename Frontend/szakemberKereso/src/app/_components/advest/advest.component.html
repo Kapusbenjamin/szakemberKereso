@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
-    <h2> {{ name }} </h2>
-    <p class="rating">
+    <h2 class="col-sm-12 col-md-3" > {{ name }} </h2>
+    <p class="rating col-sm-12 col-md-3">
       Értékelés: {{ rating }}
     </p>
     <div class="tags" >
@@ -16,6 +16,16 @@
     </div>
     <div class="discription">
       <p>Leírás: {{ ad.description }}</p>
+    </div>
+    <div *ngIf="currentUser == ad.userId">
+      <button mat-raised-button>Hirdetés Szerkesztése</button>
+      <button mat-raised-button color="warn" (click)="deleteAd()">Hirdetés Törlése</button>
+    </div>  
+    <div *ngIf="currentUser != ad.userId">
+      <button mat-raised-button *ngIf="!favorite">Hozzáadaás a kedvencekhez</button>
+      <button mat-raised-button *ngIf="favorite" >Eltávolítás a kedvencek közül</button>
+      <button mat-raised-button>Üzenet a Feladónak</button>
+      <button mat-raised-button>Megbízás Létrehozása</button>
     </div>
   </div>
 </div>

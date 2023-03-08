@@ -5,6 +5,7 @@ import { UsersService } from 'src/app/_services/users.service';
 import { AdsCountiesService } from 'src/app/_services/ads-counties.service'
 import { RatingsService } from 'src/app/_services/ratings.service';
 import { Rating } from 'src/app/_model/Rating';
+import { AdsService } from 'src/app/_services/ads.service';
 
 @Component({
   selector: 'app-advest',
@@ -14,16 +15,20 @@ import { Rating } from 'src/app/_model/Rating';
 export class AdvestComponent implements OnInit {
 
   @Input() ad!: Ad;
+  @Input() favorite!: boolean;
   name:string = "";
   jobTag: string = "";
   countiesNames: string[] = [];
   rating:number = 4.8;
+  currentUser:number;
 
   constructor(private userService: UsersService,
      private jobTagsService: JobTagsService,
      private adsCountiesService: AdsCountiesService,
-     private ratingService: RatingsService
-     ) { }
+     private ratingService: RatingsService, private adsService: AdsService,
+     ) {
+      this.currentUser = this.userService.userData.userId;
+      }
 
   ngOnInit(): void {
     this.getUsernameByAd();
@@ -65,6 +70,11 @@ export class AdvestComponent implements OnInit {
     this.userService.getUserById(this.ad.userId).subscribe(user=>{
       this.name = user.firstName + " " + user. lastName;
     });
+  }
+
+  deleteAd(){
+    this.adsService.deleteAd(this.ad.id).subscribe(()=>window.location.reload());
+
   }
 
 }

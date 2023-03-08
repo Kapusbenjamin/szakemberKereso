@@ -7,11 +7,11 @@
   background-color: white;
   border: 1px solid gray;
   border-radius: 5px;
-  width: 320px;
-  height: 400px;
   box-shadow: 10px 10px 29px 0px rgba(0,0,0,0.75);
   -webkit-box-shadow: 10px 10px 29px 0px rgba(0,0,0,0.75);
   -moz-box-shadow: 10px 10px 29px 0px rgba(0,0,0,0.75);
+  width: 320px;
+  height: 400px;
   text-align: center;
 }
 

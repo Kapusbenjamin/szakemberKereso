@@ -4,24 +4,31 @@
       <div class="row">
         <div class="col-md-6 col-sm-12">
           <app-search-dropdown [options]="counties" name="Megye"
-          [control]="searchForm.controls['county']"></app-search-dropdown>
+            [control]="searchForm.controls['county']"></app-search-dropdown>
         </div>
         <div class="col-md-6 col-sm-12">
           <app-search-dropdown [options]="jobTags" name="Szakma"
-          [control]="searchForm.controls['jobTag']"></app-search-dropdown>
+            [control]="searchForm.controls['jobTag']"></app-search-dropdown>
         </div>
         <div class="row center">
           <button class="col-6" mat-raised-button color="primary" (click)="search()">Keresés</button>
           <div *ngIf="userData.access_type > 0" class="col-6 addNew">
-            <button class="col-12" (click)="openDialog()" mat-raised-button color="primary">Új hirdetés létrehozás</button>
+            <button class="col-12" (click)="click()" mat-raised-button color="primary">Új hirdetés létrehozás</button>
           </div>
         </div>
       </div>
     </div>
   </div>
   <div class="row ads">
+    <h2>Hirdetések</h2>
+    <hr>
     <div *ngFor="let ad of ads">
-      <app-advest [ad]="ad"></app-advest>
+      <app-advest [ad]="ad" [favorite]="ad.favorite"></app-advest>
     </div>
+    <div *ngIf="ads.length == 0">Nincs hirdetés ilyen kategóriában</div>
+    <hr>
   </div>
+</div>
+<div class="background" (click)="close()" *ngIf="modalOpen">
+  <app-dialog (click)="stay()"></app-dialog>
 </div>

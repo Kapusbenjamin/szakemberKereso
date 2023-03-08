@@ -21,8 +21,8 @@ export class UsersJobsService {
     });
   }
 
-  getAllJobsByUser(id: number):Observable<Tag[]>{
-    return this.http.get<Tag[]>(`${this.apiUrl}getAllJobsByUser/${id}`);
+  getAllJobsByUser(id: number):Observable<any[]>{
+    return this.http.get<any[]>(`${this.apiUrl}getAllJobsByUser/${id}`);
   }
 
   deleteUserJob(userId: number, jobTagId: number){

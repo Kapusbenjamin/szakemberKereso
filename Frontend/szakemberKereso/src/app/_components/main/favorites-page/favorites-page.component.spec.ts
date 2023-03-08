@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MatDialogComponent } from './mat-dialog.component';
+import { FavoritesPageComponent } from './favorites-page.component';
 
-describe('MatDialogComponent', () => {
-  let component: MatDialogComponent;
-  let fixture: ComponentFixture<MatDialogComponent>;
+describe('FavoritesPageComponent', () => {
+  let component: FavoritesPageComponent;
+  let fixture: ComponentFixture<FavoritesPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MatDialogComponent ]
+      declarations: [ FavoritesPageComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(MatDialogComponent);
+    fixture = TestBed.createComponent(FavoritesPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

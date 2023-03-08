@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdPageComponent } from './ad-page/ad-page.component';
+import { FavoritesPageComponent } from './favorites-page/favorites-page.component';
 import { MainPageComponent } from './main-page/main-page.component';
 import { MessagesPageComponent } from './messages-page/messages-page.component';
 import { UserPageComponent } from './user-page/user-page.component';
@@ -11,6 +12,7 @@ const routes: Routes = [
     children: [
       { path:'user', component:UserPageComponent },
       { path:'messages', component:MessagesPageComponent },
+      { path:'favorites', component:FavoritesPageComponent },
       { path:'', component:AdPageComponent }
     ]
   }

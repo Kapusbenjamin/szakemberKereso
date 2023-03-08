@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { UserData } from 'src/app/_model/UserData';
 import { UsersService } from 'src/app/_services/users.service';
 
 @Component({
@@ -9,9 +10,12 @@ import { UsersService } from 'src/app/_services/users.service';
 })
 export class MenuComponent implements OnInit {
 
-  userName: string = "";
+  userData: UserData;
 
-  constructor(private userService: UsersService, private router: Router) { }
+
+  constructor(private userService: UsersService, private router: Router) { 
+    this.userData = this.userService.userData;
+  }
 
   ngOnInit(): void {
     document.querySelector('[data-toggle="collapse"]')!.addEventListener('click', function (this: HTMLElement) {
@@ -19,12 +23,12 @@ export class MenuComponent implements OnInit {
       const element = document.querySelector(target!);
       element!.classList.toggle('collapse');
     });
-    this.userName = this.userService.userData.name;
   }
 
   logOut(){
     this.userService.logoutUser().subscribe((res)=>{
       if(res){
+        this.userService.clearUserData();
         this.router.navigate(['/login']);
       }
     });

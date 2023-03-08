@@ -7,9 +7,8 @@ import { JobTagsService } from 'src/app/_services/job-tags.service';
 import { Tag } from 'src/app/_model/Tag';
 import { UserData } from 'src/app/_model/UserData';
 import { UsersService } from 'src/app/_services/users.service';
-import { DropdownValidator } from 'src/app/_validators/dropdown-validators';
 import { MatDialog } from '@angular/material/dialog';
-import { MatDialogComponent } from '../../mat-dialog/mat-dialog.component';
+import { FavoriteService } from 'src/app/_services/favorite.service';
 
 
 @Component({
@@ -21,11 +20,12 @@ export class AdPageComponent implements OnInit {
 
   counties: Tag[] = [];
   jobTags: Tag[] = [];
-  title:string = "Title";
   userData!: UserData;
   modalOpen:boolean = false;
+  inner: boolean = false;
+  favorites: any[] = [];
 
-  ads!: Ad[];
+  ads: Ad[] = [];
 
   searchForm = this.fb.group({
     county: new FormControl(''),
@@ -34,25 +34,51 @@ export class AdPageComponent implements OnInit {
 
   constructor(private adService: AdsService, private fb: FormBuilder,
     private countiesService: CountiesService, private jobTagsService: JobTagsService,
-    private userService: UsersService, private dialog: MatDialog
-    ) { }
+    private userService: UsersService, private favoriteService: FavoriteService
+    ) { 
+      this.userData = this.userService.userData;
+    }
 
   ngOnInit(): void {
-    this.userData = this.userService.userData;
+    this.getFavorites();
     this.getAllCounties();
     this.getAllJobTags();
-    this.getAllAcceptedAds();
+  }
+  
+  getFavorites(){
+    this.favoriteService.getAllfavoritesByUserId(this.userData.userId).subscribe(res=>{
+      this.favorites = res;
+      this.getAllAcceptedAds();
+    })
+  }
+
+  isFavorite(ad: Ad){
+    this.favorites.forEach(favorite => {
+      if(favorite.adId == ad.id){
+        ad.favorite = true;
+      }
+    });
+  }
+
+  click(){
+    this.modalOpen = !this.modalOpen;
   }
 
   getAllAcceptedAds(){
     this.adService.getAllAcceptedAds().subscribe((res)=>{
      this.ads = res
+     this.ads.forEach(ad=>{
+      this.isFavorite(ad);      
+     })
     });
   }
 
   filteringAds(filter:Object){
     this.adService.filteringAds(filter).subscribe((response:Ad[])=>{
       this.ads = response
+      this.ads.forEach(ad=>{
+        this.isFavorite(ad);
+      })
     });
   }
 
@@ -89,7 +115,20 @@ export class AdPageComponent implements OnInit {
     }
       this.filteringAds(filter);
     }
+  }
 
+  close(){
+    setTimeout(() => {
+      if(this.inner){
+        this.inner = false
+      }else{        
+        this.modalOpen = false;
+      }
+    }, 10);
+  }
+
+  stay(){
+    this.inner = true;
   }
 
   // Máshol is felhasználható
@@ -102,15 +141,4 @@ export class AdPageComponent implements OnInit {
     });
     return id;
   }
-
-  openDialog() {
-    const dialogRef = this.dialog.open(MatDialogComponent, {
-      width: '250px'
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('Dialog closed with result:', result);
-    });
-  }
-
 }

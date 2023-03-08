@@ -6,5 +6,6 @@ export interface Ad{
   updatedAt: number,
   status: number,
   deleted: number,
-  countyId: number | null
+  countyId: number | null,
+  favorite: boolean;
 }
