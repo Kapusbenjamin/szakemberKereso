@@ -31,6 +31,7 @@ public class ApplicationConfig extends Application {
         resources.add(szakemberkereso.Configuration.CorsFilter.class);
         resources.add(szakemberkereso.Controller.AddressesController.class);
         resources.add(szakemberkereso.Controller.AdsController.class);
+        resources.add(szakemberkereso.Controller.AdsCountiesController.class);
         resources.add(szakemberkereso.Controller.ChatsController.class);
         resources.add(szakemberkereso.Controller.CompaniesController.class);
         resources.add(szakemberkereso.Controller.CountiesController.class);

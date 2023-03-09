@@ -123,7 +123,6 @@ public class AdsController {
     @GET
     @Path("getAllAcceptedAds")
     public Response getAllAcceptedAds(){
-        
         JSONObject obj = new JSONObject();
         try{
             List<Ads> result = as.getAllAcceptedAds();

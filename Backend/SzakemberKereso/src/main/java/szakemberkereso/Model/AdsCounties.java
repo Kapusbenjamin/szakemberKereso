@@ -24,6 +24,7 @@ import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.NotFoundException;
 import javax.xml.bind.annotation.XmlRootElement;
 import szakemberkereso.Configuration.Database;
 
@@ -131,7 +132,7 @@ public class AdsCounties implements Serializable {
         return "szakemberkereso.Model.AdsCounties[ id=" + id + " ]";
     }
     
-    public static String addNewCountyToAd(AdsCounties ad_county){
+    public static void addNewCountyToAd(AdsCounties ad_county) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -145,11 +146,16 @@ public class AdsCounties implements Serializable {
             spq.setParameter("county_id_in", ad_county.getCountyId());
 
             spq.execute();
-            return "Sikeresen hozzáadta a hirdetéshez a megyét";
+            
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen hirdetés!");
+            }
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "HIBA: " + e.getMessage();
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -159,7 +165,7 @@ public class AdsCounties implements Serializable {
         
     }
 
-    public static String deleteCountyFromAd(AdsCounties ad_county){
+    public static void deleteCountyFromAd(AdsCounties ad_county) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -173,11 +179,16 @@ public class AdsCounties implements Serializable {
             spq.setParameter("county_id_in", ad_county.getCountyId());
 
             spq.execute();
-            return "Sikeresen törölte a hirdetéshez tartozó megyét";
+            
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen hirdetés!");
+            }
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "HIBA: " + e.getMessage();
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -187,7 +198,7 @@ public class AdsCounties implements Serializable {
         
     }
     
-    public static List<Counties> getAllCountiesByAd(Integer ad_id_in){
+    public static List<Counties> getAllCountiesByAd(Integer ad_id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -201,21 +212,28 @@ public class AdsCounties implements Serializable {
             spq.execute();
             
             List<Object[]> result = spq.getResultList();
-            List<Counties> counties = new ArrayList<>();
-            
-            for(Object[] county : result){
-                Integer county_id = Integer.parseInt(county[0].toString());
-                String county_name = county[1].toString();
-                
-                Counties c = new Counties(county_id, county_name);
-                counties.add(c);
+            if(!result.isEmpty()){
+                List<Counties> counties = new ArrayList<>();
+
+                for(Object[] county : result){
+                    Integer county_id = Integer.parseInt(county[0].toString());
+                    String county_name = county[1].toString();
+
+                    Counties c = new Counties(county_id, county_name);
+                    counties.add(c);
+                }
+
+                return counties;
             }
-            
-            return counties;
+            else{
+                throw new NotFoundException("Nincs ilyen hirdetés!");
+            }
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();

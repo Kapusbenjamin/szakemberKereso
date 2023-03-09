@@ -56,11 +56,11 @@ public class Addresses implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "county_id")
-    private int countyId;
+    private Integer countyId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "zip_code")
-    private int zipCode;
+    private Integer zipCode;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -84,6 +84,10 @@ public class Addresses implements Serializable {
     @Column(name = "door")
     private Integer door;
 
+    //id miatt
+    @Transient
+    @JsonInclude
+    private Counties county;
     //jogosultság miatt
     @Transient
     @JsonInclude
@@ -96,7 +100,7 @@ public class Addresses implements Serializable {
         this.id = id;
     }
 
-    public Addresses(Integer id, int countyId, int zipCode, String city, String street, String number, String staircase, Integer floor, Integer door) {
+    public Addresses(Integer id, Integer countyId, Integer zipCode, String city, String street, String number, String staircase, Integer floor, Integer door) {
         this.id = id;
         this.countyId = countyId;
         this.zipCode = zipCode;
@@ -116,19 +120,19 @@ public class Addresses implements Serializable {
         this.id = id;
     }
 
-    public int getCountyId() {
+    public Integer getCountyId() {
         return countyId;
     }
 
-    public void setCountyId(int countyId) {
+    public void setCountyId(Integer countyId) {
         this.countyId = countyId;
     }
 
-    public int getZipCode() {
+    public Integer getZipCode() {
         return zipCode;
     }
 
-    public void setZipCode(int zipCode) {
+    public void setZipCode(Integer zipCode) {
         this.zipCode = zipCode;
     }
 
@@ -188,6 +192,14 @@ public class Addresses implements Serializable {
         this.currentUserId = currentUserId;
     }
 
+    public Counties getCounty() {
+        return county;
+    }
+
+    public void setCounty(Counties county) {
+        this.county = county;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -239,7 +251,10 @@ public class Addresses implements Serializable {
                 Integer r_floor = r[7] != null ? Integer.parseInt(r[7].toString()) : null;
                 Integer r_door = r[8] != null ? Integer.parseInt(r[8].toString()) : null;
 
-                return new Addresses(r_id, r_county_id, r_zip_code, r_city, r_street, r_number, r_staircase, r_floor, r_door);
+                Addresses address = new Addresses(r_id, r_county_id, r_zip_code, r_city, r_street, r_number, r_staircase, r_floor, r_door);
+                address.setCounty(Counties.getCountyById(address.getCountyId()));
+                
+                return address;
             }
             else{
                 throw new NotFoundException("Nincs ilyen cím!");
@@ -316,7 +331,7 @@ public class Addresses implements Serializable {
             spq.registerStoredProcedureParameter("door_in", Integer.class, ParameterMode.IN);
 
             spq.setParameter("id_in", a.getId());
-            spq.setParameter("county_id_in", a.getCountyId());
+            spq.setParameter("county_id_in", Counties.getCountyById(a.getCountyId()).getId());
             spq.setParameter("zip_code_in", a.getZipCode());
             spq.setParameter("city_in", a.getCity());
             spq.setParameter("street_in", a.getStreet());

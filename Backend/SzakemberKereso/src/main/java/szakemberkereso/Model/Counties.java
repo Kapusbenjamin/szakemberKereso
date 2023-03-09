@@ -17,11 +17,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.ParameterMode;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
+import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.NotFoundException;
 import javax.xml.bind.annotation.XmlRootElement;
 import szakemberkereso.Configuration.Database;
 
@@ -128,6 +132,43 @@ public class Counties implements Serializable {
         catch (Exception e) {
             System.out.println(e.getMessage());
             return counties;
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static Counties getCountyById(Integer id_in) throws Exception{
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getCountyById");
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            spq.setParameter("id_in", id_in);
+            spq.execute();
+                
+            List<Object[]> result = spq.getResultList();
+            
+            if(result.isEmpty()){
+                throw new NotFoundException("Nincs ilyen megye!");
+            }
+            else{
+                Object[] r = result.get(0);
+                Integer r_id = Integer.parseInt(r[0].toString());
+                String r_name = r[1].toString();
+
+                Counties c = new Counties(r_id, r_name);
+                return c;
+            }
+        } 
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();

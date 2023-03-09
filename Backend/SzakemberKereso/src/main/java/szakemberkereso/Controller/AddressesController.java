@@ -70,7 +70,7 @@ public class AddressesController {
         try{
             Addresses result = as.getAddressById(id);
             obj.put("result", JSONObject.wrap(result));
-            obj.put("message", "Sikeres lekérés!");
+            obj.put("message", "Sikeresen lekérte a címet!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
         catch(NotFoundException e){
