@@ -15,8 +15,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.json.JSONObject;
 import szakemberkereso.Model.Messages;
 import szakemberkereso.Service.MessagesService;
+import szakemberkereso.Service.ResponseService;
 
 /**
  * REST Web Service
@@ -61,33 +63,65 @@ public class MessagesController {
     @POST
     @Path("getAllMessagesBetweenUsers")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getAllMessagesBetweenUsers(Messages message){
-        List<Messages> result = ms.getAllMessagesBetweenUsers(message);
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    public Response getAllMessagesBetweenUsers(Messages message){        
+        JSONObject obj = new JSONObject();
+        try{
+            List<Messages> result = ms.getAllMessagesBetweenUsers(message);
+            obj.put("result", JSONObject.wrap(result));
+            obj.put("message", "Sikeresen lekérte a 2 felhasználó közötti összes üzenetet!");
+            return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        }
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
+        }
     }
     
     @POST
     @Path("getAllMessages")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getAllMessages(Integer userId){
-        List<Messages> result = ms.getAllMessages();
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    public Response getAllMessages(Integer userId){        
+        JSONObject obj = new JSONObject();
+        try{
+            List<Messages> result = ms.getAllMessages();
+            obj.put("result", JSONObject.wrap(result));
+            obj.put("message", "Sikeresen lekérte az összes üzenetet!");
+            return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        }
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
+        }
     }
     
     @POST
     @Path("checkMessage")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response checkMessage(Messages message){
-        Boolean result = ms.checkMessage(message);
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    public Response checkMessage(Messages message){        
+        JSONObject obj = new JSONObject();
+        try{
+            Boolean result = ms.checkMessage(message);
+            obj.put("result", JSONObject.wrap(result));
+            obj.put("message", "Sikeresen lecsekkolta az üzeneteket!");
+            return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        }
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
+        }
     }
     
     @POST
     @Path("createMessage")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createMessage(Messages message){
-        String result = ms.createMessage(message);
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    public Response createMessage(Messages message){        
+        JSONObject obj = new JSONObject();
+        try{
+            String result = ms.createMessage(message);
+            obj.put("result", JSONObject.wrap(result));
+            obj.put("message", "Sikeresen létrehozta az üzenetet!");
+            return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        }
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
+        }
     }
     
 }

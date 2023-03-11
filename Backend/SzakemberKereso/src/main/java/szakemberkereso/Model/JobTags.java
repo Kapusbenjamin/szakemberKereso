@@ -23,6 +23,7 @@ import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.NotFoundException;
 import javax.xml.bind.annotation.XmlRootElement;
 import szakemberkereso.Configuration.Database;
 
@@ -104,7 +105,7 @@ public class JobTags implements Serializable {
         return "szakemberkereso.Model.JobTags[ id=" + id + " ]";
     }
     
-    public static List<JobTags> getAllJobTags(){
+    public static List<JobTags> getAllJobTags() throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -126,9 +127,11 @@ public class JobTags implements Serializable {
             
             return jobTags;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return jobTags;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -137,7 +140,7 @@ public class JobTags implements Serializable {
         }
     }
     
-    public static JobTags getJobTagById(Integer id_in){
+    public static JobTags getJobTagById(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -149,18 +152,26 @@ public class JobTags implements Serializable {
             
             spq.execute();
             
-            List<Object[]> result = spq.getResultList();
-            Object[] r = result.get(0);
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen szakma!");
+            }
+            else{
+                List<Object[]> result = spq.getResultList();
+                Object[] r = result.get(0);
+
+                Integer r_id = Integer.parseInt(r[0].toString());
+                String r_name = r[1].toString();
+
+                JobTags jt = new JobTags(r_id, r_name);
+                return jt;
+            }
             
-            Integer r_id = Integer.parseInt(r[0].toString());
-            String r_name = r[1].toString();
-            
-            JobTags jt = new JobTags(r_id, r_name);
-            return jt;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new JobTags();
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();

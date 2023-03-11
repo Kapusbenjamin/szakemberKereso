@@ -31,6 +31,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.NotFoundException;
 import javax.xml.bind.annotation.XmlRootElement;
 import szakemberkereso.Configuration.Database;
 
@@ -195,7 +196,41 @@ public class Images implements Serializable {
         return new Images(o_id, o_url, o_title, o_created_at, o_status, o_user_id);
     }
 
-    public static List<Images> getAllNotAcceptedImages(){
+    public static Images getImageById(Integer id_in) throws Exception{
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getImageById");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            spq.setParameter("id_in", id_in);
+            
+            spq.execute();
+            
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen kép!");
+            }
+            else{
+                List<Object[]> result = spq.getResultList();
+                Images image = Images.objectToImage(result.get(0));
+                return image;
+            }
+        } 
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+
+    public static List<Images> getAllNotAcceptedImages() throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -214,9 +249,11 @@ public class Images implements Serializable {
             
             return images;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return images;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -225,7 +262,7 @@ public class Images implements Serializable {
         }
     }
     
-    public static List<Images> getAllAcceptedImagesByUserId(Integer user_id_in){
+    public static List<Images> getAllAcceptedImagesByUserId(Integer user_id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -246,10 +283,12 @@ public class Images implements Serializable {
             }
             
             return images;
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return images;
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -258,7 +297,7 @@ public class Images implements Serializable {
         }
     }
     
-    public static List<Images> getImagesByUserId(Integer user_id_in){
+    public static List<Images> getImagesByUserId(Integer user_id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -279,10 +318,12 @@ public class Images implements Serializable {
             }
             
             return images;
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return images;
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -291,7 +332,7 @@ public class Images implements Serializable {
         }
     }
     
-    public static List<Images> getAllImages(){
+    public static List<Images> getAllImages() throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -309,10 +350,12 @@ public class Images implements Serializable {
             }
             
             return images;
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return images;
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -321,7 +364,7 @@ public class Images implements Serializable {
         }
     }
     
-    public static Boolean acceptImage(Integer id_in){
+    public static Boolean acceptImage(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -336,9 +379,11 @@ public class Images implements Serializable {
             
             return true;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -347,7 +392,7 @@ public class Images implements Serializable {
         }
     }
     
-    public static Boolean deleteImage(Integer id_in){
+    public static Boolean deleteImage(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -361,10 +406,12 @@ public class Images implements Serializable {
             spq.execute();
             
             return true;
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -373,7 +420,7 @@ public class Images implements Serializable {
         }
     }
     
-    public static String addImage(Images image){
+    public static String addImage(Images image) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -393,10 +440,12 @@ public class Images implements Serializable {
             spq.execute();
             
             return "Sikeresen hozzáadta a képet!";
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "HIBA: " + e.getMessage();
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();

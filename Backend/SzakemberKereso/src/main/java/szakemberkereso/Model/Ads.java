@@ -85,10 +85,17 @@ public class Ads implements Serializable {
     @Column(name = "deleted")
     private Integer deleted;
 
+    //id miatt
+    @Transient
+    @JsonInclude
+    private JobTags jobTag;
+    
     //jogosultság miatt
     @Transient
     @JsonInclude
     private Integer currentUserId;
+    
+    //filter miatt
     @Transient
     @JsonInclude
     private Integer countyId;
@@ -182,6 +189,14 @@ public class Ads implements Serializable {
         this.currentUserId = currentUserId;
     }
 
+    public JobTags getJobTag() {
+        return jobTag;
+    }
+
+    public void setJobTag(JobTags jobTag) {
+        this.jobTag = jobTag;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -207,7 +222,7 @@ public class Ads implements Serializable {
         return "szakemberkereso.Model.Ads[ id=" + id + " ]";
     }
     
-    public static Ads objectToAd(Object[] o){
+    public static Ads objectToAd(Object[] o) throws Exception{
         Integer o_id = Integer.parseInt(o[0].toString());
         Integer o_user_id = Integer.parseInt(o[1].toString());
         Integer o_job_tag_id = Integer.parseInt(o[2].toString());
@@ -216,7 +231,9 @@ public class Ads implements Serializable {
         Integer o_status = Integer.parseInt(o[5].toString());
         Integer o_deleted = Integer.parseInt(o[6].toString());
 
-        return new Ads(o_id, o_user_id, o_job_tag_id, o_desc, o_updated_at, o_status, o_deleted);
+        Ads ad = new Ads(o_id, o_user_id, o_job_tag_id, o_desc, o_updated_at, o_status, o_deleted);
+        ad.setJobTag(JobTags.getJobTagById(ad.getJobTagId()));
+        return ad;
     }
             
     public static Integer createAd(Ads ad) throws Exception{
@@ -232,7 +249,7 @@ public class Ads implements Serializable {
             spq.registerStoredProcedureParameter("last_id_out", Integer.class, ParameterMode.OUT);
 
             spq.setParameter("user_id_in", ad.getUserId());
-            spq.setParameter("job_tag_id_in", ad.getJobTagId());
+            spq.setParameter("job_tag_id_in", JobTags.getJobTagById(ad.getJobTagId()).getId());
             spq.setParameter("desc_in", ad.getDescription());
 
             spq.execute();
@@ -240,6 +257,9 @@ public class Ads implements Serializable {
             Integer result = Integer.parseInt(spq.getOutputParameterValue("last_id_out").toString());
             return result;
         } 
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
         catch(Exception e){
             throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
@@ -497,11 +517,11 @@ public class Ads implements Serializable {
             if(eljarasSzama != 0){
                 if(eljarasSzama == 3 || eljarasSzama == 2){
                     spq.registerStoredProcedureParameter("county_id_in", Integer.class, ParameterMode.IN);
-                    spq.setParameter("county_id_in", ad_in.getCountyId());
+                    spq.setParameter("county_id_in", Counties.getCountyById(ad_in.getCountyId()).getId());
                 }
                 if(eljarasSzama == 3 || eljarasSzama == 1){
                     spq.registerStoredProcedureParameter("job_tag_id_in", Integer.class, ParameterMode.IN);
-                    spq.setParameter("job_tag_id_in", ad_in.getJobTagId());
+                    spq.setParameter("job_tag_id_in", JobTags.getJobTagById(ad_in.getJobTagId()).getId());
                 }
             }
             
@@ -517,6 +537,9 @@ public class Ads implements Serializable {
             
             return ads;
         } 
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
         catch(Exception e){
             throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }

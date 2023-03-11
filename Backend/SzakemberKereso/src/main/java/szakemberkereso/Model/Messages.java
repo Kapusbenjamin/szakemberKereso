@@ -30,6 +30,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.NotFoundException;
 import javax.xml.bind.annotation.XmlRootElement;
 import szakemberkereso.Configuration.Database;
 
@@ -207,7 +208,7 @@ public class Messages implements Serializable {
         return new Messages(o_id, o_chat_id, o_sender_id, o_receiver_id, o_message, o_checked, o_sended_at);
     }
     
-    public static List<Messages> getAllMessagesBetweenUsers(Messages message){
+    public static List<Messages> getAllMessagesBetweenUsers(Messages message) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -232,9 +233,11 @@ public class Messages implements Serializable {
             
             return messages;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return messages;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -243,7 +246,7 @@ public class Messages implements Serializable {
         }
     }
     
-    public static List<Messages> getAllMessages(){
+    public static List<Messages> getAllMessages() throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -261,10 +264,12 @@ public class Messages implements Serializable {
             }
             
             return messages;
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return messages;
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -273,7 +278,7 @@ public class Messages implements Serializable {
         }
     }
     
-    public static Boolean checkMessage(Messages message){
+    public static Boolean checkMessage(Messages message) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -289,10 +294,12 @@ public class Messages implements Serializable {
             spq.execute();
             
             return true;
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -301,7 +308,7 @@ public class Messages implements Serializable {
         }
     }
     
-    public static String createMessage(Messages message){
+    public static String createMessage(Messages message) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -321,10 +328,12 @@ public class Messages implements Serializable {
             spq.execute();
             
             return "Sikeresen létrejött a message!";
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "HIBA: " + e.getMessage();
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();

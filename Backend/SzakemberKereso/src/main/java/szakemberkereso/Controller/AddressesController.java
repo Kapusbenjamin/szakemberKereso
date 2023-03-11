@@ -22,6 +22,7 @@ import javax.ws.rs.core.Response;
 import org.json.JSONObject;
 import szakemberkereso.Model.Addresses;
 import szakemberkereso.Service.AddressesService;
+import szakemberkereso.Service.ResponseService;
 
 /**
  * REST Web Service
@@ -65,7 +66,7 @@ public class AddressesController {
     
     @GET
     @Path("getAddressById/{id}")
-    public Response getAddressById(@PathParam("id") Integer id){
+    public Response getAddressById(@PathParam("id") Integer id){        
         JSONObject obj = new JSONObject();
         try{
             Addresses result = as.getAddressById(id);
@@ -73,13 +74,8 @@ public class AddressesController {
             obj.put("message", "Sikeresen lekérte a címet!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
-        catch(NotFoundException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch (Exception e) {
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
         }
     }
     
@@ -94,7 +90,7 @@ public class AddressesController {
     @POST
     @Path("updateAddressById")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateAddressById(Addresses address){
+    public Response updateAddressById(Addresses address){        
         JSONObject obj = new JSONObject();
         try{
             as.updateAddressById(address);
@@ -102,28 +98,15 @@ public class AddressesController {
             obj.put("message", "Sikeresen módosította a címet!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
-        catch(NotFoundException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(ForbiddenException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.FORBIDDEN).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(AuthenticationFailedException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.UNAUTHORIZED).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch (Exception e) {
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
         }
     }
     
     @POST
     @Path("deleteAddressById")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteAddressById(Addresses address){
+    public Response deleteAddressById(Addresses address){        
         JSONObject obj = new JSONObject();
         try{
             as.deleteAddressById(address);
@@ -131,21 +114,8 @@ public class AddressesController {
             obj.put("message", "Sikeresen törölte a címet!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
-        catch(NotFoundException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(ForbiddenException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.FORBIDDEN).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(AuthenticationFailedException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.UNAUTHORIZED).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch (Exception e) {
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
         }
     }
     

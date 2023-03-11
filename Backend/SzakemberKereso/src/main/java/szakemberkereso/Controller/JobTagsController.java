@@ -15,8 +15,10 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.json.JSONObject;
 import szakemberkereso.Model.JobTags;
 import szakemberkereso.Service.JobTagsService;
+import szakemberkereso.Service.ResponseService;
 
 /**
  * REST Web Service
@@ -59,17 +61,33 @@ public class JobTagsController {
     
     @GET
     @Path("getAllJobTags")
-    public Response getAllJobTags(){
-        List<JobTags> result = js.getAllJobTags();
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    public Response getAllJobTags(){        
+        JSONObject obj = new JSONObject();
+        try{
+            List<JobTags> result = js.getAllJobTags();
+            obj.put("result", JSONObject.wrap(result));
+            obj.put("message", "Sikeresen lekérte az összes szakmát!");
+            return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        }
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
+        }
     }
     
     @GET
     @Path("getJobTagById/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getJobTagById(@PathParam("id") Integer id){
-        JobTags result = js.getJobTagById(id);
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    public Response getJobTagById(@PathParam("id") Integer id){        
+        JSONObject obj = new JSONObject();
+        try{
+            JobTags result = js.getJobTagById(id);
+            obj.put("result", JSONObject.wrap(result));
+            obj.put("message", "Sikeresen lekérte a szakmát!");
+            return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        }
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
+        }
     }
     
 }

@@ -19,10 +19,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.ParameterMode;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
 import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
-import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.NotFoundException;
@@ -107,7 +105,7 @@ public class Counties implements Serializable {
         return "szakemberkereso.Model.Counties[ id=" + id + " ]";
     }
     
-    public static List<Counties> getAllCounties(){
+    public static List<Counties> getAllCounties() throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -129,9 +127,11 @@ public class Counties implements Serializable {
             
             return counties;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return counties;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();

@@ -24,6 +24,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.NotFoundException;
 import javax.xml.bind.annotation.XmlRootElement;
 import szakemberkereso.Configuration.Database;
 
@@ -159,7 +160,7 @@ public class Companies implements Serializable {
         return "szakemberkereso.Model.Companies[ id=" + id + " ]";
     }
     
-    public static Companies getCompanyById(Integer id_in){
+    public static Companies getCompanyById(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -171,19 +172,27 @@ public class Companies implements Serializable {
             spq.setParameter("id_in", id_in);
             
             spq.execute();
-            List<Object[]> result = spq.getResultList();
-            Object[] r = result.get(0);
             
-            Integer r_id = Integer.parseInt(r[0].toString());
-            String r_name = r[1].toString();
-            Integer r_address_id = Integer.parseInt(r[2].toString());
-            String r_tax_number = r[3].toString();
-            
-            return new Companies(r_id, r_name, r_address_id, r_tax_number);
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen cég!");
+            }
+            else{
+                List<Object[]> result = spq.getResultList();
+                Object[] r = result.get(0);
+
+                Integer r_id = Integer.parseInt(r[0].toString());
+                String r_name = r[1].toString();
+                Integer r_address_id = Integer.parseInt(r[2].toString());
+                String r_tax_number = r[3].toString();
+
+                return new Companies(r_id, r_name, r_address_id, r_tax_number);
+            }
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new Companies();
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -192,7 +201,7 @@ public class Companies implements Serializable {
         }
     }
     
-    public static String createCompany(Companies company){
+    public static String createCompany(Companies company) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -223,10 +232,12 @@ public class Companies implements Serializable {
 
             spq.execute();
             return "Sikeresen létrejött a cég";
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "HIBA: " + e.getMessage();
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -236,7 +247,7 @@ public class Companies implements Serializable {
         
     }
     
-    public static String updateCompanyById(Companies company){
+    public static String updateCompanyById(Companies company) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -253,10 +264,12 @@ public class Companies implements Serializable {
 
             spq.execute();
             return "Sikeresen módosult a cég";
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "HIBA: " + e.getMessage();
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -266,7 +279,7 @@ public class Companies implements Serializable {
         
     }
     
-    public static Boolean deleteCompanyById(Companies company_in){
+    public static Boolean deleteCompanyById(Companies company_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -280,9 +293,11 @@ public class Companies implements Serializable {
             spq.execute();
             return true;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();

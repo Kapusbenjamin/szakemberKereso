@@ -22,6 +22,7 @@ import javax.ws.rs.core.Response;
 import org.json.JSONObject;
 import szakemberkereso.Model.Ads;
 import szakemberkereso.Service.AdsService;
+import szakemberkereso.Service.ResponseService;
 
 /**
  * REST Web Service
@@ -65,7 +66,7 @@ public class AdsController {
     @POST
     @Path("createAd")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createAd(Ads ad){
+    public Response createAd(Ads ad){        
         JSONObject obj = new JSONObject();
         try{
             Integer result = as.createAd(ad);
@@ -73,28 +74,15 @@ public class AdsController {
             obj.put("message", "Sikeresen létrehozta a hirdetést!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
-        catch(NotFoundException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(ForbiddenException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.FORBIDDEN).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(AuthenticationFailedException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.UNAUTHORIZED).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch (Exception e) {
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
         }
     }
     
     @POST
     @Path("updateAd")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateAd(Ads ad){
+    public Response updateAd(Ads ad){        
         JSONObject obj = new JSONObject();
         try{
             as.updateAd(ad);
@@ -102,27 +90,14 @@ public class AdsController {
             obj.put("message", "Sikeresen módosította a hirdetést!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
-        catch(NotFoundException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(ForbiddenException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.FORBIDDEN).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(AuthenticationFailedException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.UNAUTHORIZED).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch (Exception e) {
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
         }
     }
     
     @GET
     @Path("getAllAcceptedAds")
-    public Response getAllAcceptedAds(){
+    public Response getAllAcceptedAds(){        
         JSONObject obj = new JSONObject();
         try{
             List<Ads> result = as.getAllAcceptedAds();
@@ -130,28 +105,15 @@ public class AdsController {
             obj.put("message", "Sikeresen lekérte az elfogadott hirdetéseket!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
-        catch(NotFoundException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(ForbiddenException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.FORBIDDEN).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(AuthenticationFailedException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.UNAUTHORIZED).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch (Exception e) {
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
         }
     }
     
     @POST
     @Path("getAllNonAcceptedAds")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getAllNonAcceptedAds(Integer userId){
+    public Response getAllNonAcceptedAds(Integer userId){        
         JSONObject obj = new JSONObject();
         try{
             List<Ads> result = as.getAllNonAcceptedAds(userId);
@@ -159,28 +121,15 @@ public class AdsController {
             obj.put("message", "Sikeresen lekérte azokat a hirdetéseket amik még nem lettek elfogadva!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
-        catch(NotFoundException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(ForbiddenException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.FORBIDDEN).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(AuthenticationFailedException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.UNAUTHORIZED).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch (Exception e) {
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
         }
     }
     
     @POST
     @Path("acceptAd")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response acceptAd(Ads ad){
+    public Response acceptAd(Ads ad){        
         JSONObject obj = new JSONObject();
         try{
             as.acceptAd(ad);
@@ -188,28 +137,15 @@ public class AdsController {
             obj.put("message", "Sikeresen elfogadta a hirdetést!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
-        catch(NotFoundException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(ForbiddenException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.FORBIDDEN).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(AuthenticationFailedException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.UNAUTHORIZED).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch (Exception e) {
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
         }
     }
     
     @POST
     @Path("getAllAds")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getAllAds(Integer userId){
+    public Response getAllAds(Integer userId){        
         JSONObject obj = new JSONObject();
         try{
             List<Ads> result = as.getAllAds(userId);
@@ -217,28 +153,15 @@ public class AdsController {
             obj.put("message", "Sikeresen lekérte az összes hirdetést!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
-        catch(NotFoundException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(ForbiddenException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.FORBIDDEN).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(AuthenticationFailedException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.UNAUTHORIZED).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch (Exception e) {
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
         }
     }
     
     @POST
     @Path("getAllAdsByUserId")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getAllAdsByUserId(Ads ad){
+    public Response getAllAdsByUserId(Ads ad){        
         JSONObject obj = new JSONObject();
         try{
             List<Ads> result = as.getAllAdsByUserId(ad);
@@ -246,29 +169,15 @@ public class AdsController {
             obj.put("message", "Sikeresen lekérte a felhasználóhoz tartozó hirdetéseket!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
-        catch(NotFoundException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(ForbiddenException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.FORBIDDEN).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(AuthenticationFailedException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.UNAUTHORIZED).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch (Exception e) {
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
         }
     }
     
     @POST
     @Path("filteringAds")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response filteringAds(Ads ad){
-        
+    public Response filteringAds(Ads ad){        
         JSONObject obj = new JSONObject();
         try{
             List<Ads> result = as.filteringAds(ad);
@@ -276,27 +185,14 @@ public class AdsController {
             obj.put("message", "Sikeresen lekérte szűrve a hirdetéseket!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
-        catch(NotFoundException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(ForbiddenException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.FORBIDDEN).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(AuthenticationFailedException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.UNAUTHORIZED).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch (Exception e) {
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
         }
     }
     
     @GET
     @Path("getAdsById/{id}")
-    public Response getAdsById(@PathParam("id") Integer id){
+    public Response getAdsById(@PathParam("id") Integer id){        
         JSONObject obj = new JSONObject();
         try{
             Ads result = as.getAdsById(id);
@@ -304,28 +200,15 @@ public class AdsController {
             obj.put("message", "Sikeresen lekérte a hirdetést!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
-        catch(NotFoundException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(ForbiddenException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.FORBIDDEN).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(AuthenticationFailedException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.UNAUTHORIZED).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch (Exception e) {
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
         }
     }
     
     @POST
     @Path("deleteAd")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteAd(Ads ad){
+    public Response deleteAd(Ads ad){        
         JSONObject obj = new JSONObject();
         try{
             as.deleteAd(ad);
@@ -333,21 +216,8 @@ public class AdsController {
             obj.put("message", "Sikeresen törölte a hirdetést!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
-        catch(NotFoundException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(ForbiddenException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.FORBIDDEN).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(AuthenticationFailedException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.UNAUTHORIZED).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch (Exception e) {
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
         }
     }
     

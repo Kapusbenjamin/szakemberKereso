@@ -5,17 +5,22 @@
 package szakemberkereso.Controller;
 
 import java.util.List;
+import javax.mail.AuthenticationFailedException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.json.JSONObject;
 import szakemberkereso.Model.Counties;
 import szakemberkereso.Service.CountiesService;
+import szakemberkereso.Service.ResponseService;
 
 /**
  * REST Web Service
@@ -58,9 +63,17 @@ public class CountiesController {
     
     @GET
     @Path("getAllCounties")
-    public Response getAllCounties(){
-        List<Counties> result = cs.getAllCounties();
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    public Response getAllCounties(){        
+        JSONObject obj = new JSONObject();
+        try{
+            List<Counties> result = cs.getAllCounties();
+            obj.put("result", JSONObject.wrap(result));
+            obj.put("message", "Sikeresen lekérte az összes megyét!");
+            return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        }
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
+        }
     }
-            
+    
 }

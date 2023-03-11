@@ -30,6 +30,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.NotFoundException;
 import javax.xml.bind.annotation.XmlRootElement;
 import szakemberkereso.Configuration.Database;
 
@@ -222,7 +223,7 @@ public class Ratings implements Serializable {
         return new Ratings(o_id, o_ratinged_user_id, o_ratinger_user_id, o_description, o_ratings_stars, o_status, o_updated_at, o_deleted);
     }
 
-    public static Ratings getRatingById(Integer id_in){
+    public static Ratings getRatingById(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -234,15 +235,23 @@ public class Ratings implements Serializable {
             spq.setParameter("id_in", id_in);
             
             spq.execute();
-            List<Object[]> result = spq.getResultList();
-            Object[] r = result.get(0);
             
-            Ratings rating = Ratings.objectToRating(r);
-            return rating;
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen értékelés!");
+            }
+            else{
+                List<Object[]> result = spq.getResultList();
+                Object[] r = result.get(0);
+
+                Ratings rating = Ratings.objectToRating(r);
+                return rating;
+            }
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new Ratings();
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -251,7 +260,7 @@ public class Ratings implements Serializable {
         }
     }
     
-    public static List<Ratings> getAllRatings(){
+    public static List<Ratings> getAllRatings() throws Exception, Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -269,10 +278,12 @@ public class Ratings implements Serializable {
             }
             
             return ratings;
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ratings;
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -281,7 +292,7 @@ public class Ratings implements Serializable {
         }
     }
     
-    public static List<Ratings> getAllNotAcceptedRatings(){
+    public static List<Ratings> getAllNotAcceptedRatings() throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -300,9 +311,11 @@ public class Ratings implements Serializable {
             
             return ratings;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ratings;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -311,7 +324,7 @@ public class Ratings implements Serializable {
         }
     }
     
-    public static List<Ratings> getAllRatingsByRatinger(Integer user_id_in){
+    public static List<Ratings> getAllRatingsByRatinger(Integer user_id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -333,9 +346,11 @@ public class Ratings implements Serializable {
             
             return ratings;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ratings;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -344,7 +359,7 @@ public class Ratings implements Serializable {
         }
     }
     
-    public static List<Ratings> getAllRatingsByRatinged(Integer user_id_in){
+    public static List<Ratings> getAllRatingsByRatinged(Integer user_id_in) throws Exception, Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -365,10 +380,12 @@ public class Ratings implements Serializable {
             }
             
             return ratings;
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ratings;
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -377,7 +394,7 @@ public class Ratings implements Serializable {
         }
     }
     
-    public static Boolean updateRatingById(Ratings rating){
+    public static Boolean updateRatingById(Ratings rating) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -395,10 +412,12 @@ public class Ratings implements Serializable {
             spq.execute();
             
             return true;
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -407,7 +426,7 @@ public class Ratings implements Serializable {
         }
     }
     
-    public static Boolean acceptRating(Integer id_in){
+    public static Boolean acceptRating(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -422,9 +441,11 @@ public class Ratings implements Serializable {
             
             return true;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -433,7 +454,7 @@ public class Ratings implements Serializable {
         }
     }
     
-    public static Boolean deleteRatingById(Integer id_in){
+    public static Boolean deleteRatingById(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -447,10 +468,12 @@ public class Ratings implements Serializable {
             spq.execute();
             
             return true;
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -459,7 +482,7 @@ public class Ratings implements Serializable {
         }
     }
     
-    public static String createRating(Ratings rating){
+    public static String createRating(Ratings rating) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -479,10 +502,12 @@ public class Ratings implements Serializable {
             spq.execute();
             
             return "Sikeresen létrejött a rating!";
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "HIBA: " + e.getMessage();
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();

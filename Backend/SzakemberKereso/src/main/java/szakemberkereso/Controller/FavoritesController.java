@@ -4,19 +4,26 @@
  */
 package szakemberkereso.Controller;
 
+import java.lang.reflect.Executable;
 import java.util.List;
+import java.util.function.Supplier;
+import javax.mail.AuthenticationFailedException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.json.JSONObject;
 import szakemberkereso.Model.Favorites;
 import szakemberkereso.Service.FavoritesService;
+import szakemberkereso.Service.ResponseService;
 
 /**
  * REST Web Service
@@ -60,33 +67,65 @@ public class FavoritesController {
     @POST
     @Path("getAllfavoritesByUserId")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getAllfavoritesByUserId(Favorites favorite){
-        List<Favorites> result = fs.getAllfavoritesByUserId(favorite.getUserId());
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    public Response getAllfavoritesByUserId(Favorites favorite){        
+        JSONObject obj = new JSONObject();
+        try{
+            List<Favorites> result = fs.getAllfavoritesByUserId(favorite.getUserId());
+            obj.put("result", JSONObject.wrap(result));
+            obj.put("message", "Sikeresen lekérte a felhasználóhoz tartozó összes kedvencet!");
+            return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        }
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
+        }
     }
     
     @POST
     @Path("getFavoriteById")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getFavoriteById(Favorites favorite){
-        Favorites result = fs.getFavoriteById(favorite.getId());
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    public Response getFavoriteById(Favorites favorite){        
+        JSONObject obj = new JSONObject();
+        try{
+            Favorites result = fs.getFavoriteById(favorite.getId());
+            obj.put("result", JSONObject.wrap(result));
+            obj.put("message", "Sikeresen lekérte a kedvencet!");
+            return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        }
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
+        }
     }
     
     @POST
     @Path("deleteFavorite")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteFavorite(Favorites favorite){
-        Boolean result = fs.deleteFavorite(favorite.getId());
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    public Response deleteFavorite(Favorites favorite){        
+        JSONObject obj = new JSONObject();
+        try{
+            Boolean result = fs.deleteFavorite(favorite.getId());
+            obj.put("result", JSONObject.wrap(result));
+            obj.put("message", "Sikeresen törölte a kedvencet!");
+            return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        }
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
+        }
     }
     
     @POST
     @Path("addFavorite")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addFavorite(Favorites favorite){
-        String result = fs.addFavorite(favorite);
-        return Response.status(Response.Status.OK).entity(result).type(MediaType.APPLICATION_JSON).build();
+    public Response addFavorite(Favorites favorite){        
+        JSONObject obj = new JSONObject();
+        try{
+            String result = fs.addFavorite(favorite);
+            obj.put("result", JSONObject.wrap(result));
+            obj.put("message", "Sikeresen hozzáadta a kedvencet!");
+            return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        }
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
+        }
     }
     
 }

@@ -13,12 +13,12 @@ import szakemberkereso.Model.Chats;
  */
 public class ChatsService {
     
-    public List<Chats> getAllChatsByUserId(Integer id){
+    public List<Chats> getAllChatsByUserId(Integer id) throws Exception{
         List<Chats> result = Chats.getAllChatsByUserId(id);
         return result;
     }
     
-    public String createChat(Chats chat){        
+    public String createChat(Chats chat) throws Exception{        
         String result = Chats.createChat(chat);
         return result;
     }

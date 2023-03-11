@@ -5,7 +5,6 @@
 package szakemberkereso.Controller;
 
 import java.util.List;
-import java.util.Objects;
 import javax.mail.AuthenticationFailedException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -21,12 +20,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.json.JSONObject;
-import szakemberkereso.Configuration.Roles;
-import szakemberkereso.Model.Ads;
 import szakemberkereso.Model.AdsCounties;
 import szakemberkereso.Model.Counties;
 import szakemberkereso.Service.AdsCountiesService;
-import szakemberkereso.Service.AuthService;
+import szakemberkereso.Service.ResponseService;
 
 /**
  * REST Web Service
@@ -70,7 +67,7 @@ public class AdsCountiesController {
     @POST
     @Path("addNewCountyToAd")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addNewCountyToAd(AdsCounties ad_county){
+    public Response addNewCountyToAd(AdsCounties ad_county){        
         JSONObject obj = new JSONObject();
         try{
             acs.addNewCountyToAd(ad_county);
@@ -78,28 +75,15 @@ public class AdsCountiesController {
             obj.put("message", "Sikeresen hozzáadta a megyét a hirdetéshez!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
-        catch(NotFoundException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(ForbiddenException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.FORBIDDEN).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(AuthenticationFailedException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.UNAUTHORIZED).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch (Exception e) {
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
         }
     }
     
     @POST
     @Path("deleteCountyFromAd")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteCountyFromAd(AdsCounties ad_county){
+    public Response deleteCountyFromAd(AdsCounties ad_county){        
         JSONObject obj = new JSONObject();
         try{
             acs.deleteCountyFromAd(ad_county);
@@ -107,28 +91,15 @@ public class AdsCountiesController {
             obj.put("message", "Sikeresen törölte a megyét a hirdetésből!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
-        catch(NotFoundException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(ForbiddenException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.FORBIDDEN).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(AuthenticationFailedException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.UNAUTHORIZED).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch (Exception e) {
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
         }
     }
     
     @GET
     @Path("getAllCountiesByAd/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getAllCountiesByAd(@PathParam("id") Integer ad_id_in){
+    public Response getAllCountiesByAd(@PathParam("id") Integer ad_id_in){        
         JSONObject obj = new JSONObject();
         try{
             List<Counties> result = acs.getAllCountiesByAd(ad_id_in);
@@ -136,21 +107,8 @@ public class AdsCountiesController {
             obj.put("message", "Sikeresen lekérte a hirdetéshez tartozó megyéket!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
-        catch(NotFoundException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.NOT_FOUND).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(ForbiddenException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.FORBIDDEN).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(AuthenticationFailedException e){
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.UNAUTHORIZED).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch (Exception e) {
-            obj.put("message", e.getMessage());
-            return Response.status(Response.Status.SERVICE_UNAVAILABLE).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
         }
     }
     

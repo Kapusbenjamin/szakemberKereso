@@ -13,7 +13,7 @@ import szakemberkereso.Model.Counties;
  */
 public class CountiesService {
     
-    public List<Counties> getAllCounties(){
+    public List<Counties> getAllCounties() throws Exception{
         List<Counties> result = Counties.getAllCounties();
         return result;
     }

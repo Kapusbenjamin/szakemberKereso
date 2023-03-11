@@ -13,37 +13,37 @@ import szakemberkereso.Model.Images;
  */
 public class ImagesService {
     
-    public List<Images> getAllNotAcceptedImages(){
+    public List<Images> getAllNotAcceptedImages() throws Exception{
         List<Images> result = Images.getAllNotAcceptedImages();
         return result;
     }
     
-    public List<Images> getAllAcceptedImagesByUserId(Integer user_id){
+    public List<Images> getAllAcceptedImagesByUserId(Integer user_id) throws Exception{
         List<Images> result = Images.getAllAcceptedImagesByUserId(user_id);
         return result;
     }
     
-    public List<Images> getImagesByUserId(Integer user_id){
+    public List<Images> getImagesByUserId(Integer user_id) throws Exception{
         List<Images> result = Images.getImagesByUserId(user_id);
         return result;
     }
     
-    public List<Images> getAllImages(){
+    public List<Images> getAllImages() throws Exception{
         List<Images> result = Images.getAllImages();
         return result;
     }
             
-    public Boolean acceptImage(Integer id){
+    public Boolean acceptImage(Integer id) throws Exception{
         Boolean result = Images.acceptImage(id);
         return result;
     }
             
-    public Boolean deleteImage(Integer id){
+    public Boolean deleteImage(Integer id) throws Exception{
         Boolean result = Images.deleteImage(id);
         return result;
     }
     
-    public String addImage(Images image){
+    public String addImage(Images image) throws Exception{
         String result = Images.addImage(image);
         return result;
     }

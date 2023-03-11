@@ -24,6 +24,7 @@ import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.NotFoundException;
 import javax.xml.bind.annotation.XmlRootElement;
 import szakemberkereso.Configuration.Database;
 
@@ -143,7 +144,7 @@ public class Chats implements Serializable {
         return "szakemberkereso.Model.Chats[ id=" + id + " ]";
     }
     
-    public static List<Chats> getAllChatsByUserId(Integer id_in){
+    public static List<Chats> getAllChatsByUserId(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -169,10 +170,12 @@ public class Chats implements Serializable {
             }
             
             return chats;
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return chats;
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -181,7 +184,7 @@ public class Chats implements Serializable {
         }
     }
     
-    public static String createChat(Chats chat){
+    public static String createChat(Chats chat) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -197,9 +200,11 @@ public class Chats implements Serializable {
             spq.execute();
             return "Sikeresen létrejött a chat";
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "HIBA: " + e.getMessage();
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();

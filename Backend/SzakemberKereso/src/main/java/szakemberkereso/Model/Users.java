@@ -432,7 +432,7 @@ public class Users implements Serializable {
         }
     }
     
-    public static Users loginUser(String us_in, String psw_in){
+    public static Users loginUser(String us_in, String psw_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -465,9 +465,11 @@ public class Users implements Serializable {
             
             return u;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new Users();
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -476,7 +478,7 @@ public class Users implements Serializable {
         }
     }
     
-    public static Boolean logoutUser(Integer id_in){
+    public static Boolean logoutUser(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -491,10 +493,11 @@ public class Users implements Serializable {
             
             return true;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            //return new Users();
-            return false;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -503,7 +506,7 @@ public class Users implements Serializable {
         }
     }
     
-    public static Boolean deleteUser(Integer id_in){
+    public static Boolean deleteUser(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -518,10 +521,11 @@ public class Users implements Serializable {
             
             return true;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            //return new Users();
-            return false;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -530,7 +534,7 @@ public class Users implements Serializable {
         }
     }
     
-    public static Boolean changeAccess(Integer id_in){
+    public static Boolean changeAccess(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -544,11 +548,12 @@ public class Users implements Serializable {
             spq.execute();
             
             return true;
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            //return new Users();
-            return false;
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -557,7 +562,7 @@ public class Users implements Serializable {
         }
     }
     
-    public static List<Users> getAllUsers(){
+    public static List<Users> getAllUsers() throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -576,10 +581,11 @@ public class Users implements Serializable {
             
             return users;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            //return new Users();
-            return users;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -588,7 +594,7 @@ public class Users implements Serializable {
         }
     }
     
-    public static Integer createUser(Users user){
+    public static Integer createUser(Users user) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -640,10 +646,12 @@ public class Users implements Serializable {
             Integer user_id = Integer.parseInt(spq.getOutputParameterValue("user_id_out").toString());
             
             return user_id;
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -653,7 +661,7 @@ public class Users implements Serializable {
         
     }
     
-    public static Integer createUserWorker(Users user){
+    public static Integer createUserWorker(Users user) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -725,10 +733,12 @@ public class Users implements Serializable {
             Integer user_id = Integer.parseInt(spq.getOutputParameterValue("user_id_out").toString());
             
             return user_id;
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -738,7 +748,7 @@ public class Users implements Serializable {
         
     }
     
-    public static String updateUser(Users user){
+    public static String updateUser(Users user) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -759,10 +769,12 @@ public class Users implements Serializable {
 
             spq.execute();
             return "Sikeresen módosult a user";
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "HIBA: " + e.getMessage();
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -772,7 +784,7 @@ public class Users implements Serializable {
         
     }
     
-    public static String changePassword(Users user){
+    public static String changePassword(Users user) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -789,10 +801,12 @@ public class Users implements Serializable {
 
             spq.execute();
             return "Sikeresen módosult a user jelszava";
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "HIBA: " + e.getMessage();
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -802,7 +816,7 @@ public class Users implements Serializable {
         
     }
     
-    public static Boolean resetPassword(String email, String password, String pwtoken){
+    public static Boolean resetPassword(String email, String password, String pwtoken) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
 
@@ -822,9 +836,11 @@ public class Users implements Serializable {
 
             return true;
         }
-        catch(Exception ex){
-            System.out.println(ex.getMessage());
-            return false;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             //clean up metods, and close connections
@@ -835,7 +851,7 @@ public class Users implements Serializable {
         
     }
     
-    public static Boolean forgotPassword(String email){
+    public static Boolean forgotPassword(String email) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
 
@@ -859,9 +875,11 @@ public class Users implements Serializable {
             
             return true;
         }
-        catch(Exception ex){
-            System.out.println(ex.getMessage());
-            return false;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             //clean up metods, and close connections
@@ -915,7 +933,7 @@ public class Users implements Serializable {
         }
     }
     
-    public static String validateEmailByToken(String token_in){
+    public static String validateEmailByToken(String token_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -929,9 +947,11 @@ public class Users implements Serializable {
             spq.execute();
             return "Sikeresen aktiválta a user-t és email-t";
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "HIBA: " + e.getMessage();
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();

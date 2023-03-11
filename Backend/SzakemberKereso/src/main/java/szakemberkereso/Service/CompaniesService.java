@@ -4,7 +4,6 @@
  */
 package szakemberkereso.Service;
 
-import szakemberkereso.Model.Addresses;
 import szakemberkereso.Model.Companies;
 
 /**
@@ -14,12 +13,12 @@ import szakemberkereso.Model.Companies;
 public class CompaniesService {
     
     
-    public Companies getCompanyById(Integer id){
+    public Companies getCompanyById(Integer id) throws Exception{
         Companies result = Companies.getCompanyById(id);
         return result;
     }
     
-    public String createCompany(Companies company){
+    public String createCompany(Companies company) throws Exception{
         //Business logic
         if(company.getAddress().getStaircase() == null){
             company.getAddress().setStaircase("");
@@ -35,12 +34,12 @@ public class CompaniesService {
         return result;
     }
     
-    public String updateCompanyById(Companies company){
+    public String updateCompanyById(Companies company) throws Exception{
         String result = Companies.updateCompanyById(company);
         return result;
     }
     
-    public Boolean deleteCompanyById(Companies company){
+    public Boolean deleteCompanyById(Companies company) throws Exception{
         Boolean result = Companies.deleteCompanyById(company);
         return result;
     }

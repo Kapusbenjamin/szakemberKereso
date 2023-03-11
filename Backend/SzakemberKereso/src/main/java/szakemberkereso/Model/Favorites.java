@@ -24,6 +24,7 @@ import javax.persistence.StoredProcedureQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.NotFoundException;
 import javax.xml.bind.annotation.XmlRootElement;
 import szakemberkereso.Configuration.Database;
 
@@ -139,7 +140,7 @@ public class Favorites implements Serializable {
         return new Favorites(o_id, o_user_id, o_ad_id);
     }
     
-    public static List<Favorites> getAllfavoritesByUserId(Integer user_id_in){
+    public static List<Favorites> getAllfavoritesByUserId(Integer user_id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -161,10 +162,12 @@ public class Favorites implements Serializable {
             }
             
             return favorites;
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return favorites;
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -173,7 +176,7 @@ public class Favorites implements Serializable {
         }
     }
     
-    public static Favorites getFavoriteById(Integer id_in){
+    public static Favorites getFavoriteById(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -185,15 +188,22 @@ public class Favorites implements Serializable {
             
             spq.execute();
             
-            List<Object[]> result = spq.getResultList();
-            Object[] r = result.get(0);
-            
-            Favorites f = Favorites.objectToFavorite(r);
-            return f;
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen kedvenc!");
+            }
+            else{
+                List<Object[]> result = spq.getResultList();
+                Object[] r = result.get(0);
+
+                Favorites f = Favorites.objectToFavorite(r);
+                return f;
+            }
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new Favorites();
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -202,7 +212,7 @@ public class Favorites implements Serializable {
         }
     }
     
-    public static Boolean deleteFavorite(Integer id_in){
+    public static Boolean deleteFavorite(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -217,9 +227,11 @@ public class Favorites implements Serializable {
             
             return true;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -228,7 +240,7 @@ public class Favorites implements Serializable {
         }
     }
     
-    public static String addFavorite(Favorites favorite){
+    public static String addFavorite(Favorites favorite) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -244,10 +256,12 @@ public class Favorites implements Serializable {
             spq.execute();
             
             return "Sikeresen hozzáadta a kedvencekhez!";
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "HIBA: " + e.getMessage();
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();

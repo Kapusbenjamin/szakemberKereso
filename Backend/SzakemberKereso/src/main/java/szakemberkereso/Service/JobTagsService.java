@@ -13,12 +13,12 @@ import szakemberkereso.Model.JobTags;
  */
 public class JobTagsService {
     
-    public List<JobTags> getAllJobTags(){
+    public List<JobTags> getAllJobTags() throws Exception{
         List<JobTags> result = JobTags.getAllJobTags();
         return result;
     }
     
-    public JobTags getJobTagById(Integer id){
+    public JobTags getJobTagById(Integer id) throws Exception{
         JobTags result = JobTags.getJobTagById(id);
         return result;
     }

@@ -30,6 +30,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.NotFoundException;
 import javax.xml.bind.annotation.XmlRootElement;
 import szakemberkereso.Configuration.Database;
 
@@ -253,7 +254,7 @@ public class Jobs implements Serializable {
         return new Jobs(o_id, o_description, o_total, o_status, o_customer_id, o_worker_id, o_customer_accepted, o_worker_accepted, o_updated_at, o_deleted);
     }
     
-    public static Jobs getJobById(Jobs job_in){
+    public static Jobs getJobById(Jobs job_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -266,15 +267,22 @@ public class Jobs implements Serializable {
             
             spq.execute();
             
-            List<Object[]> result = spq.getResultList();
-            Object[] r = result.get(0);
-            Jobs j = Jobs.objectToJob(r);
-            
-            return j;
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen munka!");
+            }
+            else{
+                List<Object[]> result = spq.getResultList();
+                Object[] r = result.get(0);
+                Jobs j = Jobs.objectToJob(r);
+
+                return j;
+            }
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new Jobs();
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -283,7 +291,7 @@ public class Jobs implements Serializable {
         }
     }
     
-    public static Boolean deleteJob(Jobs job_in){
+    public static Boolean deleteJob(Jobs job_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -298,9 +306,11 @@ public class Jobs implements Serializable {
             
             return true;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -309,7 +319,7 @@ public class Jobs implements Serializable {
         }
     }
     
-    public static Boolean changeJobStatus(Jobs job){
+    public static Boolean changeJobStatus(Jobs job) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -323,11 +333,12 @@ public class Jobs implements Serializable {
             spq.execute();
             
             return true;
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            //return new Users();
-            return false;
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -336,7 +347,7 @@ public class Jobs implements Serializable {
         }
     }
     
-    public static List<Jobs> getAllJobs(){
+    public static List<Jobs> getAllJobs() throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -355,9 +366,11 @@ public class Jobs implements Serializable {
             
             return jobs;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return jobs;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -366,7 +379,7 @@ public class Jobs implements Serializable {
         }
     }
     
-    public static List<Jobs> getAllJobsByWorker(Jobs job_in){
+    public static List<Jobs> getAllJobsByWorker(Jobs job_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -388,10 +401,12 @@ public class Jobs implements Serializable {
             }
             
             return jobs;
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return jobs;
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -400,7 +415,7 @@ public class Jobs implements Serializable {
         }
     }
     
-    public static List<Jobs> getAllJobsByCustomer(Jobs job_in){
+    public static List<Jobs> getAllJobsByCustomer(Jobs job_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -422,10 +437,12 @@ public class Jobs implements Serializable {
             }
             
             return jobs;
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return jobs;
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -434,7 +451,7 @@ public class Jobs implements Serializable {
         }
     }
     
-    public static String createJob(Jobs job){
+    public static String createJob(Jobs job) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -452,9 +469,11 @@ public class Jobs implements Serializable {
             spq.execute();
             return "Sikeresen létrejött a munka";
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "HIBA: " + e.getMessage();
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -464,7 +483,7 @@ public class Jobs implements Serializable {
         
     }
     
-    public static String updateJobByWorker(Jobs job){
+    public static String updateJobByWorker(Jobs job) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -479,10 +498,12 @@ public class Jobs implements Serializable {
 
             spq.execute();
             return "Sikeresen módosult a munka";
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "HIBA: " + e.getMessage();
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -492,7 +513,7 @@ public class Jobs implements Serializable {
         
     }
     
-    public static String updateJobByCustomer(Jobs job){
+    public static String updateJobByCustomer(Jobs job) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -507,10 +528,12 @@ public class Jobs implements Serializable {
 
             spq.execute();
             return "Sikeresen módosult a munka";
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return "HIBA: " + e.getMessage();
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -520,7 +543,7 @@ public class Jobs implements Serializable {
         
     }
     
-    public static Boolean acceptByWorker(Jobs job){
+    public static Boolean acceptByWorker(Jobs job) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -533,10 +556,12 @@ public class Jobs implements Serializable {
 
             spq.execute();
             return true;
-        } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();
@@ -546,7 +571,7 @@ public class Jobs implements Serializable {
         
     }
     
-    public static Boolean acceptByCustomer(Jobs job){
+    public static Boolean acceptByCustomer(Jobs job) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -560,9 +585,11 @@ public class Jobs implements Serializable {
             spq.execute();
             return true;
         } 
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
         finally{
             em.clear();

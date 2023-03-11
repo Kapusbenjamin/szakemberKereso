@@ -6,6 +6,9 @@ package szakemberkereso.Service;
 
 import com.helix.pecscinemaweb.Exceptions.PasswordException;
 import java.util.List;
+import java.util.Objects;
+import javax.mail.AuthenticationFailedException;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
 import szakemberkereso.Configuration.Roles;
 import szakemberkereso.Model.Users;
@@ -27,7 +30,7 @@ public class UsersService {
         }
         // uppercase letter
         else if(!pw.matches(".*[A-Z].*")){
-            throw new PasswordException("It must be a uppercase character");
+            throw new PasswordException("It must be an uppercase character");
         }
         // number
         else if(!pw.matches(".*[0-9].*")){
@@ -61,7 +64,7 @@ public class UsersService {
         return result;
     }
     
-    public Users loginUser(String email, String phone, String psw){
+    public Users loginUser(String email, String phone, String psw) throws Exception{
         //Business logic
         String us = email;
         if(email == null){
@@ -71,27 +74,50 @@ public class UsersService {
         return result;
     }
     
-    public Boolean logoutUser(Integer id){
+    public Boolean logoutUser(Integer id) throws Exception{
         Boolean result = Users.logoutUser(id);
         return result;
     }
     
-    public Boolean deleteUser(Integer id){
-        Boolean result = Users.deleteUser(id);
-        return result;
+    public Boolean deleteUser(Users user) throws Exception{
+        if(AuthService.isUserAuthorized(user.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.USER, Roles.WORKER})) {
+            if(!AuthService.isUserAuthorized(user.getCurrentUserId(), new Roles[]{Roles.ADMIN})){
+                //a nem ADMIN jogosultságú user-ek csak saját magukat törölhetik
+                if(!Objects.equals(user.getId(), user.getCurrentUserId())){
+                    throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
+                }
+            }
+            Boolean result = Users.deleteUser(user.getId());
+            return result;
+        }
+        else{
+            throw new AuthenticationFailedException("Nem sikerült azonosítani.");
+        }
     }
     
-    public Boolean changeAccess(Integer id){
-        Boolean result = Users.changeAccess(id);
-        return result;
+    public Boolean changeAccess(Users user) throws Exception{
+        //csak USER jogosultságú user-ek változtathatnak hozzáférést (csak worker-re)
+        if(AuthService.isUserAuthorized(user.getCurrentUserId(), new Roles[]{Roles.USER})) {
+            Boolean result = Users.changeAccess(user.getId());
+            return result;
+        }
+        else{
+            throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
+        }
     }
     
-    public List<Users> getAllUsers(){
-        List<Users> result = Users.getAllUsers();
-        return result;
+    public List<Users> getAllUsers(Integer userId) throws Exception{
+        //csak ADMIN kérheti le
+        if(AuthService.isUserAuthorized(userId, new Roles[]{Roles.ADMIN})){
+            List<Users> result = Users.getAllUsers();
+            return result;            
+        }
+        else{
+            throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
+        }
     }
     
-    public Integer createUser(Users user){
+    public Integer createUser(Users user) throws Exception{
         //Business logic
         if(user.getAddress().getStaircase() == null){
             user.getAddress().setStaircase("");
@@ -107,7 +133,7 @@ public class UsersService {
         return result;
     }
     
-    public Integer createUserWorker(Users user){
+    public Integer createUserWorker(Users user) throws Exception{
         //Business logic
         if(user.getAddress().getStaircase() == null){
             user.getAddress().setStaircase("");
@@ -132,27 +158,45 @@ public class UsersService {
         return result;
     }
     
-    public String updateUser(Users user){
-        String result = Users.updateUser(user);
-        return result;
+    public String updateUser(Users user) throws Exception{
+        if (AuthService.isUserAuthorized(user.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.USER, Roles.WORKER})) {
+            //a user-ek csak a saját adataikat módosíthatják
+            if(!Objects.equals(user.getId(), user.getCurrentUserId())){
+                throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
+            }
+            String result = Users.updateUser(user);
+            return result;
+        }
+        else{
+            throw new AuthenticationFailedException("Nem sikerült azonosítani.");
+        }
     }
     
-    public String changePassword(Users user){
-        String result = Users.changePassword(user);
-        return result;
+    public String changePassword(Users user) throws Exception{
+        if(AuthService.isUserAuthorized(user.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.USER, Roles.WORKER})) {
+            //a user-ek csak a saját jelszavukat módosíthatják
+            if(!Objects.equals(user.getId(), user.getCurrentUserId())){
+                throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
+            }
+            String result = Users.changePassword(user);
+            return result;
+        }
+        else{
+            throw new AuthenticationFailedException("Nem sikerült azonosítani.");
+        }
     }
     
-    public String validateEmailByToken(String token){
+    public String validateEmailByToken(String token) throws Exception{
         String result = Users.validateEmailByToken(token);
         return result;
     }
     
-    public Boolean forgotPassword(String email){
+    public Boolean forgotPassword(String email) throws Exception{
         Boolean result = Users.forgotPassword(email);
         return result;
     }
         
-    public String resetPassword(String email, String password, String pwtoken){
+    public String resetPassword(String email, String password, String pwtoken) throws Exception{
         if(Users.resetPassword(email,password,pwtoken)){
             return "Password succesfully changed.";
         }
