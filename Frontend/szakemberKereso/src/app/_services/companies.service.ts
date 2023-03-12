@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { catchError, map, throwError } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { Company } from '../_model/Company';
 import { UsersService } from './users.service';
@@ -19,11 +20,25 @@ export class CompaniesService {
       taxNumber: company.taxNumber,
       address: company.address,
       currentUserId: this.userService.userData.userId
-    })
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   getCompanyById(id: number):Observable<Company>{
-    return this.http.get<Company>(`${this.apiUrl}getCompanyById/${id}`)
+    return this.http.get<Company>(`${this.apiUrl}getCompanyById/${id}`).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   updateCompanyById(id: number,name: string, taxNumber: string):Observable<any>{
@@ -32,7 +47,14 @@ export class CompaniesService {
       name: name,
       taxNumber: taxNumber,
       currentUserId: this.userService.userData.userId
-    })
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   // Nope
@@ -40,7 +62,14 @@ export class CompaniesService {
     return this.http.post(`${this.apiUrl}deleteCompanyById`,{
       id,
       currentUserId: this.userService.userData.userId
-    });
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
 }

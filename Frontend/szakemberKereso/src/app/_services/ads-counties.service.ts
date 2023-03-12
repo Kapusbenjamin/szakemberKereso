@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { Tag } from '../_model/Tag';
 import { UsersService } from './users.service';
 
@@ -17,7 +17,16 @@ export class AdsCountiesService {
   }
 
   getAllCountiesByAd(id: number):Observable<Tag[]>{
-    return this.http.get<Tag[]>(`${this.apiUrl}getAllCountiesByAd/${id}`);
+    return this.http.get<Tag[]>(`${this.apiUrl}getAllCountiesByAd/${id}`).pipe(
+      map((response: any) => {
+        if (response.message == "Sikeresen lekérte a hirdetéshez tartozó megyéket!") {
+          return response.result;
+        }
+      }),
+      catchError((error: any) => {
+        return throwError(error);
+      })
+    );
   }
 
   addNewCountyToAd(adId: number, countyId:number):Observable<any>{
@@ -25,7 +34,14 @@ export class AdsCountiesService {
       adId,
       countyId,
       currentUserId: this.currentUserId
-    });
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   //Nope

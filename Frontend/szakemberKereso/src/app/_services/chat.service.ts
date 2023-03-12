@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { Chat } from '../_model/Chat';
 import { UsersService } from './users.service';
 
@@ -17,7 +17,14 @@ export class ChatService {
     return this.http.post<Chat[]>(`${this.apiUrl}getAllChatsByUserId`,{
       userId,
       currentUserId: this.userService.userData.userId
-    })
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   createChat(id: number){
@@ -25,7 +32,14 @@ export class ChatService {
       senderId: this.userService.userData.userId,
       receiverId: id,
       currentUserId: this.userService.userData.userId
-  })
+  }).pipe(
+    map((response: any)=> {
+      return response.result;
+    }),
+    catchError(error => {
+      return throwError(error);
+    })
+  );
   }
 
 }

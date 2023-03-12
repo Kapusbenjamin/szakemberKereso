@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { User } from 'src/app/_model/User';
 import { UserData } from 'src/app/_model/UserData';
 import { UsersService } from 'src/app/_services/users.service';
 
@@ -34,7 +35,7 @@ export class LoginFormComponent implements OnInit {
         phone = emailNumber;
       }
       let password = this.loginForm.controls['password'].value!;
-      this.usersService.loginUser(email,phone,password).subscribe((response: any)=>{
+      this.usersService.loginUser(email,phone,password).subscribe((response: User)=>{
         User = response;
         if(User.id! > 0){
           let userData: UserData ={

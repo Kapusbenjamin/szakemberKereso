@@ -12,6 +12,9 @@
             <app-input [control]="field.control" [type]="field.type" [name]="field.name"></app-input>
             <mat-error *ngIf="field.control.hasError('required') && field.control.touched">Mező kitöltése
               kötelező</mat-error>
+              <mat-error *ngIf="field.control.hasError('pattern')">
+                Tartalmazzon legalább 8 karaktert, kis és nagy betűt, számot, és speciális karaktert
+              </mat-error>
             </div>
             <mat-error *ngIf="registForm.hasError('notSame') &&
             registForm.controls['passwordConfirm'].value != '' ">A jelszavak nem egyeznek</mat-error>

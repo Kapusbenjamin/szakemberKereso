@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Field } from 'src/app/_model/Field';
 import { Tag } from 'src/app/_model/Tag';
-import { User } from 'src/app/_model/User';
 import { JobTagsService } from 'src/app/_services/job-tags.service';
+import { UsersJobsService } from 'src/app/_services/users-jobs.service';
 import { UsersService } from 'src/app/_services/users.service';
 import { DropdownValidator } from 'src/app/_validators/dropdown-validators';
 import { PasswordValidators } from 'src/app/_validators/password-validators';
@@ -35,7 +36,7 @@ export class RegistFormComponent implements OnInit {
     firstName: new FormControl('',[Validators.required]),
     email:new FormControl('',[Validators.required]),
     phone:new FormControl('',[Validators.required]),
-    password:new FormControl('',[Validators.required]),
+    password:new FormControl('',[Validators.required,Validators.minLength(8),Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)]),
     passwordConfirm: new FormControl('',[Validators.required]),
   });
 
@@ -49,7 +50,8 @@ export class RegistFormComponent implements OnInit {
   ];
 
 
-  constructor(private jobTagsService: JobTagsService, private userService: UsersService) { }
+  constructor(private jobTagsService: JobTagsService, private userService: UsersService,
+    private router: Router, private userJobs: UsersJobsService) { }
 
   ngOnInit(): void {
     this.registForm.addValidators([PasswordValidators.same('password','passwordConfirm')])
@@ -89,9 +91,17 @@ export class RegistFormComponent implements OnInit {
     let formValue = this.registForm.value!;
     delete formValue.passwordConfirm;
       if(this.professional){
-        this.userService.createUserWorker(formValue).subscribe();
+        this.userService.createUserWorker(formValue).subscribe((res)=>{
+          let userId = res;
+          let tagId = this.jobTagId.value!
+          this.userJobs.addNewJobToUser(userId,tagId,userId).subscribe()
+        });
       }else{
-        this.userService.createUser(formValue).subscribe();
+        this.userService.createUser(formValue).subscribe((res)=>{
+          if(res > 0){
+            this.router.navigateByUrl('login');
+          }
+        });
       }
     }else{
         alert("invalidForm");

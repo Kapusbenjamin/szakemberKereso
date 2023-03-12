@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { catchError, map, throwError } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { Tag } from '../_model/Tag';
 import { UsersService } from './users.service';
@@ -13,16 +14,30 @@ export class UsersJobsService {
 
   constructor(private http: HttpClient, private userService: UsersService) { }
 
-  addNewJobToUser(userId: number, tagId: number){
+  addNewJobToUser(userId: number, tagId: number,currentUserId:number ){
     return this.http.post(`${this.apiUrl}addNewJobToUser`,{
       userId: userId,
       jobTagId: tagId,
-      currentUserId: this.userService.userData.userId
-    });
+      currentUserId,
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   getAllJobsByUser(id: number):Observable<any[]>{
-    return this.http.get<any[]>(`${this.apiUrl}getAllJobsByUser/${id}`);
+    return this.http.get<any[]>(`${this.apiUrl}getAllJobsByUser/${id}`).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   deleteUserJob(userId: number, jobTagId: number){
@@ -30,7 +45,14 @@ export class UsersJobsService {
       userId,
       jobTagId,
       currentUserId: this.userService.userData.userId
-   });
+   }).pipe(
+    map((response: any)=> {
+      return response.result;
+    }),
+    catchError(error => {
+      return throwError(error);
+    })
+  );
   }
 
 }

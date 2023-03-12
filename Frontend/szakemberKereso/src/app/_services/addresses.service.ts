@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { catchError, map, throwError } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { Address } from '../_model/Address';
 import { UsersService } from './users.service';
@@ -14,15 +15,36 @@ export class AddressesService {
   constructor(private http: HttpClient, private userService: UsersService) { }
 
   getAddressById(id: number):Observable<Address>{
-    return this.http.get<Address>(`${this.apiUrl}getAddressById/${id}`);
+    return this.http.get<Address>(`${this.apiUrl}getAddressById/${id}`).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   createAddress(address: Address){
-    return this.http.post(`${this.apiUrl}createAddress`,address);
+    return this.http.post(`${this.apiUrl}createAddress`,address).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   updateAddressById(address:Address){
-    return this.http.post(`${this.apiUrl}updateAddressById`,address);
+    return this.http.post(`${this.apiUrl}updateAddressById`,address).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   deleteAddressById(id: number){
@@ -30,7 +52,14 @@ export class AddressesService {
     return this.http.post(`${this.apiUrl}deleteAddressById`,{
       id,
       currentUserId
-    });
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
 }
