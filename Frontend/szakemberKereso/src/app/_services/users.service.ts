@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { User } from '../_model/User';
 import { UserData } from '../_model/UserData';
 
@@ -19,11 +18,25 @@ export class UsersService {
     return this.http.post<User>(`${this.apiUrl}getUserById`,{
       id,
       currentUserId: this.userData.userId
-    });
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   getAllUsers():Observable<User[]>{
-    return this.http.post<User[]>(`${this.apiUrl}getAllUsers`,this.userData.userId);
+    return this.http.post<User[]>(`${this.apiUrl}getAllUsers`,this.userData.userId).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   loginUser(email:string | null, phone:string | null, password:string): Observable<User>{
@@ -32,19 +45,50 @@ export class UsersService {
       phone: phone,
       password: password
     }
-    return this.http.post<User>(`${this.apiUrl}loginUser`,user);
+    return this.http.post<User>(`${this.apiUrl}loginUser`,user).pipe(
+      map((response: any)=> {
+        console.log(response.message);
+        if(response.message == "Sikeresen bejelentkezett!"){
+          return response.result;
+        }
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   logoutUser(){
-    return this.http.post(`${this.apiUrl}logoutUser`,this.userData.userId)
+    return this.http.post(`${this.apiUrl}logoutUser`,this.userData.userId).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   createUser(user:any):Observable<any>{
-    return this.http.post<any>(`${this.apiUrl}createUser`,user);
+    return this.http.post<any>(`${this.apiUrl}createUser`,user).pipe(
+      map((response: any)=> {
+          return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   createUserWorker(user: any){
-    return this.http.post(`${this.apiUrl}createUserWorker`,user);
+    return this.http.post(`${this.apiUrl}createUserWorker`,user).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   updateUser(id: number, user: User){
@@ -55,21 +99,42 @@ export class UsersService {
       email: user.email,
       phone: user.phone,
       currentUserId: this.userData.userId
-    })
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   deleteUser(id: number){
     return this.http.post(`${this.apiUrl}deleteUser`,{
       id,
       currentUserId: this.userData.userId
-    });
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   changeAccess(id: number){
     return this.http.post(`${this.apiUrl}changeAccess`,{
       id,
       currentUserId: this.userData.userId
-    });
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   changePassword(id:number, password: string){
@@ -77,7 +142,14 @@ export class UsersService {
       id,
       password,
       currentUserId: this.userData.userId
-    });
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   getUserData(){

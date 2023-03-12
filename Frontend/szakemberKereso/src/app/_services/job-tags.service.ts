@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { catchError, map, throwError } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { Tag } from '../_model/Tag';
 
@@ -14,11 +15,29 @@ export class JobTagsService {
   constructor(private http:HttpClient) { }
 
   getAllJobTags():Observable<Tag[]>{
-    return this.http.get<Tag[]>(`${this.apiUrl}getAllJobTags`);
+    return this.http.get<Tag[]>(`${this.apiUrl}getAllJobTags`).pipe(
+      map((response: any) => {
+        if (response.message == "Sikeresen lekérte az összes szakmát!") {
+          return response.result;
+        }
+      }),
+      catchError((error: any) => {
+        return throwError(error);
+      })
+    );
   }
 
   getJobTagById(id: number):Observable<Tag>{
-    return this.http.get<Tag>(`${this.apiUrl}getJobTagById/${id}`);
+    return this.http.get<Tag>(`${this.apiUrl}getJobTagById/${id}`).pipe(
+      map((response: any) => {
+        if (response.message == "Sikeresen lekérte a szakmát!") {
+          return response.result;
+        }
+      }),
+      catchError((error: any) => {
+        return throwError(error);
+      })
+    );
   }
 
 }

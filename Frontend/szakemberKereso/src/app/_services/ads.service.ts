@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { Ad } from '../_model/Ad';
 import { UsersService } from './users.service';
 
@@ -22,7 +22,14 @@ export class AdsService {
       jobTagId,
       description,
       currentUserId: this.currentUserId
-    })
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   updateAd(id: number, description: string){
@@ -30,48 +37,113 @@ export class AdsService {
       id,
       description,
       currentUserId: this.currentUserId
-    });
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
   
   deleteAd(id: number){
     return this.http.post(`${this.apiUrl}deleteAd`,{
       id,
       currentUserId: this.currentUserId
-    })
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
-  getAllAcceptedAds():Observable<any>{
-    return this.http.get(`${this.apiUrl}getAllAcceptedAds`,);
-  }
+getAllAcceptedAds(): Observable<any> {
+  return this.http.get(`${this.apiUrl}getAllAcceptedAds`).pipe(
+    map((response: any) => {
+      if (response.message == "Sikeresen lekérte az elfogadott hirdetéseket!") {
+        return response.result;
+      }
+    }),
+    catchError((error: any) => {
+      return throwError(error);
+    })
+  );
+}
 
   filteringAds(filter:Object):Observable<Ad[]>{
-    return this.http.post<Ad[]>(`${this.apiUrl}filteringAds`,filter);
+    return this.http.post<Ad[]>(`${this.apiUrl}filteringAds`,filter).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   getAllNonAcceptedAds():Observable<any>{
-    return this.http.post<any>(`${this.apiUrl}getAllNonAcceptedAds`,this.userService.userData.userId);
+    return this.http.post<any>(`${this.apiUrl}getAllNonAcceptedAds`,this.userService.userData.userId).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   acceptAd(id: number){
     return this.http.post(`${this.apiUrl}acceptAd`,{
       id,
       currentUserId: this.currentUserId
-    })
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
   
   getAllAds(){
-    return this.http.post(`${this.apiUrl}getAllAds`,this.currentUserId)
+    return this.http.post(`${this.apiUrl}getAllAds`,this.currentUserId).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
   
   getAdById(id: number): Observable<Ad>{
-    return this.http.get<Ad>(`${this.apiUrl}getAdsById/${id}`)
+    return this.http.get<Ad>(`${this.apiUrl}getAdsById/${id}`).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
   
   getAllAdsByUserId(userId: number){
     return this.http.post(`${this.apiUrl}getAllAdsByUserId`,{
       userId,
       currentUserId: this.currentUserId
-    })
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
 }

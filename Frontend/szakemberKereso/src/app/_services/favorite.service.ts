@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { catchError, map, throwError } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { Ad } from '../_model/Ad';
 import { UsersService } from './users.service';
@@ -20,14 +21,28 @@ export class FavoriteService {
     return this.http.post(`${this.apiUrl}getFavoriteById`,{
       id,
       currentUserId: this.currentUserId
-    })
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   getAllfavoritesByUserId(userId: number): Observable<any[]>{
     return this.http.post<any[]>(`${this.apiUrl}getAllfavoritesByUserId`,{
       userId,
       currentUserId: this.currentUserId
-    })
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   addFavorite(userId: number, adId: number){
@@ -35,14 +50,28 @@ export class FavoriteService {
       userId,
       adId,
       currentUserId: this.currentUserId
-    })
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
   deleteFavorite(id: number){
     return this.http.post(`${this.apiUrl}deleteFavorite`,{
       id,
       currentUserId: this.currentUserId
-    })
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
   }
 
 

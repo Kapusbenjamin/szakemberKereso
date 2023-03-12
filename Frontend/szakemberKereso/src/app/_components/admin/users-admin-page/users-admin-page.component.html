@@ -1,6 +1,6 @@
 <div class="container">
     <div *ngIf="users" class="row">
-        <mat-table [dataSource]="users" matSort>
+        <mat-table [dataSource]="dataSource" matSort>
 
             <!-- Columns -->
             <ng-container matColumnDef="id" >
