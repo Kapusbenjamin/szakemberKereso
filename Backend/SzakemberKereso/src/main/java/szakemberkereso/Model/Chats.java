@@ -61,10 +61,18 @@ public class Chats implements Serializable {
     @Transient
     @JsonInclude
     private Integer currentUserId;
-    //sender vagy receiver miatt
+    //sender vagy receiver miatt (nem tudja melyik)
     @Transient
     @JsonInclude
     private Integer userId;
+    //id miatt
+    @Transient
+    @JsonInclude
+    private Users sender;
+    //id miatt
+    @Transient
+    @JsonInclude
+    private Users receiver;
     
     public Chats() {
     }
@@ -119,6 +127,22 @@ public class Chats implements Serializable {
         this.userId = userId;
     }
 
+    public Users getSender() {
+        return sender;
+    }
+
+    public void setSender(Users sender) {
+        this.sender = sender;
+    }
+
+    public Users getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(Users receiver) {
+        this.receiver = receiver;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -166,6 +190,8 @@ public class Chats implements Serializable {
                 Integer r_receiver_id = Integer.parseInt(r[2].toString());
                 
                 Chats c = new Chats(r_id, r_sender_id, r_receiver_id);
+                c.setSender(Users.getUserById(c.getSenderId()));
+                c.setReceiver(Users.getUserById(c.getReceiverId()));
                 chats.add(c);
             }
             

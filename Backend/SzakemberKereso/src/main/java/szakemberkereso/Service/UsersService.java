@@ -11,6 +11,8 @@ import javax.mail.AuthenticationFailedException;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
 import szakemberkereso.Configuration.Roles;
+import szakemberkereso.Model.Addresses;
+import szakemberkereso.Model.Companies;
 import szakemberkereso.Model.Users;
 
 /**
@@ -135,6 +137,7 @@ public class UsersService {
     
     public Integer createUserWorker(Users user) throws Exception{
         //Business logic
+        //nem kötelező cím adatok
         if(user.getAddress().getStaircase() == null){
             user.getAddress().setStaircase("");
         }
@@ -144,14 +147,25 @@ public class UsersService {
         if(user.getAddress().getDoor() == null){
             user.getAddress().setDoor(-1);
         }
-        if(user.getCompany().getAddress().getStaircase() == null){
-            user.getCompany().getAddress().setStaircase("");
+        
+        //cég nem kötelező
+        if(user.getCompany() != null){
+            if(user.getCompany().getAddress().getStaircase() == null){
+                user.getCompany().getAddress().setStaircase("");
+            }
+            if(user.getCompany().getAddress().getFloor() == null){
+                user.getCompany().getAddress().setFloor(-1);
+            }
+            if(user.getCompany().getAddress().getDoor() == null){
+                user.getCompany().getAddress().setDoor(-1);
+            }
         }
-        if(user.getCompany().getAddress().getFloor() == null){
-            user.getCompany().getAddress().setFloor(-1);
-        }
-        if(user.getCompany().getAddress().getDoor() == null){
-            user.getCompany().getAddress().setDoor(-1);
+        else{
+            //minden adat beállítása a megfelelő értékre, hogy ne legyen hiba és ne hozzon létre céget
+            Companies c = new Companies(null, "", -1, "");
+            Addresses a = new Addresses(null, -1, -1, "", "", "", "", -1, -1);
+            c.setAddress(a);
+            user.setCompany(c);
         }
         
         Integer result = Users.createUserWorker(user);

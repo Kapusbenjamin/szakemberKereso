@@ -185,7 +185,9 @@ public class Companies implements Serializable {
                 Integer r_address_id = Integer.parseInt(r[2].toString());
                 String r_tax_number = r[3].toString();
 
-                return new Companies(r_id, r_name, r_address_id, r_tax_number);
+                Companies c = new Companies(r_id, r_name, r_address_id, r_tax_number);
+                c.setAddress(Addresses.getAddressById(c.getAddressId()));
+                return c;
             }
         } 
         catch(NotFoundException e){

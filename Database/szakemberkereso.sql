@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2023. Már 09. 19:54
+-- Létrehozás ideje: 2023. Már 12. 17:53
 -- Kiszolgáló verziója: 10.4.22-MariaDB
 -- PHP verzió: 8.0.13
 
@@ -339,8 +339,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createUserWorker` (IN `first_name_i
     CALL `createAddress`(county_id_in, zip_code_in, city_in, street_in, number_in, staircase_in, floor_in, door_in);
     SELECT LAST_INSERT_ID() INTO address_id;
     
-    CALL `createCompany`(company_name_in, premise_county_id_in, premise_zip_code_in, premise_city_in, premise_street_in, premise_number_in, premise_staircase_in, premise_floor_in, premise_door_in, tax_number_in);
-    SELECT LAST_INSERT_ID() INTO company_id;
+    IF(company_name_in = "")
+    	THEN 
+        	SET company_id = NULL;
+    ELSE
+    	CALL `createCompany`(company_name_in, premise_county_id_in, premise_zip_code_in, premise_city_in, premise_street_in, premise_number_in, premise_staircase_in, premise_floor_in, premise_door_in, tax_number_in);
+    	SELECT LAST_INSERT_ID() INTO company_id;
+    END IF;
     
 	INSERT INTO `users`
     (
@@ -569,6 +574,10 @@ AND `ads`.`job_tag_id` = job_tag_id_in
 AND `ads`.`status` = 1
 AND `ads`.`deleted` != 1$$
 
+DROP PROCEDURE IF EXISTS `getImageById`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getImageById` (IN `id_in` INT(11))  SELECT * FROM `images`
+WHERE `images`.`id` = id_in$$
+
 DROP PROCEDURE IF EXISTS `getImagesByUserId`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getImagesByUserId` (IN `user_id_in` INT(11))  SELECT * FROM `images`
 WHERE `images`.`user_id` = user_id_in$$
@@ -774,7 +783,8 @@ INSERT INTO `addresses` (`id`, `county_id`, `zip_code`, `city`, `street`, `numbe
 (61, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
 (62, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
 (63, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(64, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL);
+(64, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
+(67, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1144,7 +1154,8 @@ INSERT INTO `users` (`id`, `first_name`, `last_name`, `access_type`, `email`, `p
 (8, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 3, 39, -1, NULL, NULL, NULL, '2023-01-28 15:00:51', NULL, '2023-02-24 12:08:22', 0),
 (9, 'TESZT', 'AA', 0, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 43, -1, NULL, NULL, NULL, '2023-02-16 16:16:26', NULL, '2023-02-24 12:08:19', 0),
 (10, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 5, 44, -1, NULL, NULL, NULL, '2023-02-16 16:16:31', NULL, '2023-02-24 12:08:16', 0),
-(19, 'TESZT', 'AA', 1, 'bkap100@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 12, 61, 1, NULL, NULL, '2023-02-24 10:59:18', '2023-02-23 18:29:08', '2023-02-23 18:30:16', '2023-02-24 10:59:18', 0);
+(19, 'TESZT', 'AA', 1, 'bkap100@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 12, 61, 1, NULL, NULL, '2023-02-24 10:59:18', '2023-02-23 18:29:08', '2023-02-23 18:30:16', '2023-02-24 10:59:18', 0),
+(22, 'TESZT', 'AA', 1, 'regteszt@teszt-user.hu', '+36123456789', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', NULL, 67, -1, 'LOIAopdH4Um0avA1EMKbgicAUoXkskpfsZ6StFT1', '2023-03-12 17:00:52', NULL, '2023-03-12 16:50:52', NULL, '2023-03-12 16:50:52', 0);
 
 -- --------------------------------------------------------
 
@@ -1263,7 +1274,7 @@ ALTER TABLE `users_jobs`
 -- AUTO_INCREMENT a táblához `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT a táblához `ads`
@@ -1287,7 +1298,7 @@ ALTER TABLE `chats`
 -- AUTO_INCREMENT a táblához `companies`
 --
 ALTER TABLE `companies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT a táblához `counties`
@@ -1335,7 +1346,7 @@ ALTER TABLE `ratings`
 -- AUTO_INCREMENT a táblához `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT a táblához `users_jobs`

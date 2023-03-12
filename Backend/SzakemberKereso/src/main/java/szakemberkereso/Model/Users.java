@@ -155,6 +155,10 @@ public class Users implements Serializable {
     @Transient
     @JsonInclude
     private Companies company;
+    //szakmák
+    @Transient
+    @JsonInclude
+    private List<JobTags> jobTags;
     
     public Users() {
     }
@@ -342,6 +346,14 @@ public class Users implements Serializable {
     public void setCurrentUserId(Integer currentUserId) {
         this.currentUserId = currentUserId;
     }
+
+    public List<JobTags> getJobTags() {
+        return jobTags;
+    }
+
+    public void setJobTags(List<JobTags> jobTags) {
+        this.jobTags = jobTags;
+    }
     
     @Override
     public int hashCode() {
@@ -368,7 +380,7 @@ public class Users implements Serializable {
         return "szakemberkereso.Model.Users[ id=" + id + " ]";
     }
     
-    public static Users objectToUser(Object[] o) throws ParseException{
+    public static Users objectToUser(Object[] o) throws ParseException, Exception{
         Integer o_id = o[0] != null ? Integer.parseInt(o[0].toString()) : null;
         String o_first_name = o[1].toString();
         String o_last_name = o[2].toString();
@@ -387,7 +399,13 @@ public class Users implements Serializable {
         Date o_updated_at = Timestamp.valueOf(o[15].toString());
         Integer o_deleted = Integer.parseInt(o[16].toString());
 
-        return new Users(o_id, o_first_name, o_last_name, o_access_type, o_email, o_phone, o_password, o_company_id, o_address_id, o_status, o_token, o_token_expired_at, o_last_login_at, o_created_at, o_activated_at, o_updated_at, o_deleted);
+        Users u = new Users(o_id, o_first_name, o_last_name, o_access_type, o_email, o_phone, o_password, o_company_id, o_address_id, o_status, o_token, o_token_expired_at, o_last_login_at, o_created_at, o_activated_at, o_updated_at, o_deleted);
+        
+        u.setCompany(Companies.getCompanyById(u.getCompanyId()));
+        u.setAddress(Addresses.getAddressById(u.getAddressId()));
+        u.setJobTags(UsersJobs.getAllJobsByUser(u.getId()));
+        
+        return u;
     }
     
     public static Users getUserById(Integer id_in) throws Exception{

@@ -104,6 +104,14 @@ public class Jobs implements Serializable {
     @Transient
     @JsonInclude
     private Integer currentUserId;
+    //id miatt
+    @Transient
+    @JsonInclude
+    private Users customer;
+    //id miatt
+    @Transient
+    @JsonInclude
+    private Users worker;
     
     public Jobs() {
     }
@@ -213,6 +221,22 @@ public class Jobs implements Serializable {
         this.currentUserId = currentUserId;
     }
 
+    public Users getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Users customer) {
+        this.customer = customer;
+    }
+
+    public Users getWorker() {
+        return worker;
+    }
+
+    public void setWorker(Users worker) {
+        this.worker = worker;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -239,7 +263,7 @@ public class Jobs implements Serializable {
     }
     
     
-    public static Jobs objectToJob(Object[] o){
+    public static Jobs objectToJob(Object[] o) throws Exception{
         Integer o_id = Integer.parseInt(o[0].toString());
         String o_description = o[1].toString();
         Integer o_total = Integer.parseInt(o[2].toString());
@@ -251,7 +275,10 @@ public class Jobs implements Serializable {
         Date o_updated_at = Timestamp.valueOf(o[8].toString());
         Integer o_deleted = Integer.parseInt(o[9].toString());
 
-        return new Jobs(o_id, o_description, o_total, o_status, o_customer_id, o_worker_id, o_customer_accepted, o_worker_accepted, o_updated_at, o_deleted);
+        Jobs j = new Jobs(o_id, o_description, o_total, o_status, o_customer_id, o_worker_id, o_customer_accepted, o_worker_accepted, o_updated_at, o_deleted);
+        j.setCustomer(Users.getUserById(j.getCustomerId()));
+        j.setWorker(Users.getUserById(j.getWorkerId()));
+        return j;
     }
     
     public static Jobs getJobById(Jobs job_in) throws Exception{

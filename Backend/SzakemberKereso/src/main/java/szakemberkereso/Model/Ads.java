@@ -89,6 +89,14 @@ public class Ads implements Serializable {
     @Transient
     @JsonInclude
     private JobTags jobTag;
+    //id miatt
+    @Transient
+    @JsonInclude
+    private Users user;
+    //kapcsolótábla adatai
+    @Transient
+    @JsonInclude
+    private List<Counties> counties;
     
     //jogosultság miatt
     @Transient
@@ -197,6 +205,22 @@ public class Ads implements Serializable {
         this.jobTag = jobTag;
     }
 
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
+    }
+
+    public List<Counties> getCounties() {
+        return counties;
+    }
+
+    public void setCounties(List<Counties> counties) {
+        this.counties = counties;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -233,6 +257,17 @@ public class Ads implements Serializable {
 
         Ads ad = new Ads(o_id, o_user_id, o_job_tag_id, o_desc, o_updated_at, o_status, o_deleted);
         ad.setJobTag(JobTags.getJobTagById(ad.getJobTagId()));
+        ad.setUser(Users.getUserById(ad.getUserId()));
+        ad.setCounties(AdsCounties.getAllCountiesByAd(ad.getId()));
+        
+//        ad.getUser().setActivatedAt(null);
+//        ad.getUser().setCreatedAt(null);
+//        ad.getUser().setDeleted(null);
+//        ad.getUser().setLastLoginAt(null);
+//        ad.getUser().setStatus(null);
+//        ad.getUser().setUpdatedAt(null);
+//        ad.getUser().setAccessType(null);
+        
         return ad;
     }
             

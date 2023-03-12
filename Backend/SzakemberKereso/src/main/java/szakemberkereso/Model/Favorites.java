@@ -61,6 +61,10 @@ public class Favorites implements Serializable {
     @Transient
     @JsonInclude
     private Integer currentUserId;
+    //id miatt
+    @Transient
+    @JsonInclude
+    private Ads ad;
     
     public Favorites() {
     }
@@ -107,6 +111,14 @@ public class Favorites implements Serializable {
         this.currentUserId = currentUserId;
     }
 
+    public Ads getAd() {
+        return ad;
+    }
+
+    public void setAd(Ads ad) {
+        this.ad = ad;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -132,12 +144,14 @@ public class Favorites implements Serializable {
         return "szakemberkereso.Model.Favorites[ id=" + id + " ]";
     }
     
-    public static Favorites objectToFavorite(Object[] o){
+    public static Favorites objectToFavorite(Object[] o) throws Exception{
         Integer o_id = Integer.parseInt(o[0].toString());
         Integer o_user_id = Integer.parseInt(o[1].toString());
         Integer o_ad_id = Integer.parseInt(o[2].toString());
 
-        return new Favorites(o_id, o_user_id, o_ad_id);
+        Favorites f = new Favorites(o_id, o_user_id, o_ad_id);
+        f.setAd(Ads.getAdsById(f.getAdId()));
+        return f;
     }
     
     public static List<Favorites> getAllfavoritesByUserId(Integer user_id_in) throws Exception{

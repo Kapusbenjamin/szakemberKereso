@@ -94,6 +94,14 @@ public class Ratings implements Serializable {
     @Transient
     @JsonInclude
     private Integer currentUserId;
+    //id miatt
+    @Transient
+    @JsonInclude
+    private Users ratinger;
+    //id miatt
+    @Transient
+    @JsonInclude
+    private Users ratinged;
     
     public Ratings() {
     }
@@ -185,6 +193,22 @@ public class Ratings implements Serializable {
         this.currentUserId = currentUserId;
     }
 
+    public Users getRatinger() {
+        return ratinger;
+    }
+
+    public void setRatinger(Users ratinger) {
+        this.ratinger = ratinger;
+    }
+
+    public Users getRatinged() {
+        return ratinged;
+    }
+
+    public void setRatinged(Users ratinged) {
+        this.ratinged = ratinged;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -210,7 +234,7 @@ public class Ratings implements Serializable {
         return "szakemberkereso.Model.Ratings[ id=" + id + " ]";
     }
     
-    public static Ratings objectToRating(Object[] o){
+    public static Ratings objectToRating(Object[] o) throws Exception{
         Integer o_id = Integer.parseInt(o[0].toString());
         Integer o_ratinged_user_id = Integer.parseInt(o[1].toString());
         Integer o_ratinger_user_id = Integer.parseInt(o[2].toString());
@@ -220,7 +244,12 @@ public class Ratings implements Serializable {
         Date o_updated_at = Timestamp.valueOf(o[6].toString());
         Integer o_deleted = Integer.parseInt(o[7].toString());
 
-        return new Ratings(o_id, o_ratinged_user_id, o_ratinger_user_id, o_description, o_ratings_stars, o_status, o_updated_at, o_deleted);
+        Ratings rating = new Ratings(o_id, o_ratinged_user_id, o_ratinger_user_id, o_description, o_ratings_stars, o_status, o_updated_at, o_deleted);
+        
+        rating.setRatinged(Users.getUserById(rating.getRatingedUserId()));
+        rating.setRatinger(Users.getUserById(rating.getRatingerUserId()));
+        
+        return rating;
     }
 
     public static Ratings getRatingById(Integer id_in) throws Exception{
