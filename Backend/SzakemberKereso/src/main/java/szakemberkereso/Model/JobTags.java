@@ -152,11 +152,11 @@ public class JobTags implements Serializable {
             
             spq.execute();
             
-            if(spq.getUpdateCount() < 1){
+            List<Object[]> result = spq.getResultList();
+            if(result.isEmpty()){
                 throw new NotFoundException("Nincs ilyen szakma!");
             }
             else{
-                List<Object[]> result = spq.getResultList();
                 Object[] r = result.get(0);
 
                 Integer r_id = Integer.parseInt(r[0].toString());
