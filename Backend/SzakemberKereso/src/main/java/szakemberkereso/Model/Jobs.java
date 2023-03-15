@@ -293,16 +293,16 @@ public class Jobs implements Serializable {
             spq.setParameter("id_in", job_in.getId());
             
             spq.execute();
+            List<Object[]> result = spq.getResultList();
             
-            if(spq.getUpdateCount() < 1){
-                throw new NotFoundException("Nincs ilyen munka!");
-            }
-            else{
-                List<Object[]> result = spq.getResultList();
+            if(!result.isEmpty()){
                 Object[] r = result.get(0);
                 Jobs j = Jobs.objectToJob(r);
 
                 return j;
+            }
+            else{
+                throw new NotFoundException("Nincs ilyen munka!");
             }
         } 
         catch(NotFoundException e){
@@ -318,7 +318,7 @@ public class Jobs implements Serializable {
         }
     }
     
-    public static Boolean deleteJob(Jobs job_in) throws Exception{
+    public static void deleteJob(Jobs job_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -326,12 +326,13 @@ public class Jobs implements Serializable {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteJob");
             
             spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
-            
             spq.setParameter("id_in", job_in.getId());
             
             spq.execute();
             
-            return true;
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen munka!");
+            }
         } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
@@ -346,7 +347,7 @@ public class Jobs implements Serializable {
         }
     }
     
-    public static Boolean changeJobStatus(Jobs job) throws Exception{
+    public static void changeJobStatus(Jobs job) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -354,13 +355,14 @@ public class Jobs implements Serializable {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("changeJobStatus");
             
             spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
-            
             spq.setParameter("id_in", job.getId());
             
             spq.execute();
             
-            return true;
-        }
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen munka!");
+            }
+        } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
         }
@@ -416,7 +418,7 @@ public class Jobs implements Serializable {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllJobsByWorker");
             
             spq.registerStoredProcedureParameter("worker_id_in", Integer.class, ParameterMode.IN);
-            spq.setParameter("worker_id_in", job_in.getWorkerId());
+            spq.setParameter("worker_id_in", Users.getUserById(job_in.getWorkerId()).getId());
             
             spq.execute();
             
@@ -452,7 +454,7 @@ public class Jobs implements Serializable {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllJobsByCustomer");
             
             spq.registerStoredProcedureParameter("customer_id_in", Integer.class, ParameterMode.IN);
-            spq.setParameter("customer_id_in", job_in.getCustomerId());
+            spq.setParameter("customer_id_in", Users.getUserById(job_in.getCustomerId()).getId());
             
             spq.execute();
             
@@ -478,7 +480,7 @@ public class Jobs implements Serializable {
         }
     }
     
-    public static String createJob(Jobs job) throws Exception{
+    public static void createJob(Jobs job) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -489,12 +491,11 @@ public class Jobs implements Serializable {
             spq.registerStoredProcedureParameter("worker_id_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("desc_in", String.class, ParameterMode.IN);
             
-            spq.setParameter("customer_id_in", job.getCustomerId());
-            spq.setParameter("worker_id_in", job.getWorkerId());
+            spq.setParameter("customer_id_in", Users.getUserById(job.getCustomerId()).getId());
+            spq.setParameter("worker_id_in", Users.getUserById(job.getWorkerId()).getId());
             spq.setParameter("desc_in", job.getDescription());
 
             spq.execute();
-            return "Sikeresen létrejött a munka";
         } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
@@ -510,7 +511,7 @@ public class Jobs implements Serializable {
         
     }
     
-    public static String updateJobByWorker(Jobs job) throws Exception{
+    public static void updateJobByWorker(Jobs job) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -524,8 +525,11 @@ public class Jobs implements Serializable {
             spq.setParameter("total_in", job.getTotal());
 
             spq.execute();
-            return "Sikeresen módosult a munka";
-        }
+            
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen munka!");
+            }
+        } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
         }
@@ -537,10 +541,9 @@ public class Jobs implements Serializable {
             em.close();
             emf.close();
         }
-        
     }
     
-    public static String updateJobByCustomer(Jobs job) throws Exception{
+    public static void updateJobByCustomer(Jobs job) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -554,63 +557,10 @@ public class Jobs implements Serializable {
             spq.setParameter("desc_in", job.getDescription());
 
             spq.execute();
-            return "Sikeresen módosult a munka";
-        }
-        catch(NotFoundException e){
-            throw new NotFoundException(e.getMessage());
-        }
-        catch(Exception e){
-            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
-        }
-        finally{
-            em.clear();
-            em.close();
-            emf.close();
-        }
-        
-    }
-    
-    public static Boolean acceptByWorker(Jobs job) throws Exception{
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
-        EntityManager em = emf.createEntityManager();
-        
-        try {            
-            StoredProcedureQuery spq = em.createStoredProcedureQuery("acceptByWorker");
             
-            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
-
-            spq.setParameter("id_in", job.getId());
-
-            spq.execute();
-            return true;
-        }
-        catch(NotFoundException e){
-            throw new NotFoundException(e.getMessage());
-        }
-        catch(Exception e){
-            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
-        }
-        finally{
-            em.clear();
-            em.close();
-            emf.close();
-        }
-        
-    }
-    
-    public static Boolean acceptByCustomer(Jobs job) throws Exception{
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
-        EntityManager em = emf.createEntityManager();
-        
-        try {            
-            StoredProcedureQuery spq = em.createStoredProcedureQuery("acceptByCustomer");
-            
-            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
-
-            spq.setParameter("id_in", job.getId());
-
-            spq.execute();
-            return true;
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen munka!");
+            }
         } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
@@ -623,9 +573,64 @@ public class Jobs implements Serializable {
             em.close();
             emf.close();
         }
-        
     }
     
+    public static void acceptByWorker(Jobs job) throws Exception{
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("acceptByWorker");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            spq.setParameter("id_in", job.getId());
+
+            spq.execute();
+            
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen munka!");
+            }
+        } 
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
     
+    public static void acceptByCustomer(Jobs job) throws Exception{
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("acceptByCustomer");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            spq.setParameter("id_in", job.getId());
+
+            spq.execute();
+            
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen munka!");
+            }
+        } 
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
     
 }

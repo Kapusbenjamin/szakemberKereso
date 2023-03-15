@@ -260,20 +260,19 @@ public class Ratings implements Serializable {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("getRatingById");
             
             spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
-            
             spq.setParameter("id_in", id_in);
             
             spq.execute();
+            List<Object[]> result = spq.getResultList();
             
-            if(spq.getUpdateCount() < 1){
-                throw new NotFoundException("Nincs ilyen értékelés!");
-            }
-            else{
-                List<Object[]> result = spq.getResultList();
+            if(!result.isEmpty()){
                 Object[] r = result.get(0);
 
                 Ratings rating = Ratings.objectToRating(r);
                 return rating;
+            }
+            else{
+                throw new NotFoundException("Nincs ilyen értékelés!");
             }
         } 
         catch(NotFoundException e){
@@ -362,7 +361,7 @@ public class Ratings implements Serializable {
         try {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllRatingsByRatinger");            
             spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
-            spq.setParameter("user_id_in", user_id_in);
+            spq.setParameter("user_id_in", Users.getUserById(user_id_in).getId());
             
             spq.execute();
             
@@ -397,7 +396,7 @@ public class Ratings implements Serializable {
         try {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllRatingsByRatinged");            
             spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
-            spq.setParameter("user_id_in", user_id_in);
+            spq.setParameter("user_id_in", Users.getUserById(user_id_in).getId());
             
             spq.execute();
             
@@ -423,7 +422,7 @@ public class Ratings implements Serializable {
         }
     }
     
-    public static Boolean updateRatingById(Ratings rating) throws Exception{
+    public static void updateRatingById(Ratings rating) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -440,35 +439,9 @@ public class Ratings implements Serializable {
             
             spq.execute();
             
-            return true;
-        }
-        catch(NotFoundException e){
-            throw new NotFoundException(e.getMessage());
-        }
-        catch(Exception e){
-            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
-        }
-        finally{
-            em.clear();
-            em.close();
-            emf.close();
-        }
-    }
-    
-    public static Boolean acceptRating(Integer id_in) throws Exception{
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
-        EntityManager em = emf.createEntityManager();
-        
-        try {
-            StoredProcedureQuery spq = em.createStoredProcedureQuery("acceptRating");
-            
-            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
-            
-            spq.setParameter("id_in", id_in);
-            
-            spq.execute();
-            
-            return true;
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen értékelés!");
+            }
         } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
@@ -483,21 +456,22 @@ public class Ratings implements Serializable {
         }
     }
     
-    public static Boolean deleteRatingById(Integer id_in) throws Exception{
+    public static void acceptRating(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
         try {
-            StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteRatingById");
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("acceptRating");
             
             spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
-            
             spq.setParameter("id_in", id_in);
             
             spq.execute();
             
-            return true;
-        }
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen értékelés!");
+            }
+        } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
         }
@@ -511,7 +485,36 @@ public class Ratings implements Serializable {
         }
     }
     
-    public static String createRating(Ratings rating) throws Exception{
+    public static void deleteRatingById(Integer id_in) throws Exception{
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteRatingById");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            spq.setParameter("id_in", id_in);
+            
+            spq.execute();
+            
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen értékelés!");
+            }
+        } 
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static void createRating(Ratings rating) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -523,14 +526,12 @@ public class Ratings implements Serializable {
             spq.registerStoredProcedureParameter("desc_in", String.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("ratings_stars_in", Integer.class, ParameterMode.IN);
             
-            spq.setParameter("ratinged_user_id_in", rating.getRatingedUserId());
-            spq.setParameter("ratinger_user_id_in", rating.getRatingerUserId());
+            spq.setParameter("ratinged_user_id_in", Users.getUserById(rating.getRatingedUserId()).getId());
+            spq.setParameter("ratinger_user_id_in", Users.getUserById(rating.getRatingerUserId()).getId());
             spq.setParameter("desc_in", rating.getDescription());
             spq.setParameter("ratings_stars_in", rating.getRatingsStars());
             
             spq.execute();
-            
-            return "Sikeresen létrejött a rating!";
         }
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());

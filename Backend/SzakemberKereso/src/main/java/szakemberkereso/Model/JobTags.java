@@ -151,12 +151,9 @@ public class JobTags implements Serializable {
             spq.setParameter("id_in", id_in);
             
             spq.execute();
-            
             List<Object[]> result = spq.getResultList();
-            if(result.isEmpty()){
-                throw new NotFoundException("Nincs ilyen szakma!");
-            }
-            else{
+            
+            if(!result.isEmpty()){
                 Object[] r = result.get(0);
 
                 Integer r_id = Integer.parseInt(r[0].toString());
@@ -165,7 +162,9 @@ public class JobTags implements Serializable {
                 JobTags jt = new JobTags(r_id, r_name);
                 return jt;
             }
-            
+            else{
+                throw new NotFoundException("Nincs ilyen szakma!");
+            }
         } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());

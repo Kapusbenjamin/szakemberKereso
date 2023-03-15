@@ -83,8 +83,8 @@ public class CompaniesController {
     public Response createCompany(Companies company){        
         JSONObject obj = new JSONObject();
         try{
-            String result = cs.createCompany(company);
-            obj.put("result", JSONObject.wrap(result));
+            cs.createCompany(company);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen létrehozta a céget!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -99,8 +99,8 @@ public class CompaniesController {
     public Response updateCompanyById(Companies company){        
         JSONObject obj = new JSONObject();
         try{
-            String result = cs.updateCompanyById(company);
-            obj.put("result", JSONObject.wrap(result));
+            cs.updateCompanyById(company);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen módosította a céget!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -115,8 +115,8 @@ public class CompaniesController {
     public Response deleteCompanyById(Companies company){        
         JSONObject obj = new JSONObject();
         try{
-            Boolean result = cs.deleteCompanyById(company);
-            obj.put("result", JSONObject.wrap(result));
+            cs.deleteCompanyById(company);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen törölte a céget!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }

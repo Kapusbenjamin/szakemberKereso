@@ -38,24 +38,20 @@ public class RatingsService {
         return result;
     }
             
-    public Boolean updateRatingById(Ratings rating) throws Exception{
-        Boolean result = Ratings.updateRatingById(rating);
-        return result;
+    public void updateRatingById(Ratings rating) throws Exception{
+        Ratings.updateRatingById(rating);
     }
             
-    public Boolean acceptRating(Integer id) throws Exception{
-        Boolean result = Ratings.acceptRating(id);
-        return result;
+    public void acceptRating(Integer id) throws Exception{
+        Ratings.acceptRating(id);
     }
             
-    public Boolean deleteRatingById(Integer id) throws Exception{
-        Boolean result = Ratings.deleteRatingById(id);
-        return result;
+    public void deleteRatingById(Integer id) throws Exception{
+        Ratings.deleteRatingById(id);
     }
     
-    public String createRating(Ratings rating) throws Exception{
-        String result = Ratings.createRating(rating);
-        return result;
+    public void createRating(Ratings rating) throws Exception{
+        Ratings.createRating(rating);
     }
           
 }

@@ -44,6 +44,8 @@ import org.apache.commons.lang.RandomStringUtils;
 import szakemberkereso.Configuration.Database;
 import szakemberkereso.Configuration.Email;
 import szakemberkereso.Configuration.Email.EmailConfig;
+import szakemberkereso.Exception.EmailException;
+import szakemberkereso.Exception.PasswordException;
 
 /**
  *
@@ -416,12 +418,11 @@ public class Users implements Serializable {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("getUserById");
             
             spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
-            
             spq.setParameter("id_in", id_in);
             
             spq.execute();
-            
             List<Object[]> result = spq.getResultList();
+            
             if(!result.isEmpty()){
                 Object[] r = result.get(0);
                 Users u = Users.objectToUser(r);
@@ -435,7 +436,6 @@ public class Users implements Serializable {
             else{
                 throw new NotFoundException("Nincs ilyen felhasználó!");
             }
-            
         } 
         catch (NotFoundException e) {
             throw new NotFoundException(e.getMessage());
@@ -466,22 +466,27 @@ public class Users implements Serializable {
             spq.setParameter("psw_in", psw_in);
             
             spq.execute();
-            
             List<Object[]> result = spq.getResultList();
-            Object[] r = result.get(0);
             
-            Integer r_id = Integer.parseInt(r[0].toString());
-            String r_first_name = r[1].toString();
-            String r_last_name = r[2].toString();
-            Integer r_access_type = Integer.parseInt(r[3].toString());
-            
-            Users u = new Users();
-            u.setId(r_id);
-            u.setFirstName(r_first_name);
-            u.setLastName(r_last_name);
-            u.setAccessType(r_access_type);
-            
-            return u;
+            if(!result.isEmpty()){
+                Object[] r = result.get(0);
+
+                Integer r_id = Integer.parseInt(r[0].toString());
+                String r_first_name = r[1].toString();
+                String r_last_name = r[2].toString();
+                Integer r_access_type = Integer.parseInt(r[3].toString());
+
+                Users u = new Users();
+                u.setId(r_id);
+                u.setFirstName(r_first_name);
+                u.setLastName(r_last_name);
+                u.setAccessType(r_access_type);
+
+                return u;
+            }
+            else{
+                throw new NotFoundException("Nincs ilyen felhasználó!");
+            }
         } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
@@ -496,7 +501,7 @@ public class Users implements Serializable {
         }
     }
     
-    public static Boolean logoutUser(Integer id_in) throws Exception{
+    public static void logoutUser(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -504,12 +509,13 @@ public class Users implements Serializable {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("logoutUser");
             
             spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
-            
             spq.setParameter("id_in", id_in);
             
             spq.execute();
             
-            return true;
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen felhasználó!");
+            }
         } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
@@ -524,7 +530,7 @@ public class Users implements Serializable {
         }
     }
     
-    public static Boolean deleteUser(Integer id_in) throws Exception{
+    public static void deleteUser(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -532,12 +538,13 @@ public class Users implements Serializable {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteUser");
             
             spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
-            
             spq.setParameter("id_in", id_in);
             
             spq.execute();
             
-            return true;
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen felhasználó!");
+            }
         } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
@@ -552,7 +559,7 @@ public class Users implements Serializable {
         }
     }
     
-    public static Boolean changeAccess(Integer id_in) throws Exception{
+    public static void changeAccess(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -560,13 +567,14 @@ public class Users implements Serializable {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("changeAccess");
             
             spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
-            
             spq.setParameter("user_id_in", id_in);
             
             spq.execute();
             
-            return true;
-        }
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen felhasználó!");
+            }
+        } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
         }
@@ -622,6 +630,7 @@ public class Users implements Serializable {
         boolean useNumbers = true;
         String token = RandomStringUtils.random(length, useLetters, useNumbers);
 
+        //jelszótitkosítás
         user.setPassword(DigestUtils.sha256Hex(user.getPassword()));
         
         try {            
@@ -648,7 +657,7 @@ public class Users implements Serializable {
             spq.setParameter("email_in", user.getEmail());
             spq.setParameter("phone_in", user.getPhone());
             spq.setParameter("password_in", user.getPassword());
-            spq.setParameter("county_id_in", user.getAddress().getCountyId());
+            spq.setParameter("county_id_in", Counties.getCountyById(user.getAddress().getCountyId()).getId());
             spq.setParameter("zip_code_in", user.getAddress().getZipCode());
             spq.setParameter("city_in", user.getAddress().getCity());
             spq.setParameter("street_in", user.getAddress().getStreet());
@@ -659,10 +668,10 @@ public class Users implements Serializable {
             spq.setParameter("token_in", token);
 
             spq.execute();
+            
             registrationEmail(user.getEmail(), token);
             
             Integer user_id = Integer.parseInt(spq.getOutputParameterValue("user_id_out").toString());
-            
             return user_id;
         }
         catch(NotFoundException e){
@@ -676,7 +685,6 @@ public class Users implements Serializable {
             em.close();
             emf.close();
         }
-        
     }
     
     public static Integer createUserWorker(Users user) throws Exception{
@@ -689,6 +697,7 @@ public class Users implements Serializable {
         boolean useNumbers = true;
         String token = RandomStringUtils.random(length, useLetters, useNumbers);
         
+        //jelszótitkosítás
         user.setPassword(DigestUtils.sha256Hex(user.getPassword()));
         
         try {            
@@ -725,7 +734,7 @@ public class Users implements Serializable {
             spq.setParameter("email_in", user.getEmail());
             spq.setParameter("phone_in", user.getPhone());
             spq.setParameter("password_in", user.getPassword());
-            spq.setParameter("county_id_in", user.getAddress().getCountyId());
+            spq.setParameter("county_id_in", Counties.getCountyById(user.getAddress().getCountyId()).getId());
             spq.setParameter("zip_code_in", user.getAddress().getZipCode());
             spq.setParameter("city_in", user.getAddress().getCity());
             spq.setParameter("street_in", user.getAddress().getStreet());
@@ -734,7 +743,7 @@ public class Users implements Serializable {
             spq.setParameter("floor_in", user.getAddress().getFloor());
             spq.setParameter("door_in", user.getAddress().getDoor());
             spq.setParameter("company_name_in", user.getCompany().getName());
-            spq.setParameter("premise_county_id_in", user.getCompany().getAddress().getCountyId());
+            spq.setParameter("premise_county_id_in", Counties.getCountyById(user.getCompany().getAddress().getCountyId()).getId());
             spq.setParameter("premise_zip_code_in", user.getCompany().getAddress().getZipCode());
             spq.setParameter("premise_city_in", user.getCompany().getAddress().getCity());
             spq.setParameter("premise_street_in", user.getCompany().getAddress().getStreet());
@@ -746,10 +755,10 @@ public class Users implements Serializable {
             spq.setParameter("token_in", token);
             
             spq.execute();
+            
             registrationEmail(user.getEmail(), token);
             
             Integer user_id = Integer.parseInt(spq.getOutputParameterValue("user_id_out").toString());
-            
             return user_id;
         }
         catch(NotFoundException e){
@@ -763,10 +772,9 @@ public class Users implements Serializable {
             em.close();
             emf.close();
         }
-        
     }
     
-    public static String updateUser(Users user) throws Exception{
+    public static void updateUser(Users user) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -786,8 +794,11 @@ public class Users implements Serializable {
             spq.setParameter("phone_in", user.getPhone());
 
             spq.execute();
-            return "Sikeresen módosult a user";
-        }
+            
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen felhasználó!");
+            }
+        } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
         }
@@ -799,10 +810,9 @@ public class Users implements Serializable {
             em.close();
             emf.close();
         }
-        
     }
     
-    public static String changePassword(Users user) throws Exception{
+    public static void changePassword(Users user) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -818,8 +828,11 @@ public class Users implements Serializable {
             spq.setParameter("password_in", user.getPassword());
 
             spq.execute();
-            return "Sikeresen módosult a user jelszava";
-        }
+            
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen felhasználó!");
+            }
+        } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
         }
@@ -831,10 +844,9 @@ public class Users implements Serializable {
             em.close();
             emf.close();
         }
-        
     }
     
-    public static Boolean resetPassword(String email, String password, String pwtoken) throws Exception{
+    public static void resetPassword(String email, String password, String pwtoken) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
 
@@ -850,10 +862,13 @@ public class Users implements Serializable {
             spq.setParameter("email_in", email);
             spq.setParameter("token_in", pwtoken);
             spq.setParameter("psw_in", password);
+            
             spq.execute();
 
-            return true;
-        }
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen felhasználó!");
+            }
+        } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
         }
@@ -866,10 +881,9 @@ public class Users implements Serializable {
             em.close();
             emf.close();
         }
-        
     }
     
-    public static Boolean forgotPassword(String email) throws Exception{
+    public static void forgotPassword(String email) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
 
@@ -887,12 +901,16 @@ public class Users implements Serializable {
 
             spq.setParameter("email_in", email);
             spq.setParameter("token_in", token);
+            
             spq.execute();
             
-            forgotPasswordEmail(email, token);
-            
-            return true;
-        }
+            if(spq.getUpdateCount() > 0){
+                forgotPasswordEmail(email, token);
+            }
+            else{
+                throw new NotFoundException("Nincs ilyen felhasználó!");
+            }
+        } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
         }
@@ -905,10 +923,9 @@ public class Users implements Serializable {
             em.close();
             emf.close();
         }
-        
     }
     
-    public static boolean forgotPasswordEmail(String email, String token){
+    public static void forgotPasswordEmail(String email, String token) throws Exception{
         try{
             //who will get the email
             String to = email;
@@ -944,14 +961,13 @@ public class Users implements Serializable {
             
             //Send the email
             Transport.send(message);
-            return true;
         }
-        catch(Exception ex){
-            return false;
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
     }
     
-    public static String validateEmailByToken(String token_in) throws Exception{
+    public static void validateEmailByToken(String token_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -959,11 +975,13 @@ public class Users implements Serializable {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("validateEmailByToken");
             
             spq.registerStoredProcedureParameter("token_in", String.class, ParameterMode.IN);
-
             spq.setParameter("token_in", token_in);
 
             spq.execute();
-            return "Sikeresen aktiválta a user-t és email-t";
+            
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen felhasználó!");
+            }
         } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
@@ -976,10 +994,9 @@ public class Users implements Serializable {
             em.close();
             emf.close();
         }
-        
     }
     
-    public static Boolean registrationEmail(String email, String token){
+    public static void registrationEmail(String email, String token) throws Exception{
         try{
             //who will get the email
             String to = email;
@@ -1014,12 +1031,46 @@ public class Users implements Serializable {
             message.setText("Thanks for the registration to our service, and enjoy your journey with our application! \n Confirm link : " + link);
             
             //Send the email
-            Transport.send(message);
-            return true;            
+            Transport.send(message);    
         }
-        catch(Exception ex){
-            return false;
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
         }
     }
+    
+    public static void isEmailUnique(String email) throws Exception {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("isEmailUnique");
+            
+            spq.registerStoredProcedureParameter("email_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("result", Integer.class, ParameterMode.OUT);
+
+            spq.setParameter("email_in", email);
+
+            spq.execute();
+            
+            Integer result = Integer.parseInt(spq.getOutputParameterValue("result").toString());
+            
+            if(result == 0){
+                throw new EmailException("Ilyen E-mail cím már létezik!");
+            }
+        } 
+        catch(EmailException e){
+            throw new EmailException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    
     
 }

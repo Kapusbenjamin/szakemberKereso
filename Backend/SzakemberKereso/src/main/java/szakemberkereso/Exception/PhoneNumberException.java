@@ -8,9 +8,9 @@ package szakemberkereso.Exception;
  *
  * @author sharkz
  */
-public class PasswordException extends Exception {
+public class PhoneNumberException extends Exception {
     
-    public PasswordException(String msg) {
+    public PhoneNumberException(String msg) {
         super(msg);
     }
     

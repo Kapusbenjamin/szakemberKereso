@@ -132,7 +132,7 @@ public class UsersJobs implements Serializable {
         return "szakemberkereso.Model.UsersJobs[ id=" + id + " ]";
     }
     
-    public static String addNewJobToUser(UsersJobs user_job) throws Exception{
+    public static void addNewJobToUser(UsersJobs user_job) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -142,11 +142,10 @@ public class UsersJobs implements Serializable {
             spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("job_tag_id_in", Integer.class, ParameterMode.IN);
 
-            spq.setParameter("user_id_in", user_job.getUserId());
-            spq.setParameter("job_tag_id_in", user_job.getJobTagId());
+            spq.setParameter("user_id_in", Users.getUserById(user_job.getUserId()).getId());
+            spq.setParameter("job_tag_id_in", JobTags.getJobTagById(user_job.getJobTagId()).getId());
 
             spq.execute();
-            return "Sikeresen hozzáadta a userhez a szakmát";
         } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
@@ -159,10 +158,9 @@ public class UsersJobs implements Serializable {
             em.close();
             emf.close();
         }
-        
     }
 
-    public static String deleteUserJob(UsersJobs user_job) throws Exception{
+    public static void deleteUserJob(UsersJobs user_job) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -172,12 +170,15 @@ public class UsersJobs implements Serializable {
             spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("job_tag_id_in", Integer.class, ParameterMode.IN);
 
-            spq.setParameter("user_id_in", user_job.getUserId());
-            spq.setParameter("job_tag_id_in", user_job.getJobTagId());
+            spq.setParameter("user_id_in", Users.getUserById(user_job.getUserId()).getId());
+            spq.setParameter("job_tag_id_in", JobTags.getJobTagById(user_job.getJobTagId()).getId());
 
             spq.execute();
-            return "Sikeresen törölte a userhez tartozó szakmát";
-        }
+            
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen felhasználó-szakma!");
+            }
+        } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
         }
@@ -189,7 +190,6 @@ public class UsersJobs implements Serializable {
             em.close();
             emf.close();
         }
-        
     }
     
     public static List<JobTags> getAllJobsByUser(Integer user_id_in) throws Exception{
@@ -200,8 +200,7 @@ public class UsersJobs implements Serializable {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllJobsByUser");
             
             spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
-
-            spq.setParameter("user_id_in", user_id_in);
+            spq.setParameter("user_id_in", Users.getUserById(user_id_in).getId());
 
             spq.execute();
             
@@ -229,7 +228,6 @@ public class UsersJobs implements Serializable {
             em.close();
             emf.close();
         }
-        
     }
     
 }

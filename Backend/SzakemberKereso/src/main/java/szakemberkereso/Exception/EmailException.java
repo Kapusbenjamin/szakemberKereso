@@ -8,9 +8,9 @@ package szakemberkereso.Exception;
  *
  * @author sharkz
  */
-public class PasswordException extends Exception {
+public class EmailException extends Exception {
     
-    public PasswordException(String msg) {
+    public EmailException(String msg) {
         super(msg);
     }
     

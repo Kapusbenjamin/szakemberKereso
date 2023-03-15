@@ -210,7 +210,47 @@ public class Chats implements Serializable {
         }
     }
     
-    public static String createChat(Chats chat) throws Exception{
+    public static Chats getChatById(Integer id_in) throws Exception{
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getChatById");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            spq.setParameter("id_in", id_in);
+            
+            spq.execute();
+            List<Object[]> result = spq.getResultList();
+            
+            if(!result.isEmpty()){
+                Object[] r = result.get(0);
+
+                Integer r_id = Integer.parseInt(r[0].toString());
+                Integer r_sender_id = Integer.parseInt(r[1].toString());
+                Integer r_receiver_id = Integer.parseInt(r[2].toString());
+
+                Chats c = new Chats(r_id, r_sender_id, r_receiver_id);
+                return c;
+            }
+            else{
+                throw new NotFoundException("Nincs ilyen chat!");
+            }
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static void createChat(Chats chat) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -220,11 +260,10 @@ public class Chats implements Serializable {
             spq.registerStoredProcedureParameter("sender_id_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("receiver_id_in", Integer.class, ParameterMode.IN);
 
-            spq.setParameter("sender_id_in", chat.getSenderId());
-            spq.setParameter("receiver_id_in", chat.getReceiverId());
+            spq.setParameter("sender_id_in", Users.getUserById(chat.getSenderId()).getId());
+            spq.setParameter("receiver_id_in", Users.getUserById(chat.getReceiverId()).getId());
 
             spq.execute();
-            return "Sikeresen létrejött a chat";
         } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());

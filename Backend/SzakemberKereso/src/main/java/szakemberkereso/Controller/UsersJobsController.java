@@ -86,8 +86,8 @@ public class UsersJobsController {
     public Response addNewJobToUser(UsersJobs user_job){
         JSONObject obj = new JSONObject();
         try{
-            String result = ujs.addNewJobToUser(user_job);
-            obj.put("result", JSONObject.wrap(result));
+            ujs.addNewJobToUser(user_job);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen hozzáadta a szakmát a felhasználóhoz!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -102,8 +102,8 @@ public class UsersJobsController {
     public Response deleteUserJob(UsersJobs user_job){        
         JSONObject obj = new JSONObject();
         try{
-            String result = ujs.deleteUserJob(user_job);
-            obj.put("result", JSONObject.wrap(result));
+            ujs.deleteUserJob(user_job);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen törölte a szakmát a felhasználótól!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }

@@ -68,7 +68,7 @@ public class ChatsController {
     public Response getAllChatsByUserId(Chats chat){        
         JSONObject obj = new JSONObject();
         try{
-            List<Chats> result = cs.getAllChatsByUserId(chat.getUserId());
+            List<Chats> result = cs.getAllChatsByUserId(chat);
             obj.put("result", JSONObject.wrap(result));
             obj.put("message", "Sikeresen lekérte a felhasználóhoz tartozó chat-eket!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
@@ -84,8 +84,8 @@ public class ChatsController {
     public Response createChat(Chats chat){        
         JSONObject obj = new JSONObject();
         try{
-            String result = cs.createChat(chat);
-            obj.put("result", JSONObject.wrap(result));
+            cs.createChat(chat);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen létrehozta a chat-et!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }

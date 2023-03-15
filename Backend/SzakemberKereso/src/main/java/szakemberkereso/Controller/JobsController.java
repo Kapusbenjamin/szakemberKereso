@@ -84,8 +84,8 @@ public class JobsController {
     public Response deleteJob(Jobs job){        
         JSONObject obj = new JSONObject();
         try{
-            Boolean result = js.deleteJob(job);
-            obj.put("result", JSONObject.wrap(result));
+            js.deleteJob(job);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen törölte a munkát!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -100,8 +100,8 @@ public class JobsController {
     public Response changeJobStatus(Jobs job){        
         JSONObject obj = new JSONObject();
         try{
-            Boolean result = js.changeJobStatus(job);
-            obj.put("result", JSONObject.wrap(result));
+            js.changeJobStatus(job);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen módosította a munka státuszát!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -164,8 +164,8 @@ public class JobsController {
     public Response createJob(Jobs job){        
         JSONObject obj = new JSONObject();
         try{
-            String result = js.createJob(job);
-            obj.put("result", JSONObject.wrap(result));
+            js.createJob(job);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen létrehozta a munkát!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -180,8 +180,8 @@ public class JobsController {
     public Response updateJobByWorker(Jobs job){        
         JSONObject obj = new JSONObject();
         try{
-            String result = js.updateJobByWorker(job);
-            obj.put("result", JSONObject.wrap(result));
+            js.updateJobByWorker(job);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen módosította a munkát mint szakember!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -196,8 +196,8 @@ public class JobsController {
     public Response updateJobByCustomer(Jobs job){        
         JSONObject obj = new JSONObject();
         try{
-            String result = js.updateJobByCustomer(job);
-            obj.put("result", JSONObject.wrap(result));
+            js.updateJobByCustomer(job);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen módosította a munkát mint megrendelő!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -212,8 +212,8 @@ public class JobsController {
     public Response acceptByWorker(Jobs job){        
         JSONObject obj = new JSONObject();
         try{
-            Boolean result = js.acceptByWorker(job);
-            obj.put("result", JSONObject.wrap(result));
+            js.acceptByWorker(job);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen elfogadta a munka részleteit mint szakember!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -228,8 +228,8 @@ public class JobsController {
     public Response acceptByCustomer(Jobs job){        
         JSONObject obj = new JSONObject();
         try{
-            Boolean result = js.acceptByCustomer(job);
-            obj.put("result", JSONObject.wrap(result));
+            js.acceptByCustomer(job);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen elfogadta a munka részleteit mint megrendelő!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }

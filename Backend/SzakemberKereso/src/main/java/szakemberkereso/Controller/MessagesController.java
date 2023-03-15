@@ -98,8 +98,8 @@ public class MessagesController {
     public Response checkMessage(Messages message){        
         JSONObject obj = new JSONObject();
         try{
-            Boolean result = ms.checkMessage(message);
-            obj.put("result", JSONObject.wrap(result));
+            ms.checkMessage(message);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen lecsekkolta az üzeneteket!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -114,8 +114,8 @@ public class MessagesController {
     public Response createMessage(Messages message){        
         JSONObject obj = new JSONObject();
         try{
-            String result = ms.createMessage(message);
-            obj.put("result", JSONObject.wrap(result));
+            ms.createMessage(message);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen létrehozta az üzenetet!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }

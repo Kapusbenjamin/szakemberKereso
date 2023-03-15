@@ -18,7 +18,7 @@ public class CompaniesService {
         return result;
     }
     
-    public String createCompany(Companies company) throws Exception{
+    public void createCompany(Companies company) throws Exception{
         //Business logic
         if(company.getAddress().getStaircase() == null){
             company.getAddress().setStaircase("");
@@ -30,18 +30,15 @@ public class CompaniesService {
             company.getAddress().setDoor(-1);
         }
         
-        String result = Companies.createCompany(company);
-        return result;
+        Companies.createCompany(company);
     }
     
-    public String updateCompanyById(Companies company) throws Exception{
-        String result = Companies.updateCompanyById(company);
-        return result;
+    public void updateCompanyById(Companies company) throws Exception{
+        Companies.updateCompanyById(company);
     }
     
-    public Boolean deleteCompanyById(Companies company) throws Exception{
-        Boolean result = Companies.deleteCompanyById(company);
-        return result;
+    public void deleteCompanyById(Companies company) throws Exception{
+        Companies.deleteCompanyById(company);
     }
     
 }

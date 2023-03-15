@@ -220,8 +220,8 @@ public class Messages implements Serializable {
             spq.registerStoredProcedureParameter("user1_id_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("user2_id_in", Integer.class, ParameterMode.IN);
             
-            spq.setParameter("user1_id_in", message.getSenderId());
-            spq.setParameter("user2_id_in", message.getReceiverId());
+            spq.setParameter("user1_id_in", Users.getUserById(message.getSenderId()).getId());
+            spq.setParameter("user2_id_in", Users.getUserById(message.getReceiverId()).getId());
             
             spq.execute();
             List<Object[]> result = spq.getResultList();
@@ -278,7 +278,7 @@ public class Messages implements Serializable {
         }
     }
     
-    public static Boolean checkMessage(Messages message) throws Exception{
+    public static void checkMessage(Messages message) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -288,13 +288,11 @@ public class Messages implements Serializable {
             spq.registerStoredProcedureParameter("chat_id_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
             
-            spq.setParameter("chat_id_in", message.getChatId());
-            spq.setParameter("user_id_in", message.getReceiverId());
+            spq.setParameter("chat_id_in", Chats.getChatById(message.getChatId()).getId());
+            spq.setParameter("user_id_in", Users.getUserById(message.getReceiverId()).getId());
             
             spq.execute();
-            
-            return true;
-        }
+        } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
         }
@@ -308,7 +306,7 @@ public class Messages implements Serializable {
         }
     }
     
-    public static String createMessage(Messages message) throws Exception{
+    public static void createMessage(Messages message) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -320,14 +318,12 @@ public class Messages implements Serializable {
             spq.registerStoredProcedureParameter("receiver_id_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("message_in", String.class, ParameterMode.IN);
             
-            spq.setParameter("chat_id_in", message.getChatId());
-            spq.setParameter("sender_id_in", message.getSenderId());
-            spq.setParameter("receiver_id_in", message.getReceiverId());
+            spq.setParameter("chat_id_in", Chats.getChatById(message.getChatId()).getId());
+            spq.setParameter("sender_id_in", Users.getUserById(message.getSenderId()).getId());
+            spq.setParameter("receiver_id_in", Users.getUserById(message.getReceiverId()).getId());
             spq.setParameter("message_in", message.getMessage());
             
             spq.execute();
-            
-            return "Sikeresen létrejött a message!";
         }
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());

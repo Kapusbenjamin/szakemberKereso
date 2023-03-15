@@ -207,14 +207,14 @@ public class Images implements Serializable {
             spq.setParameter("id_in", id_in);
             
             spq.execute();
-            
-            if(spq.getUpdateCount() < 1){
-                throw new NotFoundException("Nincs ilyen kép!");
-            }
-            else{
-                List<Object[]> result = spq.getResultList();
+            List<Object[]> result = spq.getResultList();
+
+            if(!result.isEmpty()){
                 Images image = Images.objectToImage(result.get(0));
                 return image;
+            }
+            else{
+                throw new NotFoundException("Nincs ilyen kép!");
             }
         } 
         catch(NotFoundException e){
@@ -364,7 +364,7 @@ public class Images implements Serializable {
         }
     }
     
-    public static Boolean acceptImage(Integer id_in) throws Exception{
+    public static void acceptImage(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -372,12 +372,13 @@ public class Images implements Serializable {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("acceptImage");
             
             spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
-            
             spq.setParameter("id_in", id_in);
             
             spq.execute();
             
-            return true;
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen kép!");
+            }
         } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
@@ -392,7 +393,7 @@ public class Images implements Serializable {
         }
     }
     
-    public static Boolean deleteImage(Integer id_in) throws Exception{
+    public static void deleteImage(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -400,13 +401,14 @@ public class Images implements Serializable {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteImage");
             
             spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
-            
             spq.setParameter("id_in", id_in);
             
             spq.execute();
             
-            return true;
-        }
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen kép!");
+            }
+        } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
         }
@@ -420,7 +422,7 @@ public class Images implements Serializable {
         }
     }
     
-    public static String addImage(Images image) throws Exception{
+    public static void addImage(Images image) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -438,9 +440,7 @@ public class Images implements Serializable {
             spq.setParameter("user_id_in", image.getUserId());
             
             spq.execute();
-            
-            return "Sikeresen hozzáadta a képet!";
-        }
+        } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
         }

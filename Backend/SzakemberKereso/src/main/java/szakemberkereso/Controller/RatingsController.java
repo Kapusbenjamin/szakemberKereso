@@ -145,8 +145,8 @@ public class RatingsController {
     public Response updateRatingById(Ratings rating){        
         JSONObject obj = new JSONObject();
         try{
-            Boolean result = rs.updateRatingById(rating);
-            obj.put("result", JSONObject.wrap(result));
+            rs.updateRatingById(rating);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen módosította az értékelést!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -161,8 +161,8 @@ public class RatingsController {
     public Response acceptRating(Ratings rating){        
         JSONObject obj = new JSONObject();
         try{
-            Boolean result = rs.acceptRating(rating.getId());
-            obj.put("result", JSONObject.wrap(result));
+            rs.acceptRating(rating.getId());
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen elfogadta az értékelést!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -177,8 +177,8 @@ public class RatingsController {
     public Response deleteRatingById(Ratings rating){        
         JSONObject obj = new JSONObject();
         try{
-            Boolean result = rs.deleteRatingById(rating.getId());
-            obj.put("result", JSONObject.wrap(result));
+            rs.deleteRatingById(rating.getId());
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen törölte az értékelést!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -193,8 +193,8 @@ public class RatingsController {
     public Response createRating(Ratings rating){        
         JSONObject obj = new JSONObject();
         try{
-            String result = rs.createRating(rating);
-            obj.put("result", JSONObject.wrap(result));
+            rs.createRating(rating);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen létrehozta az értékelést!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }

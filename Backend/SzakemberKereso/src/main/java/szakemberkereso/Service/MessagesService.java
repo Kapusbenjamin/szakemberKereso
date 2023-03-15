@@ -23,14 +23,12 @@ public class MessagesService {
         return result;
     }
             
-    public Boolean checkMessage(Messages message) throws Exception{
-        Boolean result = Messages.checkMessage(message);
-        return result;
+    public void checkMessage(Messages message) throws Exception{
+        Messages.checkMessage(message);
     }
     
-    public String createMessage(Messages message) throws Exception{
-        String result = Messages.createMessage(message);
-        return result;
+    public void createMessage(Messages message) throws Exception{
+        Messages.createMessage(message);
     }
             
 }

@@ -33,19 +33,16 @@ public class ImagesService {
         return result;
     }
             
-    public Boolean acceptImage(Integer id) throws Exception{
-        Boolean result = Images.acceptImage(id);
-        return result;
+    public void acceptImage(Integer id) throws Exception{
+        Images.acceptImage(id);
     }
             
-    public Boolean deleteImage(Integer id) throws Exception{
-        Boolean result = Images.deleteImage(id);
-        return result;
+    public void deleteImage(Integer id) throws Exception{
+        Images.deleteImage(id);
     }
     
-    public String addImage(Images image) throws Exception{
-        String result = Images.addImage(image);
-        return result;
+    public void addImage(Images image) throws Exception{
+        Images.addImage(image);
     }
     
 }

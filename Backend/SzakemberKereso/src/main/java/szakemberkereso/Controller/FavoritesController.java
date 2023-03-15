@@ -102,8 +102,8 @@ public class FavoritesController {
     public Response deleteFavorite(Favorites favorite){        
         JSONObject obj = new JSONObject();
         try{
-            Boolean result = fs.deleteFavorite(favorite.getId());
-            obj.put("result", JSONObject.wrap(result));
+            fs.deleteFavorite(favorite.getId());
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen törölte a kedvencet!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -118,8 +118,8 @@ public class FavoritesController {
     public Response addFavorite(Favorites favorite){        
         JSONObject obj = new JSONObject();
         try{
-            String result = fs.addFavorite(favorite);
-            obj.put("result", JSONObject.wrap(result));
+            fs.addFavorite(favorite);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen hozzáadta a kedvencet!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }

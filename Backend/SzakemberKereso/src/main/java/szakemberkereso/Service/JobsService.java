@@ -37,12 +37,11 @@ public class JobsService {
         }
     }
     
-    public Boolean deleteJob(Jobs job) throws Exception{
+    public void deleteJob(Jobs job) throws Exception{
         if (AuthService.isUserAuthorized(job.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.USER, Roles.WORKER})) {
             //csak azok a user-ek törölhetik akik a munka tagjai
             if(Objects.equals(job.getCurrentUserId(), Jobs.getJobById(job).getCustomerId()) || Objects.equals(job.getCurrentUserId(), Jobs.getJobById(job).getWorkerId())){
-                Boolean result = Jobs.deleteJob(job);
-                return result;
+                Jobs.deleteJob(job);
             }
             else{
                 throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
@@ -53,12 +52,11 @@ public class JobsService {
         }
     }
     
-    public Boolean changeJobStatus(Jobs job) throws Exception{
+    public void changeJobStatus(Jobs job) throws Exception{
         if (AuthService.isUserAuthorized(job.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.USER, Roles.WORKER})) {
             //a user-ek csak a saját munkájukat módosíthatják
             if(Objects.equals(job.getCurrentUserId(), Jobs.getJobById(job).getCustomerId()) || Objects.equals(job.getCurrentUserId(), Jobs.getJobById(job).getWorkerId())){
-                Boolean result = Jobs.changeJobStatus(job);
-                return result;
+                Jobs.changeJobStatus(job);
             }
             else{
                 throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
@@ -108,61 +106,56 @@ public class JobsService {
         }
     }
     
-    public String createJob(Jobs job) throws Exception{
-        String result = Jobs.createJob(job);
-        return result;
+    public void createJob(Jobs job) throws Exception{
+        Jobs.createJob(job);
     }
     
-    public String updateJobByWorker(Jobs job) throws Exception{
+    public void updateJobByWorker(Jobs job) throws Exception{
         if (AuthService.isUserAuthorized(job.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.WORKER})) {
             //csak azok a user-ek módosíthatják akik a munkában a worker oldalon állnak
             if(!Objects.equals(job.getCurrentUserId(), Jobs.getJobById(job).getWorkerId())){
                 throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
             }
-            String result = Jobs.updateJobByWorker(job);
-            return result;
+            Jobs.updateJobByWorker(job);
         }
         else{
             throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
         }
     }
     
-    public String updateJobByCustomer(Jobs job) throws Exception{
+    public void updateJobByCustomer(Jobs job) throws Exception{
         if (AuthService.isUserAuthorized(job.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.USER, Roles.WORKER})) {
             //csak azok a user-ek módosíthatják akik a munkában a customer oldalon állnak
             if(!Objects.equals(job.getCurrentUserId(), Jobs.getJobById(job).getCustomerId())){
                 throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
             }
-            String result = Jobs.updateJobByCustomer(job);
-            return result;
+            Jobs.updateJobByCustomer(job);
         }
         else{
             throw new AuthenticationFailedException("Nem sikerült azonosítani.");
         }
     }
     
-    public Boolean acceptByWorker(Jobs job) throws Exception{
+    public void acceptByWorker(Jobs job) throws Exception{
         if (AuthService.isUserAuthorized(job.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.WORKER})) {
             //csak azok a user-ek fogadhatják el akik a munkában a worker oldalon állnak
             if(!Objects.equals(job.getCurrentUserId(), Jobs.getJobById(job).getWorkerId())){
                 throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
             }
-            Boolean result = Jobs.acceptByWorker(job);
-            return result;
+            Jobs.acceptByWorker(job);
         }
         else{
             throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
         }
     }
     
-    public Boolean acceptByCustomer(Jobs job) throws Exception{
+    public void acceptByCustomer(Jobs job) throws Exception{
         if (AuthService.isUserAuthorized(job.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.USER, Roles.WORKER})) {
             //csak azok a user-ek fogadhatják el akik a munkában a customer oldalon állnak
             if(!Objects.equals(job.getCurrentUserId(), Jobs.getJobById(job).getCustomerId())){
                 throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
             }
-            Boolean result = Jobs.acceptByCustomer(job);
-            return result;
+            Jobs.acceptByCustomer(job);
         }
         else{
             throw new AuthenticationFailedException("Nem sikerült azonosítani.");

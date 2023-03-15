@@ -172,12 +172,9 @@ public class Companies implements Serializable {
             spq.setParameter("id_in", id_in);
             
             spq.execute();
+            List<Object[]> result = spq.getResultList();
             
-            if(spq.getUpdateCount() < 1){
-                throw new NotFoundException("Nincs ilyen cég!");
-            }
-            else{
-                List<Object[]> result = spq.getResultList();
+            if(!result.isEmpty()){
                 Object[] r = result.get(0);
 
                 Integer r_id = Integer.parseInt(r[0].toString());
@@ -188,6 +185,9 @@ public class Companies implements Serializable {
                 Companies c = new Companies(r_id, r_name, r_address_id, r_tax_number);
                 c.setAddress(Addresses.getAddressById(c.getAddressId()));
                 return c;
+            }
+            else{
+                throw new NotFoundException("Nincs ilyen cég!");
             }
         } 
         catch(NotFoundException e){
@@ -203,7 +203,7 @@ public class Companies implements Serializable {
         }
     }
     
-    public static String createCompany(Companies company) throws Exception{
+    public static void createCompany(Companies company) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -222,7 +222,7 @@ public class Companies implements Serializable {
             spq.registerStoredProcedureParameter("tax_number_in", String.class, ParameterMode.IN);
 
             spq.setParameter("company_name_in", company.getName());
-            spq.setParameter("county_id_in", company.getAddress().getCountyId());
+            spq.setParameter("county_id_in", Addresses.getAddressById(company.getAddress().getId()).getCountyId());
             spq.setParameter("zip_code_in", company.getAddress().getZipCode());
             spq.setParameter("city_in", company.getAddress().getCity());
             spq.setParameter("street_in", company.getAddress().getStreet());
@@ -233,7 +233,6 @@ public class Companies implements Serializable {
             spq.setParameter("tax_number_in", company.getTaxNumber());
 
             spq.execute();
-            return "Sikeresen létrejött a cég";
         }
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
@@ -249,7 +248,7 @@ public class Companies implements Serializable {
         
     }
     
-    public static String updateCompanyById(Companies company) throws Exception{
+    public static void updateCompanyById(Companies company) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -265,35 +264,10 @@ public class Companies implements Serializable {
             spq.setParameter("tax_number_in", company.getTaxNumber());
 
             spq.execute();
-            return "Sikeresen módosult a cég";
-        }
-        catch(NotFoundException e){
-            throw new NotFoundException(e.getMessage());
-        }
-        catch(Exception e){
-            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
-        }
-        finally{
-            em.clear();
-            em.close();
-            emf.close();
-        }
-        
-    }
-    
-    public static Boolean deleteCompanyById(Companies company_in) throws Exception{
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
-        EntityManager em = emf.createEntityManager();
-        
-        try {            
-            StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteCompanyById");
             
-            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
-
-            spq.setParameter("id_in", company_in.getId());
-
-            spq.execute();
-            return true;
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen cég!");
+            }
         } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
@@ -306,7 +280,36 @@ public class Companies implements Serializable {
             em.close();
             emf.close();
         }
+    }
+    
+    public static void deleteCompanyById(Companies company_in) throws Exception{
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
         
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteCompanyById");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+
+            spq.setParameter("id_in", company_in.getId());
+
+            spq.execute();
+            
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen cég!");
+            }
+        } 
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
     }
     
     

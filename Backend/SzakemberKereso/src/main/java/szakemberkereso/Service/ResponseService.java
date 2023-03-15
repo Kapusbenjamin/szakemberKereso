@@ -10,6 +10,8 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.json.JSONObject;
+import szakemberkereso.Exception.EmailException;
+import szakemberkereso.Exception.PasswordException;
 
 /**
  *
@@ -32,6 +34,9 @@ public class ResponseService {
         } 
         else if(e instanceof AuthenticationFailedException){
             return createErrorResponse(Response.Status.UNAUTHORIZED, e.getMessage());
+        } 
+        else if(e instanceof EmailException || e instanceof PasswordException){
+            return createErrorResponse(Response.Status.BAD_REQUEST, e.getMessage());
         } 
         else{
             return createErrorResponse(Response.Status.SERVICE_UNAVAILABLE, e.getMessage());

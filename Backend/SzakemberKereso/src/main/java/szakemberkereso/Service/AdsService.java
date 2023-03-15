@@ -38,7 +38,7 @@ public class AdsService {
         //a USER jogosultságú user-ek nem módosíthatnak hirdetéseket
         if (AuthService.isUserAuthorized(ad.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.WORKER})){
             //a user-ek csak a saját hirdetésüket módosíthatják
-            if(!Objects.equals(ad.getCurrentUserId(), Ads.getAdsById(ad.getId()).getUserId())){
+            if(!Objects.equals(ad.getCurrentUserId(), Ads.getAdById(ad.getId()).getUserId())){
                 throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
             }
             Ads.updateAd(ad);
@@ -121,7 +121,7 @@ public class AdsService {
     }
     
     public Ads getAdsById(Integer id) throws Exception{
-        Ads result = Ads.getAdsById(id);
+        Ads result = Ads.getAdById(id);
         return result;
     }
     
@@ -132,7 +132,7 @@ public class AdsService {
             Ads.deleteAd(ad.getId());
         }
         else if(AuthService.isUserAuthorized(ad.getCurrentUserId(), new Roles[]{Roles.WORKER})){
-            if(!Objects.equals(ad.getCurrentUserId(), Ads.getAdsById(ad.getId()).getUserId())){
+            if(!Objects.equals(ad.getCurrentUserId(), Ads.getAdById(ad.getId()).getUserId())){
                 throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
             }
             Ads.deleteAd(ad.getId());

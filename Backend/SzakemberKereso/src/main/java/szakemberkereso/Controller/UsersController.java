@@ -118,8 +118,8 @@ public class UsersController {
     public Response logoutUser(Integer currentUserId){        
         JSONObject obj = new JSONObject();
         try{
-            Boolean result = us.logoutUser(currentUserId);
-            obj.put("result", JSONObject.wrap(result));
+            us.logoutUser(currentUserId);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen kijelentkezett!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -166,8 +166,8 @@ public class UsersController {
     public Response updateUser(Users user){        
         JSONObject obj = new JSONObject();
         try{
-            String result = us.updateUser(user);
-            obj.put("result", JSONObject.wrap(result));
+            us.updateUser(user);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen módosította a felhasználó adatait!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -182,8 +182,8 @@ public class UsersController {
     public Response deleteUser(Users user){        
         JSONObject obj = new JSONObject();
         try{
-            Boolean result = us.deleteUser(user);
-            obj.put("result", JSONObject.wrap(result));
+            us.deleteUser(user);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen törölte a felhasználót!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -198,8 +198,8 @@ public class UsersController {
     public Response changeAccess(Users user){        
         JSONObject obj = new JSONObject();
         try{
-            Boolean result = us.changeAccess(user);
-            obj.put("result", JSONObject.wrap(result));
+            us.changeAccess(user);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen módosította a jogosultságát szakemberré!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -214,8 +214,8 @@ public class UsersController {
     public Response changePassword(Users user){        
         JSONObject obj = new JSONObject();
         try{
-            String result = us.changePassword(user);
-            obj.put("result", JSONObject.wrap(result));
+            us.changePassword(user);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen módosította a jelszavát!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -230,8 +230,8 @@ public class UsersController {
     public Response validateEmailByToken(@QueryParam("t") String token){        
         JSONObject obj = new JSONObject();
         try{
-            String result = us.validateEmailByToken(token);
-            obj.put("result", JSONObject.wrap(result));
+            us.validateEmailByToken(token);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen megerősítette a fiókját!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -246,8 +246,8 @@ public class UsersController {
     public Response forgotPassword(String email){ 
         JSONObject obj = new JSONObject();
         try{
-            Boolean result = us.forgotPassword(email);
-            obj.put("result", JSONObject.wrap(result));
+            us.forgotPassword(email);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen elküldtük E-mailben az új jelszóhoz szükséges linket!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }
@@ -266,8 +266,8 @@ public class UsersController {
             String password = u.getPassword();
             String pwtoken = u.getToken();
 
-            String result = us.resetPassword(email, password, pwtoken);
-            obj.put("result", JSONObject.wrap(result));
+            us.resetPassword(email, password, pwtoken);
+            obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen beállította az új jelszót!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
         }

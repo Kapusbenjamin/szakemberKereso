@@ -458,12 +458,12 @@ public class Ads implements Serializable {
         
     }
     
-    public static Ads getAdsById(Integer id_in) throws Exception{
+    public static Ads getAdById(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
         try {            
-            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAdsById");
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAdById");
             
             spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
             spq.setParameter("id_in", id_in);
@@ -532,7 +532,7 @@ public class Ads implements Serializable {
         
         String[] eljarasNevek = {"getAllAcceptedAds", "getJobFilteredAds", "getCountyFilteredAds", "getFilteredAds"};
         Integer eljarasSzama;
-        //eldönteni melyik eljárást érdemes meghívni
+        //melyik eljárást érdemes meghívni
         if(ad_in.getJobTagId() != null && ad_in.getCountyId() != null){
             eljarasSzama = 3;
         }

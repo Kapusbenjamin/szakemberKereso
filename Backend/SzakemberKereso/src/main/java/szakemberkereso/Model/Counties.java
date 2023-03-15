@@ -146,22 +146,23 @@ public class Counties implements Serializable {
         
         try {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("getCountyById");
+            
             spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
             spq.setParameter("id_in", id_in);
+            
             spq.execute();
-                
             List<Object[]> result = spq.getResultList();
             
-            if(result.isEmpty()){
-                throw new NotFoundException("Nincs ilyen megye!");
-            }
-            else{
+            if(!result.isEmpty()){
                 Object[] r = result.get(0);
                 Integer r_id = Integer.parseInt(r[0].toString());
                 String r_name = r[1].toString();
 
                 Counties c = new Counties(r_id, r_name);
                 return c;
+            }
+            else{
+                throw new NotFoundException("Nincs ilyen megye!");
             }
         } 
         catch(NotFoundException e){

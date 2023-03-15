@@ -150,7 +150,7 @@ public class Favorites implements Serializable {
         Integer o_ad_id = Integer.parseInt(o[2].toString());
 
         Favorites f = new Favorites(o_id, o_user_id, o_ad_id);
-        f.setAd(Ads.getAdsById(f.getAdId()));
+        f.setAd(Ads.getAdById(f.getAdId()));
         return f;
     }
     
@@ -201,16 +201,16 @@ public class Favorites implements Serializable {
             spq.setParameter("id_in", id_in);
             
             spq.execute();
+            List<Object[]> result = spq.getResultList();
             
-            if(spq.getUpdateCount() < 1){
-                throw new NotFoundException("Nincs ilyen kedvenc!");
-            }
-            else{
-                List<Object[]> result = spq.getResultList();
+            if(!result.isEmpty()){
                 Object[] r = result.get(0);
 
                 Favorites f = Favorites.objectToFavorite(r);
                 return f;
+            }
+            else{
+                throw new NotFoundException("Nincs ilyen kedvenc!");
             }
         } 
         catch(NotFoundException e){
@@ -226,7 +226,7 @@ public class Favorites implements Serializable {
         }
     }
     
-    public static Boolean deleteFavorite(Integer id_in) throws Exception{
+    public static void deleteFavorite(Integer id_in) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -234,12 +234,13 @@ public class Favorites implements Serializable {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteFavorite");
             
             spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
-            
             spq.setParameter("id_in", id_in);
             
             spq.execute();
             
-            return true;
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen kedvenc!");
+            }
         } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
@@ -254,7 +255,7 @@ public class Favorites implements Serializable {
         }
     }
     
-    public static String addFavorite(Favorites favorite) throws Exception{
+    public static void addFavorite(Favorites favorite) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
@@ -265,12 +266,14 @@ public class Favorites implements Serializable {
             spq.registerStoredProcedureParameter("ad_id_in", Integer.class, ParameterMode.IN);
             
             spq.setParameter("user_id_in", favorite.getUserId());
-            spq.setParameter("ad_id_in", favorite.getAdId());
+            spq.setParameter("ad_id_in", Ads.getAdById(favorite.getAdId()).getId());
             
             spq.execute();
             
-            return "Sikeresen hozzáadta a kedvencekhez!";
-        }
+            if(spq.getUpdateCount() < 1){
+                throw new NotFoundException("Nincs ilyen kedvenc!");
+            }
+        } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());
         }
@@ -283,6 +286,5 @@ public class Favorites implements Serializable {
             emf.close();
         }
     }
-    
     
 }

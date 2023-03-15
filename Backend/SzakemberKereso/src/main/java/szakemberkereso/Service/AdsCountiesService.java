@@ -23,7 +23,7 @@ public class AdsCountiesService {
         //a USER jogosultságú user-ek nem módosíthatnak hirdetéseket
         if (AuthService.isUserAuthorized(ad_county.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.WORKER})){
             //a user-ek csak a saját hirdetésüket módosíthatják
-            if(!Objects.equals(ad_county.getCurrentUserId(), Ads.getAdsById(ad_county.getAdId()).getUserId())){
+            if(!Objects.equals(ad_county.getCurrentUserId(), Ads.getAdById(ad_county.getAdId()).getUserId())){
                 throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
             }
             AdsCounties.addNewCountyToAd(ad_county);
@@ -37,7 +37,7 @@ public class AdsCountiesService {
         //a USER jogosultságú user-ek nem törölhetnek megyét hirdetésből
         if (AuthService.isUserAuthorized(ad_county.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.WORKER})){
             //a user-ek csak a saját hirdetésüket módosíthatják
-            if(!Objects.equals(ad_county.getCurrentUserId(), Ads.getAdsById(ad_county.getAdId()).getUserId())){
+            if(!Objects.equals(ad_county.getCurrentUserId(), Ads.getAdById(ad_county.getAdId()).getUserId())){
                 throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
             }
             AdsCounties.deleteCountyFromAd(ad_county);

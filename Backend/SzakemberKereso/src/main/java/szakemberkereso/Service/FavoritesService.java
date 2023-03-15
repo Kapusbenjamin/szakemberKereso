@@ -24,14 +24,12 @@ public class FavoritesService {
         return result;
     }
             
-    public Boolean deleteFavorite(Integer id) throws Exception{
-        Boolean result = Favorites.deleteFavorite(id);
-        return result;
+    public void deleteFavorite(Integer id) throws Exception{
+        Favorites.deleteFavorite(id);
     }
     
-    public String addFavorite(Favorites favorite) throws Exception{
-        String result = Favorites.addFavorite(favorite);
-        return result;
+    public void addFavorite(Favorites favorite) throws Exception{
+        Favorites.addFavorite(favorite);
     }
     
 }
