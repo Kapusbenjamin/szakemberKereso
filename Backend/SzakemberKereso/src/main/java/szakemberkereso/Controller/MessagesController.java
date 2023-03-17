@@ -82,7 +82,7 @@ public class MessagesController {
     public Response getAllMessages(Integer userId){        
         JSONObject obj = new JSONObject();
         try{
-            List<Messages> result = ms.getAllMessages();
+            List<Messages> result = ms.getAllMessages(userId);
             obj.put("result", JSONObject.wrap(result));
             obj.put("message", "Sikeresen lekérte az összes üzenetet!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();

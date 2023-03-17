@@ -269,10 +269,6 @@ public class Favorites implements Serializable {
             spq.setParameter("ad_id_in", Ads.getAdById(favorite.getAdId()).getId());
             
             spq.execute();
-            
-            if(spq.getUpdateCount() < 1){
-                throw new NotFoundException("Nincs ilyen kedvenc!");
-            }
         } 
         catch(NotFoundException e){
             throw new NotFoundException(e.getMessage());

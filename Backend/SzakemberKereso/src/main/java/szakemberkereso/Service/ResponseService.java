@@ -5,6 +5,7 @@
 package szakemberkereso.Service;
 
 import javax.mail.AuthenticationFailedException;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.MediaType;
@@ -35,7 +36,7 @@ public class ResponseService {
         else if(e instanceof AuthenticationFailedException){
             return createErrorResponse(Response.Status.UNAUTHORIZED, e.getMessage());
         } 
-        else if(e instanceof EmailException || e instanceof PasswordException){
+        else if(e instanceof EmailException || e instanceof PasswordException || e instanceof BadRequestException){
             return createErrorResponse(Response.Status.BAD_REQUEST, e.getMessage());
         } 
         else{

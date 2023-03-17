@@ -81,7 +81,7 @@ public class RatingsController {
     public Response getAllRatings(Integer userId){        
         JSONObject obj = new JSONObject();
         try{
-            List<Ratings> result = rs.getAllRatings();
+            List<Ratings> result = rs.getAllRatings(userId);
             obj.put("result", JSONObject.wrap(result));
             obj.put("message", "Sikeresen lekérte az összes értékelést!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
@@ -97,7 +97,7 @@ public class RatingsController {
     public Response getAllNotAcceptedRatings(Integer userId){        
         JSONObject obj = new JSONObject();
         try{
-            List<Ratings> result = rs.getAllNotAcceptedRatings();
+            List<Ratings> result = rs.getAllNotAcceptedRatings(userId);
             obj.put("result", JSONObject.wrap(result));
             obj.put("message", "Sikeresen lekérte az összes még nem elfogadott értékelést!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
@@ -113,7 +113,7 @@ public class RatingsController {
     public Response getAllRatingsByRatinger(Ratings rating){        
         JSONObject obj = new JSONObject();
         try{
-            List<Ratings> result = rs.getAllRatingsByRatinger(rating.getRatingerUserId());
+            List<Ratings> result = rs.getAllRatingsByRatinger(rating);
             obj.put("result", JSONObject.wrap(result));
             obj.put("message", "Sikeresen lekérte a felhasználóhoz tartozó összes értékelést!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
@@ -129,7 +129,7 @@ public class RatingsController {
     public Response getAllRatingsByRatinged(Ratings rating){        
         JSONObject obj = new JSONObject();
         try{
-            List<Ratings> result = rs.getAllRatingsByRatinged(rating.getRatingedUserId());
+            List<Ratings> result = rs.getAllRatingsByRatinged(rating);
             obj.put("result", JSONObject.wrap(result));
             obj.put("message", "Sikeresen lekérte a felhasználóhoz tartozó összes értékelést!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
@@ -161,7 +161,7 @@ public class RatingsController {
     public Response acceptRating(Ratings rating){        
         JSONObject obj = new JSONObject();
         try{
-            rs.acceptRating(rating.getId());
+            rs.acceptRating(rating);
             obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen elfogadta az értékelést!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
@@ -177,7 +177,7 @@ public class RatingsController {
     public Response deleteRatingById(Ratings rating){        
         JSONObject obj = new JSONObject();
         try{
-            rs.deleteRatingById(rating.getId());
+            rs.deleteRatingById(rating);
             obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen törölte az értékelést!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();

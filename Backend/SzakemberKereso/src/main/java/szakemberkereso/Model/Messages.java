@@ -289,7 +289,7 @@ public class Messages implements Serializable {
             spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
             
             spq.setParameter("chat_id_in", Chats.getChatById(message.getChatId()).getId());
-            spq.setParameter("user_id_in", Users.getUserById(message.getReceiverId()).getId());
+            spq.setParameter("user_id_in", message.getCurrentUserId());
             
             spq.execute();
         } 

@@ -220,6 +220,7 @@ public class Companies implements Serializable {
             spq.registerStoredProcedureParameter("floor_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("door_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("tax_number_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
 
             spq.setParameter("company_name_in", company.getName());
             spq.setParameter("county_id_in", Addresses.getAddressById(company.getAddress().getId()).getCountyId());
@@ -231,6 +232,7 @@ public class Companies implements Serializable {
             spq.setParameter("floor_in", company.getAddress().getFloor());
             spq.setParameter("door_in", company.getAddress().getDoor());
             spq.setParameter("tax_number_in", company.getTaxNumber());
+            spq.setParameter("user_id_in", company.getCurrentUserId());
 
             spq.execute();
         }

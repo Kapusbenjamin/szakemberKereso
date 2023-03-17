@@ -70,7 +70,7 @@ public class FavoritesController {
     public Response getAllfavoritesByUserId(Favorites favorite){        
         JSONObject obj = new JSONObject();
         try{
-            List<Favorites> result = fs.getAllfavoritesByUserId(favorite.getUserId());
+            List<Favorites> result = fs.getAllfavoritesByUserId(favorite);
             obj.put("result", JSONObject.wrap(result));
             obj.put("message", "Sikeresen lekérte a felhasználóhoz tartozó összes kedvencet!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
@@ -86,7 +86,7 @@ public class FavoritesController {
     public Response getFavoriteById(Favorites favorite){        
         JSONObject obj = new JSONObject();
         try{
-            Favorites result = fs.getFavoriteById(favorite.getId());
+            Favorites result = fs.getFavoriteById(favorite);
             obj.put("result", JSONObject.wrap(result));
             obj.put("message", "Sikeresen lekérte a kedvencet!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
@@ -102,7 +102,7 @@ public class FavoritesController {
     public Response deleteFavorite(Favorites favorite){        
         JSONObject obj = new JSONObject();
         try{
-            fs.deleteFavorite(favorite.getId());
+            fs.deleteFavorite(favorite);
             obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen törölte a kedvencet!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();

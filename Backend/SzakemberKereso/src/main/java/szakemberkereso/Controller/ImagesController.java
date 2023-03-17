@@ -66,7 +66,7 @@ public class ImagesController {
     public Response getAllNotAcceptedImages(Integer userId){        
         JSONObject obj = new JSONObject();
         try{
-            List<Images> result = is.getAllNotAcceptedImages();
+            List<Images> result = is.getAllNotAcceptedImages(userId);
             obj.put("result", JSONObject.wrap(result));
             obj.put("message", "Sikeresen lekérte a még nem elfogadott képeket!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
@@ -98,7 +98,7 @@ public class ImagesController {
     public Response getImagesByUserId(Images image){        
         JSONObject obj = new JSONObject();
         try{
-            List<Images> result = is.getImagesByUserId(image.getUserId());
+            List<Images> result = is.getImagesByUserId(image);
             obj.put("result", JSONObject.wrap(result));
             obj.put("message", "Sikeresen lekérte a felhasználóhoz tartozó összes képet!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
@@ -114,7 +114,7 @@ public class ImagesController {
     public Response getAllImages(Integer userId){        
         JSONObject obj = new JSONObject();
         try{
-            List<Images> result = is.getAllImages();
+            List<Images> result = is.getAllImages(userId);
             obj.put("result", JSONObject.wrap(result));
             obj.put("message", "Sikeresen lekérte az összes képet!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
@@ -130,7 +130,7 @@ public class ImagesController {
     public Response acceptImage(Images image){        
         JSONObject obj = new JSONObject();
         try{
-            is.acceptImage(image.getId());
+            is.acceptImage(image);
             obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen elfogadta a képet!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
@@ -146,7 +146,7 @@ public class ImagesController {
     public Response deleteImage(Images image){        
         JSONObject obj = new JSONObject();
         try{
-            is.deleteImage(image.getId());
+            is.deleteImage(image);
             obj.put("result", JSONObject.wrap(true));
             obj.put("message", "Sikeresen törölte a képet!");
             return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
