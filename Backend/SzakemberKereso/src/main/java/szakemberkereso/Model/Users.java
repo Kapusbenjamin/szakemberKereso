@@ -382,7 +382,7 @@ public class Users implements Serializable {
         return "szakemberkereso.Model.Users[ id=" + id + " ]";
     }
     
-    public static Users objectToUser(Object[] o) throws ParseException, Exception{
+    public static Users objectToUser(Object[] o) throws Exception{
         Integer o_id = o[0] != null ? Integer.parseInt(o[0].toString()) : null;
         String o_first_name = o[1].toString();
         String o_last_name = o[2].toString();
@@ -402,11 +402,15 @@ public class Users implements Serializable {
         Integer o_deleted = Integer.parseInt(o[16].toString());
 
         Users u = new Users(o_id, o_first_name, o_last_name, o_access_type, o_email, o_phone, o_password, o_company_id, o_address_id, o_status, o_token, o_token_expired_at, o_last_login_at, o_created_at, o_activated_at, o_updated_at, o_deleted);
-        
-        u.setCompany(Companies.getCompanyById(u.getCompanyId()));
-        u.setAddress(Addresses.getAddressById(u.getAddressId()));
-        u.setJobTags(UsersJobs.getAllJobsByUser(u.getId()));
-        
+//        
+//        if(u.getCompanyId() != null){
+//            u.setCompany(Companies.getCompanyById(u.getCompanyId()));
+//        }
+//        u.setAddress(Addresses.getAddressById(u.getAddressId()));
+//        if(u.getAccessType() > 0){
+//            u.setJobTags(UsersJobs.getAllJobsByUser(u.getId()));
+//        }
+//        
         return u;
     }
     
@@ -441,7 +445,7 @@ public class Users implements Serializable {
             throw new NotFoundException(e.getMessage());
         }
         catch(Exception e){
-            throw new Exception(e.getMessage());
+            throw new Exception(e.getMessage() + "getUserById" + id_in);
         }
         finally{
             em.clear();

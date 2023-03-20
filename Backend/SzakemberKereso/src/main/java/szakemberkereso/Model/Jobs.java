@@ -276,8 +276,8 @@ public class Jobs implements Serializable {
         Integer o_deleted = Integer.parseInt(o[9].toString());
 
         Jobs j = new Jobs(o_id, o_description, o_total, o_status, o_customer_id, o_worker_id, o_customer_accepted, o_worker_accepted, o_updated_at, o_deleted);
-        j.setCustomer(Users.getUserById(j.getCustomerId()));
-        j.setWorker(Users.getUserById(j.getWorkerId()));
+//        j.setCustomer(Users.getUserById(j.getCustomerId()));
+//        j.setWorker(Users.getUserById(j.getWorkerId()));
         return j;
     }
     

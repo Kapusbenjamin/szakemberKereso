@@ -170,7 +170,7 @@ public class JobTags implements Serializable {
             throw new NotFoundException(e.getMessage());
         }
         catch(Exception e){
-            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")" + "getJobTagById");
         }
         finally{
             em.clear();

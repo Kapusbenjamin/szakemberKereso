@@ -194,7 +194,7 @@ public class Companies implements Serializable {
             throw new NotFoundException(e.getMessage());
         }
         catch(Exception e){
-            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")" + "getCompanyById" + id_in);
         }
         finally{
             em.clear();

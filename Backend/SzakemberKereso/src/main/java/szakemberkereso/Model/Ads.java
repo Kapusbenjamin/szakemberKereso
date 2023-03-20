@@ -256,9 +256,9 @@ public class Ads implements Serializable {
         Integer o_deleted = Integer.parseInt(o[6].toString());
 
         Ads ad = new Ads(o_id, o_user_id, o_job_tag_id, o_desc, o_updated_at, o_status, o_deleted);
-        ad.setJobTag(JobTags.getJobTagById(ad.getJobTagId()));
-        ad.setUser(Users.getUserById(ad.getUserId()));
-        ad.setCounties(AdsCounties.getAllCountiesByAd(ad.getId()));
+//        ad.setJobTag(JobTags.getJobTagById(ad.getJobTagId()));
+//        ad.setUser(Users.getUserById(ad.getUserId()));
+//        ad.setCounties(AdsCounties.getAllCountiesByAd(ad.getId()));
         
 //        ad.getUser().setActivatedAt(null);
 //        ad.getUser().setCreatedAt(null);
@@ -483,7 +483,7 @@ public class Ads implements Serializable {
             throw new NotFoundException(e.getMessage());
         }
         catch(Exception e){
-            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")" + "getAdById");
         }
         finally{
             em.clear();
