@@ -226,15 +226,17 @@ public class Favorites implements Serializable {
         }
     }
     
-    public static void deleteFavorite(Integer id_in) throws Exception{
+    public static void deleteFavorite(Favorites favorite) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
         
         try {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("deleteFavorite");
             
-            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
-            spq.setParameter("id_in", id_in);
+            spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("ad_id_in", Integer.class, ParameterMode.IN);
+            spq.setParameter("user_id_in", favorite.getCurrentUserId());
+            spq.setParameter("ad_id_in", Ads.getAdById(favorite.getAdId()).getId());
             
             spq.execute();
             

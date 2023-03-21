@@ -81,7 +81,7 @@ public class JobsService {
     public List<Jobs> getAllJobsByWorker(Jobs job) throws Exception{
         if (AuthService.isUserAuthorized(job.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.WORKER})) {
             //csak azok a user-ek kérhetik le akik a munkában a worker oldalon állnak
-            if(!Objects.equals(job.getCurrentUserId(), Jobs.getJobById(job).getWorkerId())){
+            if(!Objects.equals(job.getCurrentUserId(), job.getWorkerId())){
                 throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
             }
             List<Jobs> result = Jobs.getAllJobsByWorker(job);
@@ -95,7 +95,7 @@ public class JobsService {
     public List<Jobs> getAllJobsByCustomer(Jobs job) throws Exception{
         if (AuthService.isUserAuthorized(job.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.USER, Roles.WORKER})) {
             //csak azok a user-ek kérhetik le akik a munkában a customer oldalon állnak
-            if(!Objects.equals(job.getCurrentUserId(), Jobs.getJobById(job).getCustomerId())){
+            if(!Objects.equals(job.getCurrentUserId(), job.getCustomerId())){
                 throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
             }
             List<Jobs> result = Jobs.getAllJobsByCustomer(job);

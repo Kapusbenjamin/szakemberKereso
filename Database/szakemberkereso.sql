@@ -2,10 +2,10 @@
 -- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
--- Gép: 127.0.0.1
--- Létrehozás ideje: 2023. Már 17. 12:28
--- Kiszolgáló verziója: 10.4.22-MariaDB
--- PHP verzió: 8.0.13
+-- Host: 127.0.0.1
+-- Generation Time: Mar 21, 2023 at 04:06 PM
+-- Server version: 10.4.22-MariaDB
+-- PHP Version: 8.0.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,14 +18,14 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Adatbázis: `szakemberkereso`
+-- Database: `szakemberkereso`
 --
 CREATE DATABASE IF NOT EXISTS `szakemberkereso` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `szakemberkereso`;
 
 DELIMITER $$
 --
--- Eljárások
+-- Procedures
 --
 DROP PROCEDURE IF EXISTS `acceptAd`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptAd` (IN `id_in` INT(11))  UPDATE `ads`
@@ -212,7 +212,7 @@ WHERE NOT EXISTS (
 ) LIMIT 1$$
 
 DROP PROCEDURE IF EXISTS `createCompany`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createCompany` (IN `company_name_in` VARCHAR(200) CHARSET utf8, IN `premise_county_id_in` INT(11), IN `premise_zip_code_in` INT(5), IN `premise_city_in` VARCHAR(255) CHARSET utf8, IN `premise_street_in` VARCHAR(255) CHARSET utf8, IN `premise_number_in` VARCHAR(30) CHARSET utf8, IN `premise_staircase_in` VARCHAR(30) CHARSET utf8, IN `premise_floor_in` INT(4), IN `premise_door_in` INT(8), IN `tax_number_in` VARCHAR(255) CHARSET utf8, IN `user_id_in` INT(11))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createCompany` (IN `company_name_in` VARCHAR(200) CHARSET utf8, IN `premise_county_id_in` INT(11), IN `premise_zip_code_in` INT(5), IN `premise_city_in` VARCHAR(255) CHARSET utf8, IN `premise_street_in` VARCHAR(255) CHARSET utf8, IN `premise_number_in` VARCHAR(30) CHARSET utf8, IN `premise_staircase_in` VARCHAR(30) CHARSET utf8, IN `premise_floor_in` INT(4), IN `premise_door_in` INT(8), IN `tax_number_in` VARCHAR(255) CHARSET utf8)  BEGIN
    DECLARE company_address_id INT(11);
     
    CALL `createAddress`(premise_county_id_in, premise_zip_code_in, premise_city_in, premise_street_in, premise_number_in, premise_staircase_in, premise_floor_in, premise_door_in);
@@ -230,13 +230,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createCompany` (IN `company_name_in
         company_address_id,
         tax_number_in
     );
-    
-    IF(user_id_in != -1)
-    	THEN
-        	UPDATE `users`
-            SET `users`.`company_id` = LAST_INSERT_ID()
-            WHERE `users`.`id` = user_id_in;
- 	END IF;
 END$$
 
 DROP PROCEDURE IF EXISTS `createJob`$$
@@ -341,13 +334,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createUserWorker` (IN `first_name_i
     CALL `createAddress`(county_id_in, zip_code_in, city_in, street_in, number_in, staircase_in, floor_in, door_in);
     SELECT LAST_INSERT_ID() INTO address_id;
     
-    IF(company_name_in = "")
-    	THEN 
-        	SET company_id = NULL;
-    ELSE
-    	CALL `createCompany`(company_name_in, premise_county_id_in, premise_zip_code_in, premise_city_in, premise_street_in, premise_number_in, premise_staircase_in, premise_floor_in, premise_door_in, tax_number_in, -1);
-    	SELECT LAST_INSERT_ID() INTO company_id;
-    END IF;
+    CALL `createCompany`(company_name_in, premise_county_id_in, premise_zip_code_in, premise_city_in, premise_street_in, premise_number_in, premise_staircase_in, premise_floor_in, premise_door_in, tax_number_in);
+    SELECT LAST_INSERT_ID() INTO company_id;
     
 	INSERT INTO `users`
     (
@@ -396,8 +384,9 @@ WHERE `ads_counties`.`ad_id` = ad_id_in
 AND `ads_counties`.`county_id` = county_id_in$$
 
 DROP PROCEDURE IF EXISTS `deleteFavorite`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteFavorite` (IN `id_in` INT(11))  DELETE FROM `favorites`
-WHERE `favorites`.`id` = id_in$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteFavorite` (IN `user_id_in` INT(11), IN `ad_id_in` INT(11))  DELETE FROM `favorites`
+WHERE `favorites`.`user_id` = user_id_in
+AND `favorites`.`ad_id` = ad_id_in$$
 
 DROP PROCEDURE IF EXISTS `deleteImage`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteImage` (IN `id_in` INT(11))  DELETE FROM `images`
@@ -551,10 +540,6 @@ DROP PROCEDURE IF EXISTS `getCompanyById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCompanyById` (IN `id_in` INT(11))  SELECT * FROM `companies`
 WHERE `companies`.`id` = id_in$$
 
-DROP PROCEDURE IF EXISTS `getCountyById`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getCountyById` (IN `id_in` INT(11))  SELECT * FROM `counties`
-WHERE `counties`.`id` = id_in$$
-
 DROP PROCEDURE IF EXISTS `getCountyFilteredAds`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCountyFilteredAds` (IN `county_id_in` INT(11))  SELECT `ads`.`id`, `ads`.`user_id`, `ads`.`job_tag_id`, `ads`.`description`, `ads`.`updated_at`, `ads`.`status`, `ads`.`deleted` FROM `ads`
 INNER JOIN `ads_counties`
@@ -575,10 +560,6 @@ WHERE `ads_counties`.`county_id` = county_id_in
 AND `ads`.`job_tag_id` = job_tag_id_in
 AND `ads`.`status` = 1
 AND `ads`.`deleted` != 1$$
-
-DROP PROCEDURE IF EXISTS `getImageById`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getImageById` (IN `id_in` INT(11))  SELECT * FROM `images`
-WHERE `images`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `getImagesByUserId`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getImagesByUserId` (IN `user_id_in` INT(11))  SELECT * FROM `images`
@@ -610,17 +591,6 @@ DROP PROCEDURE IF EXISTS `integerToNull`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `integerToNull` (INOUT `int_in` INT)  IF(int_in = -1)
 	THEN SET int_in = null;
 END IF$$
-
-DROP PROCEDURE IF EXISTS `isEmailUnique`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `isEmailUnique` (IN `email_in` VARCHAR(255) CHARSET utf8, OUT `result` BOOLEAN)  BEGIN
-	IF((SELECT COUNT(*) FROM `users`
-      	WHERE `users`.`email` = email_in) = 0)
-        THEN
-        	SET result = true;
-	ELSE
-    	SET result = false;
- 	END IF;
-END$$
 
 DROP PROCEDURE IF EXISTS `loginUser`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `loginUser` (IN `us_in` VARCHAR(200) CHARSET utf8, IN `psw_in` VARCHAR(255) CHARSET utf8)  BEGIN
@@ -729,6 +699,11 @@ SET `users`.`first_name` = first_name_in,
 	`users`.`phone` = phone_in
 WHERE `users`.`id` = id_in$$
 
+DROP PROCEDURE IF EXISTS `validateEmail`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `validateEmail` (IN `id_in` INT(11))  UPDATE `users`
+SET `users`.`status` = 0
+WHERE `users`.`id` = id_in$$
+
 DROP PROCEDURE IF EXISTS `validateEmailByToken`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `validateEmailByToken` (IN `token_in` VARCHAR(255) CHARSET utf8)  UPDATE `users`
 SET `users`.`status` = 0,
@@ -743,7 +718,7 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `addresses`
+-- Table structure for table `addresses`
 --
 
 DROP TABLE IF EXISTS `addresses`;
@@ -760,20 +735,22 @@ CREATE TABLE `addresses` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `addresses`
+-- Dumping data for table `addresses`
 --
 
 INSERT INTO `addresses` (`id`, `county_id`, `zip_code`, `city`, `street`, `number`, `staircase`, `floor`, `door`) VALUES
 (1, 2, 7600, 'Pécs', '48-as tér', '12', NULL, NULL, NULL),
 (2, 2, 7600, 'Pécs', 'Apafi utca', '23', '1', 2, 3),
 (3, 1, 4532, 'Budapest', 'A utca', '23/A', NULL, NULL, NULL),
-(4, 1, 4532, 'Budapest', 'A utca', '23/A', NULL, NULL, NULL),
+(4, 2, 7600, 'Pécs', 'Ág utca', '56', NULL, NULL, NULL),
 (6, 5, 4532, 'Pécs', 'Petőfi', '13/A', 'Első', 2, 12),
 (40, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
 (41, 4, 1111, 'Bp', 'AAAA utca', '56', NULL, NULL, NULL),
 (42, 4, 1111, 'Bp', 'AAAA utca', '56', NULL, NULL, NULL),
-(43, 10, 4532, 'Budapest', 'A utca', '23/A', 'Hátsó', 2, 11),
+(43, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
 (44, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
+(45, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
+(46, 4, 1111, 'Bp', 'AAAA utca', '56', NULL, NULL, NULL),
 (47, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
 (48, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
 (49, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
@@ -791,16 +768,12 @@ INSERT INTO `addresses` (`id`, `county_id`, `zip_code`, `city`, `street`, `numbe
 (61, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
 (62, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
 (63, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(64, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
-(67, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(68, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(69, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(71, 11, 1111, 'pécs', 'utca', '11', NULL, NULL, NULL);
+(64, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `ads`
+-- Table structure for table `ads`
 --
 
 DROP TABLE IF EXISTS `ads`;
@@ -815,26 +788,23 @@ CREATE TABLE `ads` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `ads`
+-- Dumping data for table `ads`
 --
 
 INSERT INTO `ads` (`id`, `user_id`, `job_tag_id`, `description`, `updated_at`, `status`, `deleted`) VALUES
 (1, 2, 1, 'Valami', '2023-01-17 15:24:57', 1, 0),
-(2, 2, 3, 'aaaaaaaaaaaaa', '2023-03-08 19:00:16', 1, 0),
+(2, 2, 3, 'aaaaaaaaaaaaa', '2023-02-16 16:18:17', 0, 0),
 (3, 2, 5, 'asfddsgfs', '2023-01-29 16:10:55', 1, 0),
-(4, 2, 5, 'Semmi', '2023-03-08 18:58:54', 1, 0),
+(4, 2, 5, 'Semmi', '2023-01-29 14:53:19', 0, 0),
 (5, 4, 1, 'a', '2023-02-01 17:46:21', 1, 0),
 (6, 2, 5, 'Semmi', '2023-02-16 16:18:20', 1, 1),
 (7, 2, 5, 'aaaaaaaaaaaaa', '2023-01-29 15:42:30', 1, 1),
-(8, 2, 5, 'Semmi', '2023-02-16 16:18:13', 0, 0),
-(9, 2, 5, 'aaaaaaaaaaaaa', '2023-03-08 18:52:07', 0, 1),
-(10, 2, 360, 'Semmi', '2023-03-08 18:51:37', 0, 1),
-(11, 2, 2, 'Semmi', '2023-03-08 18:48:40', 0, 0);
+(10, 2, 5, 'Semmi', '2023-03-21 15:03:39', 0, 0);
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `ads_counties`
+-- Table structure for table `ads_counties`
 --
 
 DROP TABLE IF EXISTS `ads_counties`;
@@ -845,19 +815,19 @@ CREATE TABLE `ads_counties` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `ads_counties`
+-- Dumping data for table `ads_counties`
 --
 
 INSERT INTO `ads_counties` (`id`, `ad_id`, `county_id`) VALUES
+(1, 1, 2),
 (2, 1, 3),
 (5, 2, 5),
-(6, 4, 5),
-(7, 2, 5);
+(6, 2, 5);
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `chats`
+-- Table structure for table `chats`
 --
 
 DROP TABLE IF EXISTS `chats`;
@@ -868,7 +838,7 @@ CREATE TABLE `chats` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `chats`
+-- Dumping data for table `chats`
 --
 
 INSERT INTO `chats` (`id`, `sender_id`, `receiver_id`) VALUES
@@ -880,7 +850,7 @@ INSERT INTO `chats` (`id`, `sender_id`, `receiver_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `companies`
+-- Table structure for table `companies`
 --
 
 DROP TABLE IF EXISTS `companies`;
@@ -892,7 +862,7 @@ CREATE TABLE `companies` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `companies`
+-- Dumping data for table `companies`
 --
 
 INSERT INTO `companies` (`id`, `name`, `address_id`, `tax_number`) VALUES
@@ -906,13 +876,12 @@ INSERT INTO `companies` (`id`, `name`, `address_id`, `tax_number`) VALUES
 (10, 'A kft.', 58, '2132165465'),
 (11, 'A kft.', 60, '2132165465'),
 (12, 'A kft.', 62, '2132165465'),
-(13, 'A kft.', 64, '2132165465'),
-(16, 'asd', 71, '123456789');
+(13, 'A kft.', 64, '2132165465');
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `counties`
+-- Table structure for table `counties`
 --
 
 DROP TABLE IF EXISTS `counties`;
@@ -922,7 +891,7 @@ CREATE TABLE `counties` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `counties`
+-- Dumping data for table `counties`
 --
 
 INSERT INTO `counties` (`id`, `name`) VALUES
@@ -950,7 +919,7 @@ INSERT INTO `counties` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `favorites`
+-- Table structure for table `favorites`
 --
 
 DROP TABLE IF EXISTS `favorites`;
@@ -961,19 +930,17 @@ CREATE TABLE `favorites` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `favorites`
+-- Dumping data for table `favorites`
 --
 
 INSERT INTO `favorites` (`id`, `user_id`, `ad_id`) VALUES
 (1, 1, 1),
-(4, 4, 2),
-(5, 2, 10),
-(6, 2, 10);
+(4, 4, 2);
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `images`
+-- Table structure for table `images`
 --
 
 DROP TABLE IF EXISTS `images`;
@@ -987,7 +954,7 @@ CREATE TABLE `images` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `images`
+-- Dumping data for table `images`
 --
 
 INSERT INTO `images` (`id`, `url`, `title`, `status`, `user_id`, `created_at`) VALUES
@@ -1003,7 +970,7 @@ INSERT INTO `images` (`id`, `url`, `title`, `status`, `user_id`, `created_at`) V
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `jobs`
+-- Table structure for table `jobs`
 --
 
 DROP TABLE IF EXISTS `jobs`;
@@ -1021,18 +988,18 @@ CREATE TABLE `jobs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `jobs`
+-- Dumping data for table `jobs`
 --
 
 INSERT INTO `jobs` (`id`, `description`, `total`, `status`, `customer_id`, `worker_id`, `customer_accepted`, `worker_accepted`, `updated_at`, `deleted`) VALUES
-(1, 'Alma', 200000, 1, 2, 4, 1, 1, '2023-02-16 16:24:08', 1),
+(1, 'Alma', 200000, 1, 2, 4, 1, 1, '2023-03-21 14:52:00', 0),
 (2, 'Leírás', 0, 0, 1, 2, 1, 0, '2023-02-02 14:44:09', 0),
 (3, 'Leírás', 0, 0, 1, 2, 1, 0, '2023-02-16 16:24:17', 0);
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `job_tags`
+-- Table structure for table `job_tags`
 --
 
 DROP TABLE IF EXISTS `job_tags`;
@@ -1042,7 +1009,7 @@ CREATE TABLE `job_tags` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `job_tags`
+-- Dumping data for table `job_tags`
 --
 
 INSERT INTO `job_tags` (`id`, `name`) VALUES
@@ -1072,7 +1039,7 @@ INSERT INTO `job_tags` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `messages`
+-- Table structure for table `messages`
 --
 
 DROP TABLE IF EXISTS `messages`;
@@ -1087,22 +1054,22 @@ CREATE TABLE `messages` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `messages`
+-- Dumping data for table `messages`
 --
 
 INSERT INTO `messages` (`id`, `chat_id`, `sender_id`, `receiver_id`, `message`, `checked`, `sended_at`) VALUES
-(1, 3, 1, 2, 'Alma', 1, '2023-01-24 13:33:26'),
+(1, 3, 1, 2, 'Alma', 0, '2023-01-24 13:33:26'),
 (2, 4, 3, 2, 'Nem', 1, '2023-02-08 15:50:49'),
 (3, 1, 5, 6, 'Kettő is', 0, '2023-02-08 15:50:49'),
-(4, 3, 2, 3, 'De', 1, '2023-02-08 15:51:39'),
-(5, 4, 3, 2, 'Nemssssssss', 0, '2023-02-08 16:34:38'),
-(6, 3, 2, 3, 'Uzi', 1, '2023-02-08 16:35:51'),
-(7, 3, 2, 3, 'Uzi', 1, '2023-02-16 16:19:34');
+(4, 4, 2, 3, 'De', 1, '2023-02-08 15:51:39'),
+(5, 4, 3, 2, 'Nemssssssss', 1, '2023-02-08 16:34:38'),
+(6, 3, 2, 3, 'Uzi', 0, '2023-02-08 16:35:51'),
+(7, 3, 2, 3, 'Uzi', 0, '2023-02-16 16:19:34');
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `ratings`
+-- Table structure for table `ratings`
 --
 
 DROP TABLE IF EXISTS `ratings`;
@@ -1118,7 +1085,7 @@ CREATE TABLE `ratings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `ratings`
+-- Dumping data for table `ratings`
 --
 
 INSERT INTO `ratings` (`id`, `ratinged_user_id`, `ratinger_user_id`, `description`, `ratings_stars`, `status`, `updated_at`, `deleted`) VALUES
@@ -1130,7 +1097,7 @@ INSERT INTO `ratings` (`id`, `ratinged_user_id`, `ratinger_user_id`, `descriptio
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `users`
+-- Table structure for table `users`
 --
 
 DROP TABLE IF EXISTS `users`;
@@ -1155,26 +1122,23 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `users`
+-- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `access_type`, `email`, `phone`, `password`, `company_id`, `address_id`, `status`, `token`, `token_expired_at`, `last_login_at`, `created_at`, `activated_at`, `updated_at`, `deleted`) VALUES
-(1, 'Teszt', 'Ferenc', 0, 'tesztf@teszt-user.com', '+36202567896', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 16, 0, -1, NULL, NULL, NULL, '2023-01-05 15:57:39', NULL, '2023-03-17 11:23:04', 0),
+(1, 'Teszt', 'Ferenc', 0, 'tesztf@teszt-user.com', '+36202567896', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 0, -1, NULL, NULL, NULL, '2023-01-05 15:57:39', NULL, '2023-02-24 12:08:31', 0),
 (2, 'Teszt', 'László', 1, 'tesztl@teszt-user.com', '+36202567894', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 1, 0, 0, NULL, NULL, '2023-02-16 16:16:19', '2023-01-05 15:57:39', '2023-01-05 15:48:18', '2023-02-24 12:08:29', 0),
-(3, 'Teszt', 'Izabella', 0, 'tesztiza@teszt-user.com', '+36302987764', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 0, 0, NULL, NULL, '2023-01-05 15:55:18', '2023-01-05 15:57:39', '2023-01-04 15:48:18', '2023-03-01 12:44:30', 1),
+(3, 'Teszt', 'Izabella', 0, 'tesztiza@teszt-user.com', '+36302987764', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 0, 0, NULL, NULL, '2023-01-05 15:55:18', '2023-01-05 15:57:39', '2023-01-04 15:48:18', '2023-02-24 12:08:26', 0),
 (4, 'Teszt', 'Admin', 2, 'teszta@teszt-user.com', '+36702753456', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 0, 0, NULL, NULL, '2023-01-06 15:48:18', '2023-01-05 15:57:39', '2023-01-01 15:48:18', '2023-02-24 12:08:24', 0),
 (8, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 3, 39, -1, NULL, NULL, NULL, '2023-01-28 15:00:51', NULL, '2023-02-24 12:08:22', 0),
 (9, 'TESZT', 'AA', 0, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 43, -1, NULL, NULL, NULL, '2023-02-16 16:16:26', NULL, '2023-02-24 12:08:19', 0),
 (10, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 5, 44, -1, NULL, NULL, NULL, '2023-02-16 16:16:31', NULL, '2023-02-24 12:08:16', 0),
-(19, 'TESZT', 'AA', 1, 'bkap100@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 12, 61, 1, NULL, NULL, '2023-02-24 10:59:18', '2023-02-23 18:29:08', '2023-02-23 18:30:16', '2023-02-24 10:59:18', 0),
-(22, 'TESZT', 'AA', 1, 'regteszt@teszt-user.hu', '+36123456789', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', NULL, 67, -1, 'LOIAopdH4Um0avA1EMKbgicAUoXkskpfsZ6StFT1', '2023-03-12 17:00:52', NULL, '2023-03-12 16:50:52', NULL, '2023-03-12 16:50:52', 0),
-(23, 'TESZT', 'AA', 0, 'a@teszt-user.hu', '+36123456789', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', NULL, 68, -1, 'ZpJSjkEBgLtAOZ3guK0TRV41T6AnORLXEp7sGaKR', '2023-03-15 11:12:07', NULL, '2023-03-15 11:02:07', NULL, '2023-03-15 11:02:07', 0),
-(24, 'TESZT', 'AA', 0, 'regteszt2@teszt-user.hu', '+36123456789', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', NULL, 69, -1, 'uckD2R8Zbsnp94FoZsM6F2evFWKStrICWwgpskIR', '2023-03-15 11:28:52', NULL, '2023-03-15 11:18:52', NULL, '2023-03-15 11:18:52', 0);
+(19, 'TESZT', 'AA', 1, 'bkap100@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 12, 61, 1, NULL, NULL, '2023-02-24 10:59:18', '2023-02-23 18:29:08', '2023-02-23 18:30:16', '2023-02-24 10:59:18', 0);
 
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `users_jobs`
+-- Table structure for table `users_jobs`
 --
 
 DROP TABLE IF EXISTS `users_jobs`;
@@ -1185,7 +1149,7 @@ CREATE TABLE `users_jobs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `users_jobs`
+-- Dumping data for table `users_jobs`
 --
 
 INSERT INTO `users_jobs` (`id`, `user_id`, `job_tag_id`) VALUES
@@ -1193,177 +1157,177 @@ INSERT INTO `users_jobs` (`id`, `user_id`, `job_tag_id`) VALUES
 (3, 4, 5);
 
 --
--- Indexek a kiírt táblákhoz
+-- Indexes for dumped tables
 --
 
 --
--- A tábla indexei `addresses`
+-- Indexes for table `addresses`
 --
 ALTER TABLE `addresses`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `ads`
+-- Indexes for table `ads`
 --
 ALTER TABLE `ads`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `ads_counties`
+-- Indexes for table `ads_counties`
 --
 ALTER TABLE `ads_counties`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `chats`
+-- Indexes for table `chats`
 --
 ALTER TABLE `chats`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `companies`
+-- Indexes for table `companies`
 --
 ALTER TABLE `companies`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `counties`
+-- Indexes for table `counties`
 --
 ALTER TABLE `counties`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `favorites`
+-- Indexes for table `favorites`
 --
 ALTER TABLE `favorites`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `images`
+-- Indexes for table `images`
 --
 ALTER TABLE `images`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `jobs`
+-- Indexes for table `jobs`
 --
 ALTER TABLE `jobs`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `job_tags`
+-- Indexes for table `job_tags`
 --
 ALTER TABLE `job_tags`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `messages`
+-- Indexes for table `messages`
 --
 ALTER TABLE `messages`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `ratings`
+-- Indexes for table `ratings`
 --
 ALTER TABLE `ratings`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `users_jobs`
+-- Indexes for table `users_jobs`
 --
 ALTER TABLE `users_jobs`
   ADD PRIMARY KEY (`id`);
 
 --
--- A kiírt táblák AUTO_INCREMENT értéke
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT a táblához `addresses`
+-- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
--- AUTO_INCREMENT a táblához `ads`
+-- AUTO_INCREMENT for table `ads`
 --
 ALTER TABLE `ads`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT a táblához `ads_counties`
+-- AUTO_INCREMENT for table `ads_counties`
 --
 ALTER TABLE `ads_counties`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT a táblához `chats`
+-- AUTO_INCREMENT for table `chats`
 --
 ALTER TABLE `chats`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT a táblához `companies`
+-- AUTO_INCREMENT for table `companies`
 --
 ALTER TABLE `companies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
--- AUTO_INCREMENT a táblához `counties`
+-- AUTO_INCREMENT for table `counties`
 --
 ALTER TABLE `counties`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT a táblához `favorites`
+-- AUTO_INCREMENT for table `favorites`
 --
 ALTER TABLE `favorites`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT a táblához `images`
+-- AUTO_INCREMENT for table `images`
 --
 ALTER TABLE `images`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT a táblához `jobs`
+-- AUTO_INCREMENT for table `jobs`
 --
 ALTER TABLE `jobs`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT a táblához `job_tags`
+-- AUTO_INCREMENT for table `job_tags`
 --
 ALTER TABLE `job_tags`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
--- AUTO_INCREMENT a táblához `messages`
+-- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT a táblához `ratings`
+-- AUTO_INCREMENT for table `ratings`
 --
 ALTER TABLE `ratings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT a táblához `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT a táblához `users_jobs`
+-- AUTO_INCREMENT for table `users_jobs`
 --
 ALTER TABLE `users_jobs`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;

@@ -20,11 +20,7 @@ public class FavoritesService {
     
     public List<Favorites> getAllfavoritesByUserId(Favorites favorite) throws Exception{
         if (AuthService.isUserAuthorized(favorite.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.WORKER, Roles.USER})){
-            //a user-ek csak a saját kedvencüket kérhetik le
-            if(!Objects.equals(favorite.getCurrentUserId(), favorite.getUserId())){
-                throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
-            }
-            List<Favorites> result = Favorites.getAllfavoritesByUserId(favorite.getUserId());
+            List<Favorites> result = Favorites.getAllfavoritesByUserId(favorite.getCurrentUserId());
             return result;
         }
         else{
@@ -48,11 +44,7 @@ public class FavoritesService {
             
     public void deleteFavorite(Favorites favorite) throws Exception{
         if (AuthService.isUserAuthorized(favorite.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.WORKER, Roles.USER})){
-            //a user-ek csak a saját kedvencüket törölhetik
-            if(!Objects.equals(favorite.getCurrentUserId(), Favorites.getFavoriteById(favorite.getId()).getUserId())){
-                throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
-            }
-            Favorites.deleteFavorite(favorite.getId());
+            Favorites.deleteFavorite(favorite);
         }
         else{
             throw new AuthenticationFailedException("Nem sikerült azonosítani!");
