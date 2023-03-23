@@ -6,6 +6,7 @@ import { AdsCountiesService } from 'src/app/_services/ads-counties.service'
 import { RatingsService } from 'src/app/_services/ratings.service';
 import { Rating } from 'src/app/_model/Rating';
 import { AdsService } from 'src/app/_services/ads.service';
+import { FavoriteService } from 'src/app/_services/favorite.service';
 
 @Component({
   selector: 'app-advest',
@@ -26,6 +27,7 @@ export class AdvestComponent implements OnInit {
      private jobTagsService: JobTagsService,
      private adsCountiesService: AdsCountiesService,
      private ratingService: RatingsService, private adsService: AdsService,
+     private favoriteService: FavoriteService
      ) {
       this.currentUser = this.userService.userData.userId;
       }
@@ -74,7 +76,21 @@ export class AdvestComponent implements OnInit {
 
   deleteAd(){
     this.adsService.deleteAd(this.ad.id).subscribe(()=>window.location.reload());
+  }
 
+  addAdToFavorite(){
+    let adId = this.ad.id
+    let userId = this.currentUser
+    this.favoriteService.addFavorite(userId,adId).subscribe(res=>{
+      this.favorite = true;
+    });
+  }
+
+  removeAdFromFavorites(){
+    let adId = this.ad.id
+    this.favoriteService.deleteFavorite(adId).subscribe(res=>{
+      this.favorite = false;
+    });
   }
 
 }

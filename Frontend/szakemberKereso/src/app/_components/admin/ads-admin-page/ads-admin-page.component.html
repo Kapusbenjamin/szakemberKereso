@@ -7,7 +7,7 @@
                 <button mat-raised-button color="warn" (click)="deleteAd(ad)" >Elutasít</button>
             </div>
         </div>
-        <div *ngIf="ads">
+        <div *ngIf="ads.length == 0">
             Nincs elfogadásra váró hirdetés
         </div>
     </div>

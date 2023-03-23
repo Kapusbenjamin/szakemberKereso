@@ -16,14 +16,13 @@
                         {{ county.name }}
                     </option>
                 </select>
-                <button *ngIf="i != 0" type="button" (click)="deleteCounty(i)">-</button>
+                <button mat-raised-button color="warn" class="button" *ngIf="i != 0" type="button" (click)="deleteCounty(i)">-</button>
             </div>
-            <button (click)="addCounty()">+</button>
+            <button mat-raised-button color="primary" class="button" (click)="addCounty()">+</button>
         </div>
         Leírás:
         <textarea formControlName="description" name="" id="" cols="30" rows="10"></textarea>
-        <button>Mégse</button>
-        <button (click)="createAd()">Hirdetés Feladása</button>
+        <button mat-raised-button color="warn" (click)="function">Mégse</button>
+        <button mat-raised-button color="primary" (click)="createAd()">Hirdetés Feladása</button>
     </form>
-    {{ formG.value | json }}
 </div>

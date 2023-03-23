@@ -60,9 +60,9 @@ export class FavoriteService {
     );
   }
 
-  deleteFavorite(id: number){
+  deleteFavorite(adId: number){
     return this.http.post(`${this.apiUrl}deleteFavorite`,{
-      id,
+      adId,
       currentUserId: this.currentUserId
     }).pipe(
       map((response: any)=> {

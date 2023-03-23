@@ -22,8 +22,8 @@
       <button mat-raised-button color="warn" (click)="deleteAd()">Hirdetés Törlése</button>
     </div>  
     <div *ngIf="currentUser != ad.userId">
-      <button mat-raised-button *ngIf="!favorite">Hozzáadaás a kedvencekhez</button>
-      <button mat-raised-button *ngIf="favorite" >Eltávolítás a kedvencek közül</button>
+      <button mat-raised-button *ngIf="!favorite" (click)="addAdToFavorite()">Hozzáadaás a kedvencekhez</button>
+      <button mat-raised-button *ngIf="favorite" (click)="removeAdFromFavorites()">Eltávolítás a kedvencek közül</button>
       <button mat-raised-button>Üzenet a Feladónak</button>
       <button mat-raised-button>Megbízás Létrehozása</button>
     </div>

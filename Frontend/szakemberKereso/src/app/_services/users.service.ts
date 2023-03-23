@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { User } from '../_model/User';
@@ -39,23 +39,19 @@ export class UsersService {
     );
   }
 
-  loginUser(email:string | null, phone:string | null, password:string): Observable<User>{
+  loginUser(email:string | null, phone:string | null, password:string):Observable<any>{
     let user = {
-      email: email,
-      phone: phone,
-      password: password
+      email,
+      phone,
+      password
     }
-    return this.http.post<User>(`${this.apiUrl}loginUser`,user).pipe(
-      map((response: any)=> {
-        console.log(response.message);
-        if(response.message == "Sikeresen bejelentkezett!"){
-          return response.result;
-        }
-      }),
+    return this.http.post<any>(`${this.apiUrl}loginUser`,user).pipe(
       catchError(error => {
+        console.log(error.status);
+        alert("Sikertelen Bejelentkezés");
         return throwError(error);
       })
-    );
+    )
   }
 
   logoutUser(){

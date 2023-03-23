@@ -35,9 +35,10 @@ export class LoginFormComponent implements OnInit {
         phone = emailNumber;
       }
       let password = this.loginForm.controls['password'].value!;
-      this.usersService.loginUser(email,phone,password).subscribe((response: User)=>{
-        User = response;
-        if(User.id! > 0){
+      this.usersService.loginUser(email,phone,password)
+      .subscribe((response: any)=>{   
+        User = response.result;
+        if(User.id! > 0){          
           let userData: UserData ={
             name: User.firstName + " " + User.lastName,
             userId: User.id!,
@@ -49,9 +50,7 @@ export class LoginFormComponent implements OnInit {
           alert('Sikertelen bejelentkezés');
         }
       });
-     }else{
-      alert('Érvénytelen bejelentkezés');
-    }
+     }
   }
 
 }

@@ -19,6 +19,7 @@ export class DialogComponent implements OnInit {
   formG: FormGroup;
   userId: number;
   countiesTags: Tag[] = [];
+  @Input() function! : any;
   
   constructor(private userJobService: UsersJobsService,private fb: FormBuilder,
     private adsCounties: AdsCountiesService, private adsService: AdsService,
@@ -50,10 +51,8 @@ export class DialogComponent implements OnInit {
   }
 
   createAd(){
-    // let jobTagId = this.formG.get('jobTagId')?.value
-    // let description = this.formG.get('description')?.value
-    let jobTagId = 1;
-    let description = "Create ad Teszt"
+    let jobTagId = this.formG.get('jobTagId')?.value
+    let description = this.formG.get('description')?.value
     this.adsService.createAd(this.userId,jobTagId,description).subscribe((res)=>{
       let adId = res as number;
       console.log(adId);
@@ -61,9 +60,6 @@ export class DialogComponent implements OnInit {
         this.addcountyToAd(adId, county);
       });
     })
-  }
-
-  lo(){
   }
 
   addcountyToAd(id:number, county: number){
