@@ -38,6 +38,9 @@ import { AdsAdminPageComponent } from './_components/admin/ads-admin-page/ads-ad
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { UsersAdminPageComponent } from './_components/admin/users-admin-page/users-admin-page.component';
+import { JobComponent } from './_components/job/job.component';
+import { RatingComponent } from './_components/rating/rating.component';
+import { JobPageComponent } from './_components/main/job-page/job-page.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +66,10 @@ import { UsersAdminPageComponent } from './_components/admin/users-admin-page/us
     FavoritesPageComponent,
     AdminPageComponent,
     AdsAdminPageComponent,
-    UsersAdminPageComponent
+    UsersAdminPageComponent,
+    JobComponent,
+    RatingComponent,
+    JobPageComponent
   ],
   imports: [
     BrowserModule,

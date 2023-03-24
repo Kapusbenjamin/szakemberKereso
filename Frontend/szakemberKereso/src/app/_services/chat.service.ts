@@ -27,10 +27,10 @@ export class ChatService {
     );
   }
 
-  createChat(id: number){
+  createChat(senderId: number,receiverId: number){
     return this.http.post(`${this.apiUrl}createChat`,{
-      senderId: this.userService.userData.userId,
-      receiverId: id,
+      senderId,
+      receiverId,
       currentUserId: this.userService.userData.userId
   }).pipe(
     map((response: any)=> {

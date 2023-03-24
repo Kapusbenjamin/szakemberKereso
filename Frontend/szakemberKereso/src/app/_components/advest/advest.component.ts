@@ -7,6 +7,8 @@ import { RatingsService } from 'src/app/_services/ratings.service';
 import { Rating } from 'src/app/_model/Rating';
 import { AdsService } from 'src/app/_services/ads.service';
 import { FavoriteService } from 'src/app/_services/favorite.service';
+import { Router } from '@angular/router';
+import { ChatService } from 'src/app/_services/chat.service';
 
 @Component({
   selector: 'app-advest',
@@ -27,7 +29,7 @@ export class AdvestComponent implements OnInit {
      private jobTagsService: JobTagsService,
      private adsCountiesService: AdsCountiesService,
      private ratingService: RatingsService, private adsService: AdsService,
-     private favoriteService: FavoriteService
+     private favoriteService: FavoriteService, private router: Router, private chatService: ChatService
      ) {
       this.currentUser = this.userService.userData.userId;
       }
@@ -91,6 +93,12 @@ export class AdvestComponent implements OnInit {
     this.favoriteService.deleteFavorite(adId).subscribe(res=>{
       this.favorite = false;
     });
+  }
+
+  goToMessage(){
+    this.chatService.createChat(this.currentUser,this.ad.userId).subscribe((res)=>{
+      this.router.navigate(['main/messages']);
+    })
   }
 
 }
