@@ -142,7 +142,7 @@ public class AdsCounties implements Serializable {
             spq.registerStoredProcedureParameter("ad_id_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("county_id_in", Integer.class, ParameterMode.IN);
 
-            spq.setParameter("ad_id_in", Ads.getAdById(ad_county.getAdId()).getId());
+            spq.setParameter("ad_id_in", Ads.getIdIfAdIsValid(ad_county.getAdId()));
             spq.setParameter("county_id_in", Counties.getCountyById(ad_county.getCountyId()).getId());
 
             spq.execute();
@@ -170,7 +170,7 @@ public class AdsCounties implements Serializable {
             spq.registerStoredProcedureParameter("ad_id_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("county_id_in", Integer.class, ParameterMode.IN);
 
-            spq.setParameter("ad_id_in", Ads.getAdById(ad_county.getAdId()).getId());
+            spq.setParameter("ad_id_in", Ads.getIdIfAdIsValid(ad_county.getAdId()));
             spq.setParameter("county_id_in", Counties.getCountyById(ad_county.getCountyId()).getId());
 
             spq.execute();
@@ -200,7 +200,7 @@ public class AdsCounties implements Serializable {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllCountiesByAd");
             
             spq.registerStoredProcedureParameter("ad_id_in", Integer.class, ParameterMode.IN);
-            spq.setParameter("ad_id_in", Ads.getAdById(ad_id_in).getId());
+            spq.setParameter("ad_id_in", Ads.getIdIfAdIsValid(ad_id_in));
 
             spq.execute();
             

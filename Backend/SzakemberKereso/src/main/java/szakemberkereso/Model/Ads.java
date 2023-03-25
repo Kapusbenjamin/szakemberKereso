@@ -97,6 +97,10 @@ public class Ads implements Serializable {
     @Transient
     @JsonInclude
     private List<Counties> counties;
+    //értékelés
+    @Transient
+    @JsonInclude
+    private List<Ratings> userRatings;
     
     //jogosultság miatt
     @Transient
@@ -221,6 +225,14 @@ public class Ads implements Serializable {
         this.counties = counties;
     }
 
+    public List<Ratings> getUserRatings() {
+        return userRatings;
+    }
+
+    public void setUserRatings(List<Ratings> userRatings) {
+        this.userRatings = userRatings;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -256,17 +268,18 @@ public class Ads implements Serializable {
         Integer o_deleted = Integer.parseInt(o[6].toString());
 
         Ads ad = new Ads(o_id, o_user_id, o_job_tag_id, o_desc, o_updated_at, o_status, o_deleted);
-//        ad.setJobTag(JobTags.getJobTagById(ad.getJobTagId()));
-//        ad.setUser(Users.getUserById(ad.getUserId()));
-//        ad.setCounties(AdsCounties.getAllCountiesByAd(ad.getId()));
+        ad.setUserRatings(Ratings.getAllRatingsByRatinged(ad.getUserId()));
+        ad.setJobTag(JobTags.getJobTagById(ad.getJobTagId()));
+        ad.setUser(Users.getUserById(ad.getUserId()));
+        ad.setCounties(AdsCounties.getAllCountiesByAd(ad.getId()));
         
-//        ad.getUser().setActivatedAt(null);
-//        ad.getUser().setCreatedAt(null);
-//        ad.getUser().setDeleted(null);
-//        ad.getUser().setLastLoginAt(null);
-//        ad.getUser().setStatus(null);
-//        ad.getUser().setUpdatedAt(null);
-//        ad.getUser().setAccessType(null);
+        ad.getUser().setActivatedAt(null);
+        ad.getUser().setCreatedAt(null);
+        ad.getUser().setDeleted(null);
+        ad.getUser().setLastLoginAt(null);
+        ad.getUser().setStatus(null);
+        ad.getUser().setUpdatedAt(null);
+        ad.getUser().setAccessType(null);
         
         return ad;
     }
@@ -474,6 +487,41 @@ public class Ads implements Serializable {
             if(!result.isEmpty()){
                 Ads ad = Ads.objectToAd(result.get(0));
                 return ad;
+            }
+            else{
+                throw new NotFoundException("Nincs ilyen hirdetés!");
+            }
+        } 
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")" + "getAdById");
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+        
+    }
+    
+    public static Integer getIdIfAdIsValid(Integer id_in) throws Exception{
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {            
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getAdById");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            spq.setParameter("id_in", id_in);
+            
+            spq.execute();
+            
+            List<Object[]> result = spq.getResultList();
+            if(!result.isEmpty()){
+                Integer id = Integer.parseInt(result.get(0)[0].toString());
+                return id;
             }
             else{
                 throw new NotFoundException("Nincs ilyen hirdetés!");

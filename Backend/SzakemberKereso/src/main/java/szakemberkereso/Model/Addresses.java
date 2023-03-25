@@ -252,7 +252,7 @@ public class Addresses implements Serializable {
                 Integer r_door = r[8] != null ? Integer.parseInt(r[8].toString()) : null;
 
                 Addresses address = new Addresses(r_id, r_county_id, r_zip_code, r_city, r_street, r_number, r_staircase, r_floor, r_door);
-//                address.setCounty(Counties.getCountyById(address.getCountyId()));
+                address.setCounty(Counties.getCountyById(address.getCountyId()));
                 
                 return address;
             }

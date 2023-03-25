@@ -389,28 +389,28 @@ public class Users implements Serializable {
         Integer o_access_type = Integer.parseInt(o[3].toString());
         String o_email = o[4].toString();
         String o_phone = o[5].toString();
-        String o_password = o[6].toString();
+//        String o_password = o[6].toString();
         Integer o_company_id = o[7] != null ? Integer.parseInt(o[7].toString()) : null;
         Integer o_address_id = Integer.parseInt(o[8].toString());
         Integer o_status = Integer.parseInt(o[9].toString());
-        String o_token = o[10] != null ? o[10].toString() : null;
-        Date o_token_expired_at = o[11] != null ? Timestamp.valueOf(o[11].toString()) : null;
+//        String o_token = o[10] != null ? o[10].toString() : null;
+//        Date o_token_expired_at = o[11] != null ? Timestamp.valueOf(o[11].toString()) : null;
         Date o_last_login_at = o[12] != null ? Timestamp.valueOf(o[12].toString()) : null;
         Date o_created_at = Timestamp.valueOf(o[13].toString());
         Date o_activated_at = o[14] != null ? Timestamp.valueOf(o[14].toString()) : null;
         Date o_updated_at = Timestamp.valueOf(o[15].toString());
         Integer o_deleted = Integer.parseInt(o[16].toString());
 
-        Users u = new Users(o_id, o_first_name, o_last_name, o_access_type, o_email, o_phone, o_password, o_company_id, o_address_id, o_status, o_token, o_token_expired_at, o_last_login_at, o_created_at, o_activated_at, o_updated_at, o_deleted);
-//        
-//        if(u.getCompanyId() != null){
-//            u.setCompany(Companies.getCompanyById(u.getCompanyId()));
-//        }
-//        u.setAddress(Addresses.getAddressById(u.getAddressId()));
-//        if(u.getAccessType() > 0){
-//            u.setJobTags(UsersJobs.getAllJobsByUser(u.getId()));
-//        }
-//        
+        Users u = new Users(o_id, o_first_name, o_last_name, o_access_type, o_email, o_phone, null, o_company_id, o_address_id, o_status, null, null, o_last_login_at, o_created_at, o_activated_at, o_updated_at, o_deleted);
+        
+        if(u.getCompanyId() != null){
+            u.setCompany(Companies.getCompanyById(u.getCompanyId()));
+        }
+        u.setAddress(Addresses.getAddressById(u.getAddressId()));
+        if(u.getAccessType() > 0){
+            u.setJobTags(UsersJobs.getAllJobsByUser(u.getId()));
+        }
+        
         return u;
     }
     
@@ -430,12 +430,42 @@ public class Users implements Serializable {
             if(!result.isEmpty()){
                 Object[] r = result.get(0);
                 Users u = Users.objectToUser(r);
-
-                u.setPassword(null);
-                u.setToken(null);
-                u.setTokenExpiredAt(null);
-                
                 return u;
+            }
+            else{
+                throw new NotFoundException("Nincs ilyen felhasználó!");
+            }
+        } 
+        catch (NotFoundException e) {
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception(e.getMessage() + "getUserById" + id_in);
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
+    
+    public static Integer getIdIfUserValid(Integer id_in) throws Exception{
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("getUserById");
+            
+            spq.registerStoredProcedureParameter("id_in", Integer.class, ParameterMode.IN);
+            spq.setParameter("id_in", id_in);
+            
+            spq.execute();
+            List<Object[]> result = spq.getResultList();
+            
+            if(!result.isEmpty()){
+                Object[] r = result.get(0);
+                Integer id = Integer.parseInt(r[0].toString());
+                return id;
             }
             else{
                 throw new NotFoundException("Nincs ilyen felhasználó!");

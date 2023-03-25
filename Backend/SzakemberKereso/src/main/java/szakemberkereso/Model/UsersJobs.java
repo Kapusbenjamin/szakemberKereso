@@ -142,7 +142,7 @@ public class UsersJobs implements Serializable {
             spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("job_tag_id_in", Integer.class, ParameterMode.IN);
 
-            spq.setParameter("user_id_in", Users.getUserById(user_job.getUserId()).getId());
+            spq.setParameter("user_id_in", Users.getIdIfUserValid(user_job.getUserId()));
             spq.setParameter("job_tag_id_in", JobTags.getJobTagById(user_job.getJobTagId()).getId());
 
             spq.execute();
@@ -170,7 +170,7 @@ public class UsersJobs implements Serializable {
             spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("job_tag_id_in", Integer.class, ParameterMode.IN);
 
-            spq.setParameter("user_id_in", Users.getUserById(user_job.getUserId()).getId());
+            spq.setParameter("user_id_in", Users.getIdIfUserValid(user_job.getUserId()));
             spq.setParameter("job_tag_id_in", JobTags.getJobTagById(user_job.getJobTagId()).getId());
 
             spq.execute();
@@ -200,7 +200,7 @@ public class UsersJobs implements Serializable {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllJobsByUser");
             
             spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
-            spq.setParameter("user_id_in", Users.getUserById(user_id_in).getId());
+            spq.setParameter("user_id_in", Users.getIdIfUserValid(user_id_in));
 
             spq.execute();
             

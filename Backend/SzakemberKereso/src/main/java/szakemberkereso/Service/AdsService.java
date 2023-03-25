@@ -92,13 +92,13 @@ public class AdsService {
             if(AuthService.isUserAuthorized(ad.getCurrentUserId(), new Roles[]{Roles.WORKER, Roles.USER})){
                 if(AuthService.isUserAuthorized(ad.getCurrentUserId(), new Roles[]{Roles.WORKER})){
                     //a WORKER-ek csak a saját hirdetésüknél kérhetik le a még nem elfogadottakat is
-                    if(Objects.equals(ad.getCurrentUserId(), Users.getUserById(ad.getUserId()).getId())){
+                    if(Objects.equals(ad.getCurrentUserId(), Users.getIdIfUserValid(ad.getUserId()))){
                         List<Ads> result = Ads.getAllAdsByUserId(ad.getUserId());
                         return result;
                     }
                 }
                 //a USER jogosultságú user-ek és azok a WORKER-ek akik más hirdetéseit akarják lekérni csak az elfogadott hirdetéseket láthatják
-                List<Ads> ads = Ads.getAllAdsByUserId(Users.getUserById(ad.getUserId()).getId());
+                List<Ads> ads = Ads.getAllAdsByUserId(Users.getIdIfUserValid(ad.getUserId()));
                 List<Ads> result = new ArrayList<>();
                 for(Ads a : ads){
                     if(a.getStatus() == 1){
@@ -107,7 +107,7 @@ public class AdsService {
                 }
                 return result;
             }
-            List<Ads> result = Ads.getAllAdsByUserId(Users.getUserById(ad.getUserId()).getId());
+            List<Ads> result = Ads.getAllAdsByUserId(Users.getIdIfUserValid(ad.getUserId()));
             return result;
         }
         else{

@@ -150,7 +150,7 @@ public class Favorites implements Serializable {
         Integer o_ad_id = Integer.parseInt(o[2].toString());
 
         Favorites f = new Favorites(o_id, o_user_id, o_ad_id);
-//        f.setAd(Ads.getAdById(f.getAdId()));
+        f.setAd(Ads.getAdById(f.getAdId()));
         return f;
     }
     

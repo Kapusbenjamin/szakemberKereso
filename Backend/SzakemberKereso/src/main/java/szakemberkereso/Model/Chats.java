@@ -260,8 +260,8 @@ public class Chats implements Serializable {
             spq.registerStoredProcedureParameter("sender_id_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("receiver_id_in", Integer.class, ParameterMode.IN);
 
-            spq.setParameter("sender_id_in", Users.getUserById(chat.getSenderId()).getId());
-            spq.setParameter("receiver_id_in", Users.getUserById(chat.getReceiverId()).getId());
+            spq.setParameter("sender_id_in", Users.getIdIfUserValid(chat.getSenderId()));
+            spq.setParameter("receiver_id_in", Users.getIdIfUserValid(chat.getReceiverId()));
 
             spq.execute();
         } 

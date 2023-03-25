@@ -361,7 +361,7 @@ public class Ratings implements Serializable {
         try {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllRatingsByRatinger");            
             spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
-            spq.setParameter("user_id_in", Users.getUserById(user_id_in).getId());
+            spq.setParameter("user_id_in", Users.getIdIfUserValid(user_id_in));
             
             spq.execute();
             
@@ -396,7 +396,7 @@ public class Ratings implements Serializable {
         try {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllRatingsByRatinged");            
             spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
-            spq.setParameter("user_id_in", Users.getUserById(user_id_in).getId());
+            spq.setParameter("user_id_in", Users.getIdIfUserValid(user_id_in));
             
             spq.execute();
             
@@ -526,8 +526,8 @@ public class Ratings implements Serializable {
             spq.registerStoredProcedureParameter("desc_in", String.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("ratings_stars_in", Integer.class, ParameterMode.IN);
             
-            spq.setParameter("ratinged_user_id_in", Users.getUserById(rating.getRatingedUserId()).getId());
-            spq.setParameter("ratinger_user_id_in", Users.getUserById(rating.getRatingerUserId()).getId());
+            spq.setParameter("ratinged_user_id_in", Users.getIdIfUserValid(rating.getRatingedUserId()));
+            spq.setParameter("ratinger_user_id_in", Users.getIdIfUserValid(rating.getRatingerUserId()));
             spq.setParameter("desc_in", rating.getDescription());
             spq.setParameter("ratings_stars_in", rating.getRatingsStars());
             

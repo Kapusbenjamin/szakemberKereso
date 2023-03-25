@@ -276,8 +276,8 @@ public class Jobs implements Serializable {
         Integer o_deleted = Integer.parseInt(o[9].toString());
 
         Jobs j = new Jobs(o_id, o_description, o_total, o_status, o_customer_id, o_worker_id, o_customer_accepted, o_worker_accepted, o_updated_at, o_deleted);
-//        j.setCustomer(Users.getUserById(j.getCustomerId()));
-//        j.setWorker(Users.getUserById(j.getWorkerId()));
+        j.setCustomer(Users.getUserById(j.getCustomerId()));
+        j.setWorker(Users.getUserById(j.getWorkerId()));
         return j;
     }
     
@@ -418,7 +418,7 @@ public class Jobs implements Serializable {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllJobsByWorker");
             
             spq.registerStoredProcedureParameter("worker_id_in", Integer.class, ParameterMode.IN);
-            spq.setParameter("worker_id_in", Users.getUserById(job_in.getWorkerId()).getId());
+            spq.setParameter("worker_id_in", Users.getIdIfUserValid(job_in.getWorkerId()));
             
             spq.execute();
             
@@ -454,7 +454,7 @@ public class Jobs implements Serializable {
             StoredProcedureQuery spq = em.createStoredProcedureQuery("getAllJobsByCustomer");
             
             spq.registerStoredProcedureParameter("customer_id_in", Integer.class, ParameterMode.IN);
-            spq.setParameter("customer_id_in", Users.getUserById(job_in.getCustomerId()).getId());
+            spq.setParameter("customer_id_in", Users.getIdIfUserValid(job_in.getCustomerId()));
             
             spq.execute();
             
@@ -491,8 +491,8 @@ public class Jobs implements Serializable {
             spq.registerStoredProcedureParameter("worker_id_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("desc_in", String.class, ParameterMode.IN);
             
-            spq.setParameter("customer_id_in", Users.getUserById(job.getCustomerId()).getId());
-            spq.setParameter("worker_id_in", Users.getUserById(job.getWorkerId()).getId());
+            spq.setParameter("customer_id_in", Users.getIdIfUserValid(job.getCustomerId()));
+            spq.setParameter("worker_id_in", Users.getIdIfUserValid(job.getWorkerId()));
             spq.setParameter("desc_in", job.getDescription());
 
             spq.execute();

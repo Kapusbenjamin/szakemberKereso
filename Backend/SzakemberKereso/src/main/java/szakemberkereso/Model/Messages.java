@@ -220,8 +220,8 @@ public class Messages implements Serializable {
             spq.registerStoredProcedureParameter("user1_id_in", Integer.class, ParameterMode.IN);
             spq.registerStoredProcedureParameter("user2_id_in", Integer.class, ParameterMode.IN);
             
-            spq.setParameter("user1_id_in", Users.getUserById(message.getSenderId()).getId());
-            spq.setParameter("user2_id_in", Users.getUserById(message.getReceiverId()).getId());
+            spq.setParameter("user1_id_in", Users.getIdIfUserValid(message.getSenderId()));
+            spq.setParameter("user2_id_in", Users.getIdIfUserValid(message.getReceiverId()));
             
             spq.execute();
             List<Object[]> result = spq.getResultList();
@@ -319,8 +319,8 @@ public class Messages implements Serializable {
             spq.registerStoredProcedureParameter("message_in", String.class, ParameterMode.IN);
             
             spq.setParameter("chat_id_in", Chats.getChatById(message.getChatId()).getId());
-            spq.setParameter("sender_id_in", Users.getUserById(message.getSenderId()).getId());
-            spq.setParameter("receiver_id_in", Users.getUserById(message.getReceiverId()).getId());
+            spq.setParameter("sender_id_in", Users.getIdIfUserValid(message.getSenderId()));
+            spq.setParameter("receiver_id_in", Users.getIdIfUserValid(message.getReceiverId()));
             spq.setParameter("message_in", message.getMessage());
             
             spq.execute();
