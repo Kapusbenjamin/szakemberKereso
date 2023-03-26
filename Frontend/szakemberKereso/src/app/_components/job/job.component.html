@@ -1,10 +1,10 @@
 <div class="job">
-    <h2 [ngClass]="job.customerAccepted? 'green' : 'red' ">Megrendelő: {{job.customerId}}</h2>
-    <h2 [ngClass]="job.workerAccepted? 'green' : 'red' ">Szakember: {{job.workerId}}</h2>
+    <h2 [ngClass]="job.customerAccepted? 'green' : 'red' ">Megrendelő: {{job.customer.firstName + " " + job.customer.lastName}}</h2>
+    <h2 [ngClass]="job.workerAccepted? 'green' : 'red' ">Szakember: {{job.worker.firstName + " " + job.worker.lastName}}</h2>
     <p>Leírás: {{job.description}}</p>
     <p>Összeg: {{job.total}} FT</p>
     <p>Állapot: {{ job.status ? "Kész" : "Folyamatban"}}</p>
     <button *ngIf="currentUser.userId == job.workerId" [disabled]="job.workerAccepted" (click)="acceptByWorker()">Elfogadás szakemberként</button>
     <button *ngIf="currentUser.userId == job.customerId" [disabled]="job.customerAccepted" (click)="acceptByCustomer()">Elfogadás megrendelőként</button>
-    <button>Megrendelés lezárása</button>
+    <button [disabled]="job.status">Megrendelés lezárása</button>
 </div>

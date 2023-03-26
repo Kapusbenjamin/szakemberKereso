@@ -22,58 +22,27 @@ export class AdvestComponent implements OnInit {
   name:string = "";
   jobTag: string = "";
   countiesNames: string[] = [];
-  rating:number = 4.8;
+  rating: number = 0;
   currentUser:number;
 
-  constructor(private userService: UsersService,
-     private jobTagsService: JobTagsService,
-     private adsCountiesService: AdsCountiesService,
-     private ratingService: RatingsService, private adsService: AdsService,
+  constructor(private userService: UsersService, private adsService: AdsService,
      private favoriteService: FavoriteService, private router: Router, private chatService: ChatService
      ) {
       this.currentUser = this.userService.userData.userId;
       }
 
   ngOnInit(): void {
-    this.getUsernameByAd();
     this.getRatingsByUserId();
-    this.getTagsByAd();
-    this.getCountiesByAd();
   }
 
   getRatingsByUserId(){
-    this.ratingService.getAllRatingsByRatinged(this.ad.userId).subscribe((ratings)=>{
-      let sum = 0;
-      ratings.forEach((rating: Rating)=>{
-        sum =+ rating.ratingsStars;
-      })
-      if(ratings.length == 0){
-        this.rating = 0;
-      }else{
-        this.rating = (sum / ratings.length)
-      }
-    })
-  }
-
-  getTagsByAd(){
-    this.jobTagsService.getJobTagById(this.ad.jobTagId).subscribe(value=>{
-      this.jobTag = value.name;
-    })
-  }
-
-
-  getCountiesByAd(){
-    this.adsCountiesService.getAllCountiesByAd(this.ad.id).subscribe(values=>{
-      values.forEach(value=>{
-        this.countiesNames.push(value.name)
-      })
-    })
-  }
-
-  getUsernameByAd(){
-    this.userService.getUserById(this.ad.userId).subscribe(user=>{
-      this.name = user.firstName + " " + user. lastName;
+    let sum: number = 0;
+    this.ad.userRatings.forEach((element:any) => {
+      sum = sum + element.ratingsStars;
     });
+    if(this.ad.userRatings.length > 0){
+      this.rating = sum / this.ad.userRatings.length
+    }
   }
 
   deleteAd(){

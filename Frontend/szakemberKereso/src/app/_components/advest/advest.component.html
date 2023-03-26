@@ -1,26 +1,27 @@
 <div class="container">
   <div class="row">
-    <h2 class="col-sm-12 col-md-3" > {{ name }} </h2>
+    <h2 class="col-sm-12 col-md-3" > {{ ad.user.firstName + " " + ad.user.lastName }} </h2>
     <p class="rating col-sm-12 col-md-3">
-      Értékelés: {{ rating }}
+      Értékelés: {{ rating == 0 ? " Nincs értékelve " : rating }} / 5
     </p>
     <div class="tags" >
       <div class="tag">
-        {{ jobTag }}
+        {{ ad.jobTag.name }}
       </div>
-      <div class="tags" *ngFor="let countyname of countiesNames">
+      <div class="tags" *ngFor="let county of ad.counties">
         <div class="tag">
-          {{ countyname }}
+          {{ county.name }}
         </div>
       </div>
     </div>
     <div class="discription">
       <p>Leírás: {{ ad.description }}</p>
     </div>
+    <p>Dátum: {{ ad.updatedAt }} </p>
     <div *ngIf="currentUser == ad.userId">
       <button mat-raised-button>Hirdetés Szerkesztése</button>
       <button mat-raised-button color="warn" (click)="deleteAd()">Hirdetés Törlése</button>
-    </div>  
+    </div>
     <div *ngIf="currentUser != ad.userId">
       <button mat-raised-button *ngIf="!favorite" (click)="addAdToFavorite()">Hozzáadaás a kedvencekhez</button>
       <button mat-raised-button *ngIf="favorite" (click)="removeAdFromFavorites()">Eltávolítás a kedvencek közül</button>
