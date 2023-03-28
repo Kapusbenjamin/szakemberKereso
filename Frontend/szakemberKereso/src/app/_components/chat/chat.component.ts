@@ -12,9 +12,11 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   @ViewChild('scrollMe') private myScrollContainer!: ElementRef;
   @Input() chat!:any;
   messages:any[] = [];
-  userId!:number;
+  userId:number;
 
-  constructor(private userService: UsersService, private messagesService: MessagesService) { }
+  constructor(private userService: UsersService, private messagesService: MessagesService) {
+    this.userId = this.userService.userData.userId
+   }
   ngAfterViewChecked(): void {
     this.scrollToBottom();
   }
@@ -27,9 +29,11 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   }
 
   getMessegesByChat(chat: Chat){
-    this.messagesService.getAllMessagesBetweenUsers(chat.senderId,chat.receiverId).subscribe((messages: any)=>{
-      this.messages = messages;
-    })
+    if(chat.id > 0){
+      this.messagesService.getAllMessagesBetweenUsers(chat.senderId,chat.receiverId).subscribe((messages: any)=>{
+        this.messages = messages;
+      })
+    }
   }
 
   scrollToBottom(): void {

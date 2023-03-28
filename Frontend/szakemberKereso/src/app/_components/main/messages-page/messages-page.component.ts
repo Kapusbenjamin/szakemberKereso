@@ -14,11 +14,13 @@ import { UsersService } from 'src/app/_services/users.service';
 })
 export class MessagesPageComponent implements OnInit {
 
-  constructor(private userService: UsersService, private chatService: ChatService, private messageService: MessagesService) { }
+  constructor(private userService: UsersService, private chatService: ChatService, private messageService: MessagesService) {
+    this.userId =  this.userService.userData.userId
+   }
 
   chats: Chat[] = [];
-  userId!: number;
-  activeChat = new BehaviorSubject<string>('');
+  userId: number;
+  activeChat = new BehaviorSubject<any>('');
 
   ngOnInit(): void {
       this.getAllChats();
@@ -32,6 +34,7 @@ export class MessagesPageComponent implements OnInit {
   }
 
   loadChats(chats: Chat[]){
+    this.activeChat.next(chats[0]);
     chats.forEach((chat:Chat)=>{
       if(chat.receiverId == this.userId){
         this.userService.getUserById(chat.senderId).subscribe((user: User)=>{

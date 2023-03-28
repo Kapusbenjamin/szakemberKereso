@@ -17,16 +17,17 @@ export class UserChatComponent implements OnInit {
 
   ngOnInit(): void {
     this.userId = this.UserService.userData.userId;
-    console.log(this.chats[0]);
   }
 
   chatSelect(chat:Chat){
-    this.activeChat.next(chat);
-    this.messagesService.checkMessage(chat.id,this.userId).subscribe((res)=>{
-      if(res){
-        chat.unreadNumber = 0;
-      }
-    });
+    if(this.chats.length > 0){
+      this.activeChat.next(chat);
+      this.messagesService.checkMessage(chat.id,this.userId).subscribe((res)=>{
+        if(res){
+          chat.unreadNumber = 0;
+        }
+      });
+    }
   }
 
 }
