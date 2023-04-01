@@ -33,14 +33,12 @@ export class JobPageComponent implements OnInit {
   
   loadWorks(){
     this.jobService.getAllJobsByWorker(this.currentUser.userId).subscribe((jobs: Job[])=>{
-      console.log(jobs);
       this.works = jobs
     });
   }
   
   loadOrders(){
     this.jobService.getAllJobsByCustomer(this.currentUser.userId).subscribe((jobs: Job[])=>{
-      console.log(jobs);
       this.orders = jobs
     });
   }

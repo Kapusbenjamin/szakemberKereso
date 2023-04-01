@@ -7,4 +7,5 @@
     <button *ngIf="currentUser.userId == job.workerId" [disabled]="job.workerAccepted" (click)="acceptByWorker()">Elfogadás szakemberként</button>
     <button *ngIf="currentUser.userId == job.customerId" [disabled]="job.customerAccepted" (click)="acceptByCustomer()">Elfogadás megrendelőként</button>
     <button [disabled]="job.status">Megrendelés lezárása</button>
+    <button *ngIf="currentUser.userId == job.customerId" [disabled]="job.status">Értékelés írása</button>
 </div>

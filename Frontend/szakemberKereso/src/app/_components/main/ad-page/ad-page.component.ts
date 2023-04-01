@@ -24,6 +24,7 @@ export class AdPageComponent implements OnInit {
   modalOpen:boolean = false;
   inner: boolean = false;
   favorites: any[] = [];
+  loaded: boolean = false;
 
   ads: Ad[] = [];
 
@@ -65,7 +66,9 @@ export class AdPageComponent implements OnInit {
   }
 
   getAllAcceptedAds(){
+    this.loaded = false;
     this.adService.getAllAcceptedAds().subscribe((res)=>{
+      this.loaded = true;
      this.ads = res
      this.ads.forEach(ad=>{
       this.isFavorite(ad);      
@@ -74,8 +77,10 @@ export class AdPageComponent implements OnInit {
   }
 
   filteringAds(filter:Object){
+    this.loaded = false;
     this.adService.filteringAds(filter).subscribe((response:Ad[])=>{
       this.ads = response
+      this.loaded = true;
       this.ads.forEach(ad=>{
         this.isFavorite(ad);
       })
