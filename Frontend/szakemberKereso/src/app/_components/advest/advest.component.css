@@ -20,5 +20,13 @@
   border: 1px solid rgb(255, 255, 255);
 }
 
+.link{
+  color: lightskyblue;
+  text-decoration: underline;
+  cursor: pointer;
+}
 
+.link:hover{
+  color: rgb(70, 145, 192);
+}
 

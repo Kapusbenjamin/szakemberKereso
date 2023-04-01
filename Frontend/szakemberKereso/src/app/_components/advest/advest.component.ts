@@ -70,4 +70,11 @@ export class AdvestComponent implements OnInit {
     })
   }
 
+  setRatingedUser(id: number){
+    if(this.rating != 0){
+      this.userService.setRatingedUser(id);
+      this.router.navigate(['main/ratings']);
+    }
+  }
+
 }

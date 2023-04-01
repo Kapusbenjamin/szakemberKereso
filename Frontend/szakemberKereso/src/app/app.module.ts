@@ -41,6 +41,7 @@ import { UsersAdminPageComponent } from './_components/admin/users-admin-page/us
 import { JobComponent } from './_components/job/job.component';
 import { RatingComponent } from './_components/rating/rating.component';
 import { JobPageComponent } from './_components/main/job-page/job-page.component';
+import { RatingPageComponent } from './_components/main/rating-page/rating-page.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { JobPageComponent } from './_components/main/job-page/job-page.component
     UsersAdminPageComponent,
     JobComponent,
     RatingComponent,
-    JobPageComponent
+    JobPageComponent,
+    RatingPageComponent
   ],
   imports: [
     BrowserModule,

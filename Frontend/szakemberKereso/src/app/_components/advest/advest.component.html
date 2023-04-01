@@ -1,8 +1,8 @@
 <div class="container">
   <div class="row">
     <h2 class="col-sm-12 col-md-3" > {{ ad.user.firstName + " " + ad.user.lastName }} </h2>
-    <p class="rating col-sm-12 col-md-3">
-      Értékelés: {{ rating == 0 ? " Nincs értékelve " : rating }} / 5
+    <p class="rating col-sm-12 col-md-3" [ngClass]="rating != 0 ? 'link': '' "  (click)="setRatingedUser(ad.userId)">
+      Értékelés: {{ rating == 0 ? " Nincs értékelve " : rating + "/5" }}
     </p>
     <div class="tags" >
       <div class="tag">

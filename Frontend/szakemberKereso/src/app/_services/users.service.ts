@@ -11,6 +11,7 @@ export class UsersService {
 
   apiUrl: string = "http://127.0.0.1:8080/SzakemberKereso-1.0-SNAPSHOT/webresources/Users/";
   userData: UserData = {userId: -1, name:"", access_type: -1};
+  ratingedUserId: number = -1; 
 
   constructor(private http:HttpClient) { }
 
@@ -165,4 +166,9 @@ export class UsersService {
     this.userData = {userId: -1, name:"", access_type: -1};
     localStorage.removeItem('userData');
   }
+
+  setRatingedUser(id: number){
+    this.ratingedUserId = id;
+  }
+
 }
