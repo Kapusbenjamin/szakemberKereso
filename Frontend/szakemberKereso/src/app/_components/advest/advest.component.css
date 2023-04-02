@@ -21,12 +21,20 @@
 }
 
 .link{
-  color: lightskyblue;
+  color: rgb(0, 87, 141);
   text-decoration: underline;
   cursor: pointer;
 }
 
 .link:hover{
   color: rgb(70, 145, 192);
+}
+
+.rating{
+  display: flex;
+}
+
+.stars{
+  font-size: xx-large;
 }
 

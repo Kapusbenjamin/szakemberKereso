@@ -1,0 +1,6 @@
+<div class="container">
+    <div class="row" *ngFor="let rating of ratings">
+        <app-rating [rating]="rating"></app-rating>
+        <div><button mat-raised-button color="primary" (click)="acceptRating(rating)">Elfogad</button><button mat-raised-button color="warn" (click)="deleteRating(rating)">Elutasít</button></div>
+    </div>
+</div>

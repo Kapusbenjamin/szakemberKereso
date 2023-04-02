@@ -1,9 +1,10 @@
 <div class="container">
   <div class="row">
     <h2 class="col-sm-12 col-md-3" > {{ ad.user.firstName + " " + ad.user.lastName }} </h2>
-    <p class="rating col-sm-12 col-md-3" [ngClass]="rating != 0 ? 'link': '' "  (click)="setRatingedUser(ad.userId)">
-      Értékelés: {{ rating == 0 ? " Nincs értékelve " : rating + "/5" }}
-    </p>
+    <div class="rating col-sm-12 col-md-3" >
+      <h3 [ngClass]="rating != 0 ? 'link': '' "  (click)="setRatingedUser(ad.userId)" class="stars">{{ stars }}</h3>
+      <h4>{{ (rating == 0) ? " - nincs értékelve "  : rating}}</h4>
+    </div>
     <div class="tags" >
       <div class="tag">
         {{ ad.jobTag.name }}

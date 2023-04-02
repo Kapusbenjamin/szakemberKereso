@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminPageComponent } from './admin-page/admin-page.component';
 import { AdsAdminPageComponent } from './ads-admin-page/ads-admin-page.component';
 import { UsersAdminPageComponent } from './users-admin-page/users-admin-page.component';
+import { RatingsPageComponent } from './ratings-page/ratings-page.component';
 
 const routes: Routes = [
    {
@@ -10,8 +11,7 @@ const routes: Routes = [
      children: [
        { path:'users', component:UsersAdminPageComponent },
        { path:'ads', component:AdsAdminPageComponent },
-  //     { path:'favorites', component:FavoritesPageComponent },
-  //     { path:'', component:AdPageComponent }
+       { path:'ratings', component:RatingsPageComponent },
      ]
    }
 ];

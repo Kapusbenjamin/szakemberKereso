@@ -1,5 +1,6 @@
-<div>
-    <p>Értékelő: {{ rating.ratinger.firstName + " " + rating.ratinger.lastName }}</p>
-    <p>Értékelés: {{ rating.ratingsStars}}</p>
-    <p>Leírás: {{ rating.description }}</p>
+<div class="row">
+    <h2>{{ rating.ratinger.firstName + " " + rating.ratinger.lastName }}</h2>
+    <h3>{{ stars +  " - " +  rating.ratingsStars}}</h3>
+    <p>{{ rating.description }}</p>
+    <p>{{ rating.updatedAt }} </p>
 </div>

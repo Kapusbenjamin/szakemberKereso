@@ -43,6 +43,7 @@ import { RatingComponent } from './_components/rating/rating.component';
 import { JobPageComponent } from './_components/main/job-page/job-page.component';
 import { RatingPageComponent } from './_components/main/rating-page/rating-page.component';
 import { LoaderComponent } from './_components/loader/loader.component';
+import { RatingsPageComponent } from './_components/admin/ratings-page/ratings-page.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,8 @@ import { LoaderComponent } from './_components/loader/loader.component';
     RatingComponent,
     JobPageComponent,
     RatingPageComponent,
-    LoaderComponent
+    LoaderComponent,
+    RatingsPageComponent
   ],
   imports: [
     BrowserModule,

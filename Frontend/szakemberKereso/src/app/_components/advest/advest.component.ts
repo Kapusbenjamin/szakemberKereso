@@ -22,7 +22,8 @@ export class AdvestComponent implements OnInit {
   name:string = "";
   jobTag: string = "";
   countiesNames: string[] = [];
-  rating: number = 0;
+  rating: number =  0;
+  stars: string = "☆☆☆☆☆";
   currentUser:number;
 
   constructor(private userService: UsersService, private adsService: AdsService,
@@ -43,6 +44,7 @@ export class AdvestComponent implements OnInit {
     if(this.ad.userRatings.length > 0){
       this.rating = sum / this.ad.userRatings.length
     }
+    this.setStars(this.rating);
   }
 
   deleteAd(){
@@ -68,6 +70,20 @@ export class AdvestComponent implements OnInit {
     this.chatService.createChat(this.currentUser,this.ad.userId).subscribe((res)=>{
       this.router.navigate(['main/messages']);
     })
+  }
+
+  setStars(star: number){
+    if(star == 5){
+      this.stars = "★★★★★";
+    }else if(star >= 4){
+      this.stars = "★★★★☆";
+    }else if(star >= 3){
+      this.stars = "★★★☆☆";
+    }else if(star >= 2){
+      this.stars = "★★☆☆☆";
+    }else if(star >= 1){
+      this.stars = "★☆☆☆☆";
+    }
   }
 
   setRatingedUser(id: number){
