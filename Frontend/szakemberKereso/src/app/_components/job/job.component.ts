@@ -15,7 +15,7 @@ export class JobComponent implements OnInit {
   currentUser: UserData;
 
   constructor(private jobService: JobsService, private UserService: UsersService) { 
-    this.currentUser = UserService.userData;
+    this.currentUser = this.UserService.userData;
   }
 
   ngOnInit(): void {
@@ -31,6 +31,12 @@ export class JobComponent implements OnInit {
   acceptByCustomer(){
     this.jobService.acceptByCustomer(this.job.id!).subscribe(res=>{
       this.job.customerAccepted = 1;
+    })
+  }
+
+  jobClose(){
+    this.jobService.changeJobStatus(this.job.id!).subscribe(res=>{
+
     })
   }
 

@@ -1,6 +1,8 @@
+import { Tag } from "./Tag"
+
 export interface Address{
     id?: number
-    county?:string,
+    county?:Tag,
     countyId: number,
     zipCode: number,
     city: string,

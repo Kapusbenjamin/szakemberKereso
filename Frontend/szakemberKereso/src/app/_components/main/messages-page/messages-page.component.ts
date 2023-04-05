@@ -34,20 +34,30 @@ export class MessagesPageComponent implements OnInit {
   }
 
   loadChats(chats: Chat[]){
-    this.activeChat.next(chats[0]);
     chats.forEach((chat:Chat)=>{
       if(chat.receiverId == this.userId){
         this.userService.getUserById(chat.senderId).subscribe((user: User)=>{
           chat.name = (user.firstName + " " + user.lastName);
           this.getUnreadMessagesNumber(chat);
+          this.findChatByChatName(chat);
         })
       }else{
         this.userService.getUserById(chat.receiverId).subscribe((user: User)=>{
           chat.name = (user.firstName + " " + user.lastName);
           this.getUnreadMessagesNumber(chat);
+          this.findChatByChatName(chat);
         })
       }
     });
+    if(this.chatService.chatName == ""){
+      this.activeChat.next(chats[0]);
+    }
+  }
+
+  findChatByChatName(chat: Chat){   
+      if(chat.name == this.chatService.chatName){
+        this.activeChat.next(chat);
+      }
   }
 
   getUnreadMessagesNumber(chat: Chat){

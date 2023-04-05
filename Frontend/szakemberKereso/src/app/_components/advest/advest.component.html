@@ -3,7 +3,7 @@
     <h2 class="col-sm-12 col-md-3" > {{ ad.user.firstName + " " + ad.user.lastName }} </h2>
     <div class="rating col-sm-12 col-md-3" >
       <h3 [ngClass]="rating != 0 ? 'link': '' "  (click)="setRatingedUser(ad.userId)" class="stars">{{ stars }}</h3>
-      <h4>{{ (rating == 0) ? " - nincs értékelve "  : rating}}</h4>
+      <h4>{{ (rating == 0) ? " - nincs értékelve "  : rating | number}}</h4>
     </div>
     <div class="tags" >
       <div class="tag">

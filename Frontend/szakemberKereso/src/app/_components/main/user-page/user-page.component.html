@@ -1,69 +1,48 @@
-<div *ngIf="user != undefined" class="near">
-  <div class="sideBar">
-    <div class="barElement">
-      Adatok
-    </div>
-    <div class="barElement">
-      Értékelések
-    </div>
-    <div class="barElement">
-      Munkák
-    </div>
-    <div *ngIf="user.accessType! < 1" class="barElement">
-      Legyél te is szakember
-    </div>
-    <div *ngIf="user.accessType! > 0" class="barElement">
-      Referencia képek
-    </div>
-
-
-  </div>
-  <div class="datas">
+<div class="container">
+  <hr>
+  <div class="row" *ngIf="user">
     <h2>Profil adatok</h2>
-    <div class="userData">
-      <p>Név: {{ userName }}</p>
+    <div class="userData col-sm-12 col-md-6 col-lg-4">
+      <h2>Elérhetőség</h2>
+      <p>Név: {{ userData.name }}</p>
       <p>Jogosultság: {{ userType() }}</p>
       <p>Email: {{ user.email }}</p>
       <p>Telefon Szám: {{ user.phone }}</p>
-    </div>
-    <div class="professional" *ngIf="user.accessType! > 0" >
-      <p>Foglalkozás(ok):</p>
-      <ul class="professons" *ngFor="let item of professions" >
-        <li>
-          {{item.name}}
-        </li>
-      </ul>
-    </div>
-    <div class="Address" *ngIf="address != undefined">
-      <h2>Cím</h2>
-      <p>Megye: {{ address.county }} </p>
-      <p>Irányítószám: {{ address.zipCode }} </p>
-      <p>Város: {{ address.city }} </p>
-      <p>Utca: {{ address.street }} </p>
-      <p>Ház szám: {{ address.number }} </p>
-      <div *ngIf="address.staircase != null" >
-        <p>Lépcsőház: {{ address.staircase }} </p>
-        <p>Emelet: {{ address.floor }} </p>
-        <p>Ajtó: {{ address.door }} </p>
+      <div class="jobs" *ngIf="user.accessType! > 0">
+        <h2>Foglalkozás(ok):</h2>
+        <ul>
+          <li *ngFor="let tag of user.jobTags"> {{ tag.name }}</li>
+        </ul>
       </div>
     </div>
-    <div *ngIf="company != undefined" class="company">
-      <h2>Cég</h2>
-      <p>Cég név: {{ company.name }}</p>
-      <p>Adószám: {{ company.taxNumber }}</p>
-      <div class="Address" *ngIf="company.address != undefined">
-        <h2>Cég cím</h2>
-        <p>Megye: {{ company.address.county }} </p>
-        <p>Irányítószám: {{ company.address.zipCode }} </p>
-        <p>Város: {{ company.address.city }} </p>
-        <p>Utca: {{ company.address.street }} </p>
-        <p>Ház szám: {{ company.address.number }} </p>
-        <div *ngIf="company.address.staircase != null" >
-          <p>Lépcsőház: {{ company.address.staircase }} </p>
-          <p>Emelet: {{ company.address.floor }} </p>
-          <p>Ajtó: {{ company.address.door }} </p>
-        </div>
+    <div class="address col-sm-12 col-md-6 col-lg-4">
+      <h2>Cím</h2>
+      <p>Megye: {{ user.address!.county!.name }}</p>
+      <p>Irányítószám: {{ user.address!.zipCode }}</p>
+      <p>Város: {{user.address!.city }}</p>
+      <p>Utca: {{ user.address!.street }}</p>
+      <p>Házszám: {{ user.address!.number }}</p>
+      <div *ngIf="user.address!.staircase">
+        <p>Lépcsőház: {{ user.address!.staircase }}</p>
+        <p>Emelet: {{ user.address!.floor }}</p>
+        <p>Ajtó: {{ user.address!.door }}</p>
+      </div>
+    </div>
+    <div *ngIf="user.company" class="company col-sm-12 col-md-6 col-lg-4">
+      <h2>Cég információk</h2>
+      <p>Cégnév: {{ user.company.name }}</p>
+      <p>Adószám: {{ user.company.taxNumber }}</p>
+      <p>Megye: {{ user.company.address!.county!.name }}</p>
+      <p>Irányítószám: {{ user.company.address!.zipCode }}</p>
+      <p>Város: {{user.company.address!.city }}</p>
+      <p>Utca: {{ user.company.address!.street }}</p>
+      <p>Házszám: {{ user.company.address!.number }}</p>
+      <div *ngIf="user.company.address!.staircase">
+        <p>Lépcsőház: {{ user.company.address!.staircase }}</p>
+        <p>Emelet: {{ user.company.address!.floor }}</p>
+        <p>Ajtó: {{ user.company.address!.door }}</p>
       </div>
     </div>
   </div>
+  <hr>
 </div>

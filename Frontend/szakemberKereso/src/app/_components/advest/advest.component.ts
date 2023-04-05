@@ -68,6 +68,7 @@ export class AdvestComponent implements OnInit {
 
   goToMessage(){
     this.chatService.createChat(this.currentUser,this.ad.userId).subscribe((res)=>{
+      this.chatService.chatName = this.ad.user.firstName + " " + this.ad.user.lastName;
       this.router.navigate(['main/messages']);
     })
   }

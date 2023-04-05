@@ -12,6 +12,7 @@ export class ChatService {
   constructor(private http: HttpClient, private userService: UsersService) { }
 
   apiUrl: string = "http://127.0.0.1:8080/SzakemberKereso-1.0-SNAPSHOT/webresources/Chats/";
+  chatName: string = "";
 
   getAllChatsByUserId(userId: number):Observable<Chat[]>{
     return this.http.post<Chat[]>(`${this.apiUrl}getAllChatsByUserId`,{
@@ -40,6 +41,10 @@ export class ChatService {
       return throwError(error);
     })
   );
+  }
+
+  setChatUser(userName: string){
+    this.chatName = userName;
   }
 
 }

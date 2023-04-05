@@ -5,11 +5,11 @@
             <h2>Munkák</h2>
             <div *ngFor="let work of works"  class="work">
                 <app-job [job]="work"></app-job>
+                <hr>
             </div>
             <p *ngIf="works.length == 0">Nincs megjeleníthető munka</p>
         </div>
         <div class="orders">
-            <hr>
             <h2>Megrendelések</h2>
             <div *ngFor="let order of orders"  class="order">
                 <app-job [job]="order"></app-job>

@@ -9,6 +9,7 @@
 
 .tags{
   display: flex;
+  font-weight: 500;
 }
 
 .tag{
