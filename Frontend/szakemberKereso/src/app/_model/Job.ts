@@ -7,8 +7,8 @@ export interface Job{
   status?: number,
   customerId: number,
   workerId: number,
-  customer: User,
-  worker: User
+  customer?: User,
+  worker?: User
   customerAccepted?: number,
   workerAccepted?: number,
   updatedAt?: number,

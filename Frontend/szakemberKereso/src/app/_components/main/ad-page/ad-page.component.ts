@@ -9,7 +9,7 @@ import { UserData } from 'src/app/_model/UserData';
 import { UsersService } from 'src/app/_services/users.service';
 import { MatDialog } from '@angular/material/dialog';
 import { FavoriteService } from 'src/app/_services/favorite.service';
-
+import { AddNewAdDialogComponent } from 'src/app/_components/dialogs/add-new-ad-dialog/add-new-ad-dialog.component';
 
 @Component({
   selector: 'app-ad-page',
@@ -35,7 +35,8 @@ export class AdPageComponent implements OnInit {
 
   constructor(private adService: AdsService, private fb: FormBuilder,
     private countiesService: CountiesService, private jobTagsService: JobTagsService,
-    private userService: UsersService, private favoriteService: FavoriteService
+    private userService: UsersService, private favoriteService: FavoriteService,
+    public dialog: MatDialog
     ) { 
       this.userData = this.userService.userData;
     }
@@ -61,9 +62,10 @@ export class AdPageComponent implements OnInit {
     });
   }
 
-  click(){
-    this.modalOpen = !this.modalOpen;
-  }
+  addNewAdDialog(): void {
+    const dialogRef = this.dialog.open(AddNewAdDialogComponent, {
+    });
+ }
 
   getAllAcceptedAds(){
     this.loaded = false;

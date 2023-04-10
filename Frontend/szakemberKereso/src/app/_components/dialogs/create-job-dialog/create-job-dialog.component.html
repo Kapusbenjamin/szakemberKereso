@@ -1,0 +1,9 @@
+<div>
+    <h2>Szakember: {{data.name}}</h2>
+    <div class="tag">
+        {{ data.jobTag }}
+    </div>
+    <textarea [formControl]="description" name="" id="" cols="30" rows="10"></textarea>
+    <button (click)="close()">Mégse</button>
+    <button (click)="createJob()">Megbízási kérelem elküldése</button>
+</div>

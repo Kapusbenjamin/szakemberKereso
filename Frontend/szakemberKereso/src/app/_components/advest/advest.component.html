@@ -27,7 +27,7 @@
       <button mat-raised-button *ngIf="!favorite" (click)="addAdToFavorite()">Hozzáadaás a kedvencekhez</button>
       <button mat-raised-button *ngIf="favorite" (click)="removeAdFromFavorites()">Eltávolítás a kedvencek közül</button>
       <button mat-raised-button (click)="goToMessage()">Üzenet a Feladónak</button>
-      <button mat-raised-button>Megbízás Létrehozása</button>
+      <button mat-raised-button (click)="createJob()">Megbízás Létrehozása</button>
     </div>
   </div>
 </div>

@@ -26,6 +26,7 @@ export class JobPageComponent implements OnInit {
   getAllJobForUser(){
     if(this.currentUser.access_type > 0){
       this.loadWorks();
+      this.loadOrders();
     }else{
       this.loadOrders();
     }
@@ -33,7 +34,7 @@ export class JobPageComponent implements OnInit {
   
   loadWorks(){
     this.jobService.getAllJobsByWorker(this.currentUser.userId).subscribe((jobs: Job[])=>{
-      this.works = jobs
+      this.works = jobs     
     });
   }
   

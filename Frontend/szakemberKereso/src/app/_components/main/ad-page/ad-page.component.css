@@ -7,14 +7,3 @@
   padding: 10px;
   background-color: white;
 }
-
-.background{
-  position:absolute;
-  top:0px;
-  right:0px;
-  bottom:0px;
-  left:0px;
-  width: 100%;
-  position: fixed;
-  background-color: rgba(0,0,0, 0.5);
-}

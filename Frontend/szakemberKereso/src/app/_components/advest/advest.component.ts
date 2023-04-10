@@ -9,6 +9,8 @@ import { AdsService } from 'src/app/_services/ads.service';
 import { FavoriteService } from 'src/app/_services/favorite.service';
 import { Router } from '@angular/router';
 import { ChatService } from 'src/app/_services/chat.service';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateJobDialogComponent } from '../dialogs/create-job-dialog/create-job-dialog.component';
 
 @Component({
   selector: 'app-advest',
@@ -27,12 +29,14 @@ export class AdvestComponent implements OnInit {
   currentUser:number;
 
   constructor(private userService: UsersService, private adsService: AdsService,
-     private favoriteService: FavoriteService, private router: Router, private chatService: ChatService
+     private favoriteService: FavoriteService, private router: Router, private chatService: ChatService,
+     public dialog: MatDialog
      ) {
       this.currentUser = this.userService.userData.userId;
       }
 
   ngOnInit(): void {
+    this.name = this.ad.user.firstName + " " + this.ad.user.lastName;
     this.getRatingsByUserId();
   }
 
@@ -68,7 +72,7 @@ export class AdvestComponent implements OnInit {
 
   goToMessage(){
     this.chatService.createChat(this.currentUser,this.ad.userId).subscribe((res)=>{
-      this.chatService.chatName = this.ad.user.firstName + " " + this.ad.user.lastName;
+      this.chatService.chatName = this.name;
       this.router.navigate(['main/messages']);
     })
   }
@@ -92,6 +96,12 @@ export class AdvestComponent implements OnInit {
       this.userService.setRatingedUser(id);
       this.router.navigate(['main/ratings']);
     }
+  }
+
+  createJob(): void{
+      const dialogRef = this.dialog.open(CreateJobDialogComponent, {
+        data: { workerId: this.ad.userId, name: this.name, jobTag: this.ad.jobTag.name},
+      });
   }
 
 }

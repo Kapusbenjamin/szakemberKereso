@@ -152,8 +152,12 @@ export class JobsService {
     );
   }
 
-  createJob(job: Job){
-    return this.http.post(`${this.apiUrl}acceptByCustomer`,job).pipe(
+  createJob(customerId: number, workerId: number, description:string){
+    return this.http.post(`${this.apiUrl}createJob`,{
+      customerId,
+      workerId,
+      description
+    }).pipe(
       map((response: any)=> {
         return response.result;
       }),

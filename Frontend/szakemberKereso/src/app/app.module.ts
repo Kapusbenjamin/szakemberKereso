@@ -30,7 +30,6 @@ import { UserChatComponent } from './_components/user-chat/user-chat.component';
 import { MessagesPageComponent } from './_components/main/messages-page/messages-page.component';
 import { ChatComponent } from './_components/chat/chat.component';
 import { ChatFormComponent } from './_components/chat-form/chat-form.component';
-import { DialogComponent } from './_components/dialog/dialog.component';
 import { FavoritesPageComponent } from './_components/main/favorites-page/favorites-page.component';
 import { AdminPageComponent } from './_components/admin/admin-page/admin-page.component';
 import { MatMenuModule } from '@angular/material/menu'; 
@@ -44,6 +43,9 @@ import { JobPageComponent } from './_components/main/job-page/job-page.component
 import { RatingPageComponent } from './_components/main/rating-page/rating-page.component';
 import { LoaderComponent } from './_components/loader/loader.component';
 import { RatingsPageComponent } from './_components/admin/ratings-page/ratings-page.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { AddNewAdDialogComponent } from './_components/dialogs/add-new-ad-dialog/add-new-ad-dialog.component';
+import { CreateJobDialogComponent } from './_components/dialogs/create-job-dialog/create-job-dialog.component';
 
 @NgModule({
   declarations: [
@@ -65,7 +67,6 @@ import { RatingsPageComponent } from './_components/admin/ratings-page/ratings-p
     MessagesPageComponent,
     ChatComponent,
     ChatFormComponent,
-    DialogComponent,
     FavoritesPageComponent,
     AdminPageComponent,
     AdsAdminPageComponent,
@@ -75,7 +76,9 @@ import { RatingsPageComponent } from './_components/admin/ratings-page/ratings-p
     JobPageComponent,
     RatingPageComponent,
     LoaderComponent,
-    RatingsPageComponent
+    RatingsPageComponent,
+    AddNewAdDialogComponent,
+    CreateJobDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -91,7 +94,8 @@ import { RatingsPageComponent } from './_components/admin/ratings-page/ratings-p
     MatSlideToggleModule,
     MatMenuModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatDialogModule
   ],
   providers: [
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
