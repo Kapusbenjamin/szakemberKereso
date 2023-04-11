@@ -44,9 +44,13 @@ export class AdsCountiesService {
     );
   }
 
-  //Nope
-  // deleteCountyFromAd(adId: number, countyId:number){
-  //   return this.http.delete(`${this.apiUrl}deleteCountyFromAd`)
-  // }
+
+  deleteCountyFromAd(adId: number, countyId:number){
+    return this.http.post(`${this.apiUrl}deleteCountyFromAd`,{
+      adId,
+      countyId,
+      currentUserId: this.currentUserId
+    })
+  }
 
 }

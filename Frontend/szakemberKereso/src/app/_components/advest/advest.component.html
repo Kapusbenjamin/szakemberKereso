@@ -20,14 +20,14 @@
     </div>
     <p>Dátum: {{ ad.updatedAt }} </p>
     <div *ngIf="currentUser == ad.userId">
-      <button mat-raised-button>Hirdetés Szerkesztése</button>
+      <button mat-raised-button (click)="openEditAd()">Hirdetés Szerkesztése</button>
       <button mat-raised-button color="warn" (click)="deleteAd()">Hirdetés Törlése</button>
     </div>
     <div *ngIf="currentUser != ad.userId">
       <button mat-raised-button *ngIf="!favorite" (click)="addAdToFavorite()">Hozzáadaás a kedvencekhez</button>
       <button mat-raised-button *ngIf="favorite" (click)="removeAdFromFavorites()">Eltávolítás a kedvencek közül</button>
       <button mat-raised-button (click)="goToMessage()">Üzenet a Feladónak</button>
-      <button mat-raised-button (click)="createJob()">Megbízás Létrehozása</button>
+      <button mat-raised-button (click)="openCreateJob()">Megbízás Létrehozása</button>
     </div>
   </div>
 </div>

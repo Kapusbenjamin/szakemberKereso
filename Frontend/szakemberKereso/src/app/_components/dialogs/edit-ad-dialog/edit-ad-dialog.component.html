@@ -1,0 +1,24 @@
+<div class="row col-12">
+    <h2>{{data.ad.user.firstName + " " + data.ad.user.lastName}}</h2>
+    <div class="tag">{{ data.ad.jobTag.name}}</div>
+    <form [formGroup]="formG">
+        <div *ngFor="let countyC of counties.controls; let i = index" formArrayName="counties">
+            {{ countyC.value.name }}
+            <select [formControlName]="i">
+                <option [value]="county.id" *ngFor="let county of countiesTags">
+                    {{ county.name }}
+                </option>
+            </select>
+            <button mat-raised-button color="warn" class="button" *ngIf="i != 0" type="button"
+                (click)="deleteCounty(i)">-</button>
+        </div>
+        <button mat-raised-button color="primary" class="button" (click)="addCounty()">+</button>
+        <div>
+            <textarea formControlName="description" name="" id="" cols="30" rows="10"></textarea>
+        </div>
+    </form>
+    <button (click)="close()">Mégse</button>
+    <button (click)="editAd()">Szerkesztés jóváhagyása</button>
+    {{ counties.value | json }}
+    {{ data.ad.counties | json }}
+</div>

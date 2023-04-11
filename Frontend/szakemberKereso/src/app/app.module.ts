@@ -46,6 +46,7 @@ import { RatingsPageComponent } from './_components/admin/ratings-page/ratings-p
 import { MatDialogModule } from '@angular/material/dialog';
 import { AddNewAdDialogComponent } from './_components/dialogs/add-new-ad-dialog/add-new-ad-dialog.component';
 import { CreateJobDialogComponent } from './_components/dialogs/create-job-dialog/create-job-dialog.component';
+import { EditAdDialogComponent } from './_components/dialogs/edit-ad-dialog/edit-ad-dialog.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { CreateJobDialogComponent } from './_components/dialogs/create-job-dialo
     LoaderComponent,
     RatingsPageComponent,
     AddNewAdDialogComponent,
-    CreateJobDialogComponent
+    CreateJobDialogComponent,
+    EditAdDialogComponent
   ],
   imports: [
     BrowserModule,

@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { ChatService } from 'src/app/_services/chat.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateJobDialogComponent } from '../dialogs/create-job-dialog/create-job-dialog.component';
+import { EditAdDialogComponent } from '../dialogs/edit-ad-dialog/edit-ad-dialog.component';
 
 @Component({
   selector: 'app-advest',
@@ -98,10 +99,16 @@ export class AdvestComponent implements OnInit {
     }
   }
 
-  createJob(): void{
+  openCreateJob(): void{
       const dialogRef = this.dialog.open(CreateJobDialogComponent, {
         data: { workerId: this.ad.userId, name: this.name, jobTag: this.ad.jobTag.name},
       });
+  }
+
+  openEditAd(){
+    const dialogRef = this.dialog.open(EditAdDialogComponent, {
+      data: { ad: this.ad},
+    });
   }
 
 }
