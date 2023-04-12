@@ -1,0 +1,15 @@
+<div>
+    <h2>{{data.ratingedUserName}}</h2>
+    <form [formGroup]="formG">
+        <select formControlName="ratingsStars">
+            <option value="1">★☆☆☆☆</option>
+            <option value="2">★★☆☆☆</option>
+            <option value="3">★★★☆☆</option>
+            <option value="4">★★★★☆</option>
+            <option value="5">★★★★★</option>
+        </select>
+        <textarea formControlName="description" cols="30" rows="10"></textarea>
+    </form>
+    <button (click)="close()">Mégse</button>
+    <button (click)="ratingWorker()">Értékelés küldése</button>
+</div>

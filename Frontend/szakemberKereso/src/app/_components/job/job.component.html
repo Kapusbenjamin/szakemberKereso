@@ -4,8 +4,10 @@
     <p>Leírás: {{job.description}}</p>
     <p>Összeg: {{job.total}} FT</p>
     <p>Állapot: {{ job.status ? "Kész" : "Folyamatban"}}</p>
-    <button *ngIf="currentUser.userId == job.workerId" [disabled]="job.workerAccepted" (click)="acceptByWorker()">Elfogadás szakemberként</button>
-    <button *ngIf="currentUser.userId == job.customerId" [disabled]="job.customerAccepted" (click)="acceptByCustomer()">Elfogadás megrendelőként</button>
-    <button [disabled]="job.status" (click)="jobClose()">Megrendelés lezárása</button>
-    <button *ngIf="currentUser.userId == job.customerId" [disabled]="job.status">Értékelés írása</button>
+    <button mat-raised-button *ngIf="currentUser.userId == job.workerId" [disabled]="job.workerAccepted == 1" (click)="acceptByWorker()">Elfogadás szakemberként</button>
+    <button mat-raised-button *ngIf="currentUser.userId == job.customerId" [disabled]="job.customerAccepted == 1" (click)="acceptByCustomer()">Elfogadás megrendelőként</button>
+    <button mat-raised-button *ngIf="currentUser.userId == job.workerId" [disabled]="job.status == 1" (click)="editByWorkerDialog()">Szerkesztés szakemberként</button>
+    <button mat-raised-button *ngIf="currentUser.userId == job.customerId" [disabled]="job.status == 1" (click)="editByCustomerDialog()">Szerkesztés megrendelőként</button>
+    <button [disabled]="job.status == 1" (click)="jobClose()" mat-raised-button color="warn">Megrendelés lezárása</button>
+    <button mat-raised-button (click)="ratingWorkerDialog()" *ngIf="currentUser.userId == job.customerId" [disabled]="job.status == 0">Értékelés írása</button>
 </div>

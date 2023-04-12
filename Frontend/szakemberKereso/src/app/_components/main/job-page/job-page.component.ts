@@ -14,6 +14,7 @@ export class JobPageComponent implements OnInit {
   works: Job[] = [];
   orders: Job[] = [];
   currentUser: UserData;
+  loaded: boolean = false;
 
   constructor(private jobService: JobsService, private userService: UsersService) {
     this.currentUser = this.userService.userData
@@ -34,13 +35,15 @@ export class JobPageComponent implements OnInit {
   
   loadWorks(){
     this.jobService.getAllJobsByWorker(this.currentUser.userId).subscribe((jobs: Job[])=>{
-      this.works = jobs     
+      this.works = jobs
+      this.loaded = true; 
     });
   }
   
   loadOrders(){
     this.jobService.getAllJobsByCustomer(this.currentUser.userId).subscribe((jobs: Job[])=>{
       this.orders = jobs
+      this.loaded = true; 
     });
   }
 

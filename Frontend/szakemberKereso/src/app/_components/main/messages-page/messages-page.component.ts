@@ -21,6 +21,7 @@ export class MessagesPageComponent implements OnInit {
   chats: Chat[] = [];
   userId: number;
   activeChat = new BehaviorSubject<any>('');
+  loaded: boolean = false;
 
   ngOnInit(): void {
       this.getAllChats();
@@ -30,6 +31,7 @@ export class MessagesPageComponent implements OnInit {
     this.userId = this.userService.userData.userId;
     this.chatService.getAllChatsByUserId(this.userId).subscribe((chats: Chat[])=>{
     this.loadChats(chats);
+    this.loaded = true;
     })
   }
 

@@ -10,17 +10,23 @@ import { RatingsService } from 'src/app/_services/ratings.service';
 export class RatingsPageComponent implements OnInit {
 
   ratings: Rating[] = [];
+  loaded: boolean = false;
 
   constructor(private ratingsService: RatingsService) { }
 
   ngOnInit(): void {
+    this.getAllNotAcceptedRatings();
+  }
+  
+  getAllNotAcceptedRatings(){    
     this.ratingsService.getAllNotAcceptedRatings().subscribe((ratings : Rating[])=>{
       this.ratings = ratings
+      this.loaded = true;
     })
   }
 
   acceptRating(rating: Rating){
-    this.ratingsService.acceptRating(rating.id).subscribe(res=>{
+    this.ratingsService.acceptRating(rating.id!).subscribe(res=>{
       if(res){
         this.removeRatingFromArray(rating);
       }
@@ -28,7 +34,7 @@ export class RatingsPageComponent implements OnInit {
   }
 
   deleteRating(rating: Rating){
-    this.ratingsService.deleteRatingById(rating.id).subscribe(res=>{
+    this.ratingsService.deleteRatingById(rating.id!).subscribe(res=>{
       if(res){
         this.removeRatingFromArray(rating);
       }

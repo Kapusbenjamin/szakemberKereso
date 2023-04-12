@@ -126,7 +126,8 @@ export class RatingsService {
       ratingedUserId: rating.ratingedUserId,
       ratingerUserId: rating.ratingerUserId,
       description: rating.description,
-      ratingsStars: rating.ratingsStars
+      ratingsStars: rating.ratingsStars,
+      currentUserId: this.userService.userData.userId
     }).pipe(
       map((response: any)=> {
         return response.result;

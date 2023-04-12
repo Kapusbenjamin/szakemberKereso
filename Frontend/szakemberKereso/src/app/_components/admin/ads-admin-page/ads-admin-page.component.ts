@@ -13,6 +13,7 @@ export class AdsAdminPageComponent implements OnInit {
 
   userData: UserData;
   ads: Ad[] = [];
+  loaded: boolean = false;
 
   constructor(private userService: UsersService, private adsService: AdsService
     ) { 
@@ -26,6 +27,7 @@ export class AdsAdminPageComponent implements OnInit {
   getAllNonAcceptedAds(){
     this.adsService.getAllNonAcceptedAds().subscribe((ads :Ad[])=>{
       this.ads = ads;
+      this.loaded = true
     })
   }
 

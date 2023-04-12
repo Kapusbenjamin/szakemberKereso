@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
 import { Ad } from 'src/app/_model/Ad';
 import { Tag } from 'src/app/_model/Tag';
 import { UserData } from 'src/app/_model/UserData';

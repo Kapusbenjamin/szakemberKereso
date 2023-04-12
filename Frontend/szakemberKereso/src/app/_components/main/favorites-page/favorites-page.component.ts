@@ -13,6 +13,7 @@ export class FavoritesPageComponent implements OnInit {
 
   ads: Ad[] = [];
   userId: number;
+  loaded: boolean = false;
 
 
   constructor(private userService: UsersService,  private adsService: AdsService,
@@ -25,10 +26,12 @@ export class FavoritesPageComponent implements OnInit {
   }
 
   getAllFavorites(){
+    this.loaded = false;
     this.favoriteService.getAllfavoritesByUserId(this.userId).subscribe((favorites: any[])=>{
       favorites.forEach((favorite)=>{
         this.adsService.getAdById(favorite.adId).subscribe((ad: Ad)=>{
           this.ads.push(ad);
+            this.loaded = true;
         })
       })
     })

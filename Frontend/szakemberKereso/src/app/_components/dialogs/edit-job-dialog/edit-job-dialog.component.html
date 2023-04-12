@@ -1,0 +1,12 @@
+<div>
+    <h2>Szakember: {{ data.job.worker?.firstName + " " +  data.job.worker?.lastName}}</h2>
+    <h2>Megrendelő: {{ data.job.customer?.firstName + " " +  data.job.customer?.lastName}}</h2>
+    <p *ngIf="this.userData.userId == this.data.job.workerId">Leírás: {{ data.job.description }}</p>
+    <form [formGroup]="formG">
+        <textarea *ngIf="this.userData.userId == this.data.job.customerId" formControlName="description" cols="30" rows="10"></textarea>
+        <input *ngIf="this.userData.userId == this.data.job.workerId"  type="number" formControlName="total" >
+    </form>
+    <p *ngIf="this.userData.userId == this.data.job.customerId">Összeg: {{ data.job.total }}</p>
+    <button (click)="close()">Mégse</button>
+    <button (click)="editJob()">Szerkesztés jóváhagyása</button>
+</div>

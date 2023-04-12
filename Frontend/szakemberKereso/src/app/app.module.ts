@@ -47,6 +47,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AddNewAdDialogComponent } from './_components/dialogs/add-new-ad-dialog/add-new-ad-dialog.component';
 import { CreateJobDialogComponent } from './_components/dialogs/create-job-dialog/create-job-dialog.component';
 import { EditAdDialogComponent } from './_components/dialogs/edit-ad-dialog/edit-ad-dialog.component';
+import { EditJobDialogComponent } from './_components/dialogs/edit-job-dialog/edit-job-dialog.component';
+import { RatingWorkerDialogComponent } from './_components/dialogs/rating-worker-dialog/rating-worker-dialog.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +82,9 @@ import { EditAdDialogComponent } from './_components/dialogs/edit-ad-dialog/edit
     RatingsPageComponent,
     AddNewAdDialogComponent,
     CreateJobDialogComponent,
-    EditAdDialogComponent
+    EditAdDialogComponent,
+    EditJobDialogComponent,
+    RatingWorkerDialogComponent
   ],
   imports: [
     BrowserModule,
