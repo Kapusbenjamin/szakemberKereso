@@ -150,6 +150,10 @@ public class Users implements Serializable {
     @Transient
     @JsonInclude
     private Integer currentUserId;
+    //jelszó módosításhoz
+    @Transient
+    @JsonInclude
+    private String newPassword;
     //user létrehozásánál az address és cég adatokhoz (mivel csak address_id van)
     @Transient
     @JsonInclude
@@ -356,6 +360,14 @@ public class Users implements Serializable {
     public void setJobTags(List<JobTags> jobTags) {
         this.jobTags = jobTags;
     }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
     
     @Override
     public int hashCode() {
@@ -389,7 +401,7 @@ public class Users implements Serializable {
         Integer o_access_type = Integer.parseInt(o[3].toString());
         String o_email = o[4].toString();
         String o_phone = o[5].toString();
-//        String o_password = o[6].toString();
+        String o_password = o[6].toString();
         Integer o_company_id = o[7] != null ? Integer.parseInt(o[7].toString()) : null;
         Integer o_address_id = Integer.parseInt(o[8].toString());
         Integer o_status = Integer.parseInt(o[9].toString());
@@ -401,7 +413,7 @@ public class Users implements Serializable {
         Date o_updated_at = Timestamp.valueOf(o[15].toString());
         Integer o_deleted = Integer.parseInt(o[16].toString());
 
-        Users u = new Users(o_id, o_first_name, o_last_name, o_access_type, o_email, o_phone, null, o_company_id, o_address_id, o_status, null, null, o_last_login_at, o_created_at, o_activated_at, o_updated_at, o_deleted);
+        Users u = new Users(o_id, o_first_name, o_last_name, o_access_type, o_email, o_phone, o_password, o_company_id, o_address_id, o_status, null, null, o_last_login_at, o_created_at, o_activated_at, o_updated_at, o_deleted);
         
         if(u.getCompanyId() != null){
             u.setCompany(Companies.getCompanyById(u.getCompanyId()));

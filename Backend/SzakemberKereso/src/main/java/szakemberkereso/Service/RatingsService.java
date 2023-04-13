@@ -123,4 +123,13 @@ public class RatingsService {
         }
     }
           
+    public Boolean canWriteRating(Ratings rating) throws Exception{
+        if (AuthService.isUserAuthorized(rating.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.WORKER, Roles.USER})){
+            return Ratings.canWriteRating(rating);
+        }
+        else{
+            throw new AuthenticationFailedException("Nem sikerült azonosítani!");
+        }
+    }
+          
 }
