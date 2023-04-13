@@ -5,6 +5,7 @@ import { UserData } from 'src/app/_model/UserData';
 import { CompaniesService } from 'src/app/_services/companies.service';
 import { UsersService } from 'src/app/_services/users.service';
 import { EditUserAddressDialogComponent } from '../../dialogs/edit-user-address-dialog/edit-user-address-dialog.component';
+import { EditUserCompanyDialogComponent } from '../../dialogs/edit-user-company-dialog/edit-user-company-dialog.component';
 
 
 @Component({
@@ -49,7 +50,9 @@ export class UserPageComponent implements OnInit {
   }
 
   editCompanyDialog() {
-    throw new Error('Method not implemented.');
+    const dialogRef = this.dialog.open(EditUserCompanyDialogComponent, {
+      data: {company: this.user.company}
+    });
   }
 
   editAddressDialog() {
