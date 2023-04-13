@@ -49,6 +49,11 @@ import { CreateJobDialogComponent } from './_components/dialogs/create-job-dialo
 import { EditAdDialogComponent } from './_components/dialogs/edit-ad-dialog/edit-ad-dialog.component';
 import { EditJobDialogComponent } from './_components/dialogs/edit-job-dialog/edit-job-dialog.component';
 import { RatingWorkerDialogComponent } from './_components/dialogs/rating-worker-dialog/rating-worker-dialog.component';
+import { EditUserDialogComponent } from './_components/dialogs/edit-user-dialog/edit-user-dialog.component';
+import { EditUserProfessionsDialogComponent } from './_components/dialogs/edit-user-professions-dialog/edit-user-professions-dialog.component';
+import { EditUserCompanyDialogComponent } from './_components/dialogs/edit-user-company-dialog/edit-user-company-dialog.component';
+import { EditUserAddressDialogComponent } from './_components/dialogs/edit-user-address-dialog/edit-user-address-dialog.component';
+import { CreateCompanyDialogComponent } from './_components/dialogs/create-company-dialog/create-company-dialog.component';
 
 @NgModule({
   declarations: [
@@ -84,7 +89,12 @@ import { RatingWorkerDialogComponent } from './_components/dialogs/rating-worker
     CreateJobDialogComponent,
     EditAdDialogComponent,
     EditJobDialogComponent,
-    RatingWorkerDialogComponent
+    RatingWorkerDialogComponent,
+    EditUserDialogComponent,
+    EditUserProfessionsDialogComponent,
+    EditUserCompanyDialogComponent,
+    EditUserAddressDialogComponent,
+    CreateCompanyDialogComponent
   ],
   imports: [
     BrowserModule,

@@ -1,14 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Address } from 'src/app/_model/Address';
-import { Company } from 'src/app/_model/Company';
-import { Tag } from 'src/app/_model/Tag';
+import { MatDialog } from '@angular/material/dialog';
 import { User } from 'src/app/_model/User';
 import { UserData } from 'src/app/_model/UserData';
-import { AddressesService } from 'src/app/_services/addresses.service';
 import { CompaniesService } from 'src/app/_services/companies.service';
-import { CountiesService } from 'src/app/_services/counties.service';
-import { UsersJobsService } from 'src/app/_services/users-jobs.service';
 import { UsersService } from 'src/app/_services/users.service';
+import { EditUserAddressDialogComponent } from '../../dialogs/edit-user-address-dialog/edit-user-address-dialog.component';
 
 
 @Component({
@@ -19,17 +15,15 @@ import { UsersService } from 'src/app/_services/users.service';
 export class UserPageComponent implements OnInit {
 
   constructor(private userService: UsersService,
-     private userJobService: UsersJobsService,
-     private addressService: AddressesService,
-     private countiesService: CountiesService,
-     private companyService: CompaniesService
-     ) {
+    private companyService: CompaniesService,
+    public dialog: MatDialog
+    ) {
       this.userData =  this.userService.userData
-     }
-
+    }
+    
   user!: User;
   userData!: UserData;
-
+    
   ngOnInit(): void {
     this.getUserData();
   }
@@ -40,8 +34,41 @@ export class UserPageComponent implements OnInit {
     });
   }
 
+  deleteCompany() {
+    this.companyService.deleteCompanyById(this.user.company!.id).subscribe(res=>{
+      if(res){
+        delete this.user.company;
+      }
+    })
+  }
+
+  editCompanyAddressDialog() {
+    const dialogRef = this.dialog.open(EditUserAddressDialogComponent, {
+      data: {address: this.user.company!.address}
+    });
+  }
+
+  editCompanyDialog() {
+    throw new Error('Method not implemented.');
+  }
+
+  editAddressDialog() {
+    const dialogRef = this.dialog.open(EditUserAddressDialogComponent, {
+      data: {address: this.user.address}
+    });
+  }
+
+  editUserProfessionsDialog() {
+    throw new Error('Method not implemented.');
+  }
+
+  editUserDialog() {
+    throw new Error('Method not implemented.');
+  }
+    
   userType(){
     return this.user.accessType == 0 ? "Általános felhasználó" : this.user.accessType == 2 ? "Admin" : "Szakember"
   }
-
+    
 }
+  

@@ -8,11 +8,13 @@
       <p>Jogosultság: {{ userType() }}</p>
       <p>Email: {{ user.email }}</p>
       <p>Telefon Szám: {{ user.phone }}</p>
+      <p class="edit" (click)="editUserDialog()" >Szerkesztés</p>
       <div class="jobs" *ngIf="user.accessType! > 0">
         <h2>Foglalkozás(ok):</h2>
         <ul>
           <li *ngFor="let tag of user.jobTags"> {{ tag.name }}</li>
         </ul>
+        <p class="edit" (click)="editUserProfessionsDialog()">Szerkesztés</p>
       </div>
     </div>
     <div class="address col-sm-12 col-md-6 col-lg-4">
@@ -27,11 +29,14 @@
         <p>Emelet: {{ user.address!.floor }}</p>
         <p>Ajtó: {{ user.address!.door }}</p>
       </div>
+      <p class="edit" (click)="editAddressDialog()">Szerkesztés</p>
     </div>
     <div *ngIf="user.company" class="company col-sm-12 col-md-6 col-lg-4">
       <h2>Cég információk</h2>
       <p>Cégnév: {{ user.company.name }}</p>
       <p>Adószám: {{ user.company.taxNumber }}</p>
+      <p class="edit" (click)="editCompanyDialog()" >Szerkesztés</p>
+      <h2>Cég cím</h2>
       <p>Megye: {{ user.company.address!.county!.name }}</p>
       <p>Irányítószám: {{ user.company.address!.zipCode }}</p>
       <p>Város: {{user.company.address!.city }}</p>
@@ -42,6 +47,13 @@
         <p>Emelet: {{ user.company.address!.floor }}</p>
         <p>Ajtó: {{ user.company.address!.door }}</p>
       </div>
+      <div class="flex">
+        <div class="edit" (click)="editCompanyAddressDialog()">Szerkesztés</div>
+        <div class="warn" (click)="deleteCompany()">Cég törlése</div>
+      </div>
+    </div>
+    <div *ngIf="user.accessType! > 0 && !user.company">
+      <p class="edit" (click)="editCompanyDialog()">Cég hozzáadása</p>
     </div>
   </div>
   <hr>

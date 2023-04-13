@@ -36,8 +36,19 @@ export class AddressesService {
     );
   }
 
-  updateAddressById(address:Address){
-    return this.http.post(`${this.apiUrl}updateAddressById`,address).pipe(
+  updateAddressById(id: number, address:Address){
+    return this.http.post(`${this.apiUrl}updateAddressById`,{
+      id,
+      countyId: address.countyId,
+      zipCode: address.zipCode,
+      city: address.city,
+      street: address.street,
+      number: address.number, 
+      staircase: address.staircase,
+      floor: address.floor,
+      door: address.door,
+      currentUserId: this.userService.userData.userId
+    }).pipe(
       map((response: any)=> {
         return response.result;
       }),

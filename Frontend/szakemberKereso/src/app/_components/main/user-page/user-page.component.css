@@ -1,3 +1,29 @@
 .userData, .address, .company{
   border-left: 1px solid gray;
 }
+
+.edit{
+  text-decoration: underline;
+  color: rgb(40, 40, 146);
+  text-align: center;
+}
+
+.edit:hover{
+  color: rgb(59, 59, 255);
+  cursor: pointer;
+}
+
+.flex{
+  display: flex;
+  place-content: space-evenly;
+}
+
+.warn{
+  text-decoration: underline;
+  color: brown;
+}
+
+.warn:hover{
+  cursor: pointer;
+  color: red;
+}

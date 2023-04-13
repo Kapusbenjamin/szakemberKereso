@@ -57,7 +57,6 @@ export class CompaniesService {
     );
   }
 
-  // Nope
   deleteCompanyById(id: number):Observable<any>{
     return this.http.post(`${this.apiUrl}deleteCompanyById`,{
       id,
