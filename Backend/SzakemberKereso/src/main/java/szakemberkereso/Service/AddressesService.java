@@ -51,8 +51,8 @@ public class AddressesService {
         }
         
         if (AuthService.isUserAuthorized(a.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.USER, Roles.WORKER})) {
-            //a user-ek csak a saját address-üket módosíthatják
-            if(!Objects.equals(Addresses.getAddressById(a.getId()).getId(), Users.getUserById(a.getCurrentUserId()).getAddressId())){
+            //a user-ek csak a saját vagy a saját cég address-üket módosíthatják
+            if(!Objects.equals(Addresses.getAddressById(a.getId()).getId(), Users.getUserById(a.getCurrentUserId()).getAddressId()) && !Objects.equals(Addresses.getAddressById(a.getId()).getId(), Users.getUserById(a.getCurrentUserId()).getCompany().getAddressId())){
                 throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez!");
             }
             Addresses.updateAddressById(a);
@@ -66,7 +66,7 @@ public class AddressesService {
         if (AuthService.isUserAuthorized(address.getCurrentUserId(), new Roles[]{Roles.ADMIN, Roles.USER, Roles.WORKER})) {
             if(!AuthService.isUserAuthorized(address.getCurrentUserId(), new Roles[]{Roles.ADMIN})){
                 //a nem ADMIN jogosultságú user-ek csak a saját address-üket törölhetik
-                if(!Objects.equals(Addresses.getAddressById(address.getId()).getId(), Users.getUserById(address.getCurrentUserId()).getAddressId())){
+                if(!Objects.equals(Addresses.getAddressById(address.getId()).getId(), Users.getUserById(address.getCurrentUserId()).getAddressId()) && !Objects.equals(Addresses.getAddressById(address.getId()).getId(), Users.getUserById(address.getCurrentUserId()).getCompany().getAddressId())){
                     throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez!");
                 }
             }

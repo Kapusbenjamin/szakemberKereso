@@ -257,7 +257,7 @@ public class Addresses implements Serializable {
                 return address;
             }
             else{
-                throw new NotFoundException("Nincs ilyen cím!");
+                throw new NotFoundException("Nincs ilyen cím!" + id_in);
             }
         }
         catch(NotFoundException e){
@@ -342,7 +342,7 @@ public class Addresses implements Serializable {
 
             spq.execute();
             if(spq.getUpdateCount() < 1){
-                throw new NotFoundException("Nincs ilyen cím!");
+                throw new NotFoundException("Nincs ilyen cím!" + "id: " + a.getId());
             }
         } 
         catch(NotFoundException e){
