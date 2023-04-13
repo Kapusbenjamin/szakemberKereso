@@ -1,10 +1,12 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { City } from 'src/app/_model/City';
-import { Field } from 'src/app/_model/Field';
 import { Tag } from 'src/app/_model/Tag';
+import { UserData } from 'src/app/_model/UserData';
+import { AddressesService } from 'src/app/_services/addresses.service';
 import { CountiesService } from 'src/app/_services/counties.service';
 import { HttpService } from 'src/app/_services/http.service';
+import { UsersService } from 'src/app/_services/users.service';
 import { DropdownValidator } from 'src/app/_validators/dropdown-validators';
 
 @Component({
@@ -21,6 +23,8 @@ export class AddressFormComponent implements OnInit {
   streetsNames: Tag[] = [];
   currentCounty: any = "";
 
+  userData: UserData;
+
   county = new FormControl('',[Validators.required,DropdownValidator(this.counties)]);
   address = new FormGroup({
     zipCode: new FormControl('',[Validators.required,Validators.pattern('[0-9]+')]),
@@ -33,7 +37,11 @@ export class AddressFormComponent implements OnInit {
     door: new FormControl(null),
   });
 
-  constructor(private countiesService: CountiesService, private http: HttpService,private cdr: ChangeDetectorRef) { }
+  constructor(private countiesService: CountiesService,
+    private usersService: UsersService,
+    private http: HttpService,private cdr: ChangeDetectorRef) {
+    this.userData = this.usersService.userData
+   }
   ngOnDestroy(): void {
     setTimeout(() => {
       this.formGroup.removeControl('address');
@@ -42,6 +50,7 @@ export class AddressFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.setValueIfHasAddress();
     setTimeout(() => {
       this.formGroup.addControl('address',this.address);
       this.cdr.detectChanges();
@@ -65,6 +74,23 @@ export class AddressFormComponent implements OnInit {
         }
       });
     });
+  }
+
+  setValueIfHasAddress(){
+    let currentAddress = this.formGroup.controls['currentAddress'].value
+    if(currentAddress){
+      this.county.setValue(currentAddress.county.name);
+      this.address.controls['countyId'].setValue(currentAddress.countyId);
+      this.address.controls['zipCode'].setValue(currentAddress.zipCode);
+      this.address.controls['city'].setValue(currentAddress.city);
+      this.address.controls['street'].setValue(currentAddress.street);
+      this.address.controls['number'].setValue(currentAddress.number);
+      if(currentAddress.staircase){
+        this.address.controls['staircase'].setValue(currentAddress.staircase);
+        this.address.controls['floor'].setValue(currentAddress.floor);
+        this.address.controls['door'].setValue(currentAddress.door);
+      }
+    }
   }
 
   loadCities(county: string,cities: Tag[]){

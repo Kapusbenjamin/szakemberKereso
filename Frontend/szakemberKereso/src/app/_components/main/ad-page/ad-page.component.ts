@@ -123,22 +123,7 @@ export class AdPageComponent implements OnInit {
       this.filteringAds(filter);
     }
   }
-
-  close(){
-    setTimeout(() => {
-      if(this.inner){
-        this.inner = false
-      }else{        
-        this.modalOpen = false;
-      }
-    }, 10);
-  }
-
-  stay(){
-    this.inner = true;
-  }
-
-  // Máshol is felhasználható
+  
   getIdFromDropDown(name: string, dropdown:Tag[]):number {
     let id = -1
     dropdown.forEach((element:Tag)=>{
