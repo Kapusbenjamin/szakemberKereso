@@ -4,6 +4,8 @@
         {{ data.jobTag }}
     </div>
     <textarea [formControl]="description" name="" id="" cols="30" rows="10"></textarea>
-    <button (click)="close()">Mégse</button>
-    <button (click)="createJob()">Megbízási kérelem elküldése</button>
+    <div class="flex">
+        <button mat-raised-button color="warn" (click)="close()">Mégse</button>
+        <button mat-raised-button color="primary" (click)="createJob()">Megbízási kérelem elküldése</button>
+    </div>
 </div>

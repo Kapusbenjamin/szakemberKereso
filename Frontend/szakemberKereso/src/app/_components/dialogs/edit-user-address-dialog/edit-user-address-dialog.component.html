@@ -1,3 +1,5 @@
 <app-address-form [formGroup]="addressForm"></app-address-form>
-<button (click)="close()" >Mégse</button>
-<button (click)="editAddress()">Szerkesztés jóváhagyása</button>
+<div class="flex">
+    <button mat-raised-button color="warn" (click)="close()">Mégse</button>
+    <button mat-raised-button color="primary" (click)="editAddress()">Szerkesztés jóváhagyása</button>
+</div>

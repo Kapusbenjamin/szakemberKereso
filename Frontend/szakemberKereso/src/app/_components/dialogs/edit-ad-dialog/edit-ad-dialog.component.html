@@ -17,8 +17,8 @@
             <textarea formControlName="description" name="" id="" cols="30" rows="10"></textarea>
         </div>
     </form>
-    <button (click)="close()">Mégse</button>
-    <button (click)="editAd()">Szerkesztés jóváhagyása</button>
-    {{ counties.value | json }}
-    {{ data.ad.counties | json }}
+    <div class="flex">
+        <button mat-raised-button color="warn" (click)="close()">Mégse</button>
+        <button mat-raised-button color="primary" (click)="editAd()">Szerkesztés jóváhagyása</button>
+    </div>
 </div>

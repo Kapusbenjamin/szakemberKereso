@@ -7,6 +7,8 @@
         <input *ngIf="this.userData.userId == this.data.job.workerId"  type="number" formControlName="total" >
     </form>
     <p *ngIf="this.userData.userId == this.data.job.customerId">Összeg: {{ data.job.total }}</p>
-    <button (click)="close()">Mégse</button>
-    <button (click)="editJob()">Szerkesztés jóváhagyása</button>
+    <div class="flex">
+        <button mat-raised-button color="warn" (click)="close()">Mégse</button>
+        <button mat-raised-button color="primary" (click)="editJob()">Szerkesztés jóváhagyása</button>
+    </div>
 </div>
