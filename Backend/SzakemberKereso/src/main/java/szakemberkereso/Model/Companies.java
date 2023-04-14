@@ -223,7 +223,7 @@ public class Companies implements Serializable {
             spq.registerStoredProcedureParameter("user_id_in", Integer.class, ParameterMode.IN);
 
             spq.setParameter("company_name_in", company.getName());
-            spq.setParameter("county_id_in", Addresses.getAddressById(company.getAddress().getId()).getCountyId());
+            spq.setParameter("county_id_in", Counties.getCountyById(company.getAddress().getCountyId()).getId());
             spq.setParameter("zip_code_in", company.getAddress().getZipCode());
             spq.setParameter("city_in", company.getAddress().getCity());
             spq.setParameter("street_in", company.getAddress().getStreet());

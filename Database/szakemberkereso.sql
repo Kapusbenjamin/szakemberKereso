@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2023. Ápr 13. 19:25
+-- Létrehozás ideje: 2023. Ápr 14. 15:49
 -- Kiszolgáló verziója: 10.4.22-MariaDB
 -- PHP verzió: 8.0.13
 
@@ -228,7 +228,7 @@ WHERE NOT EXISTS (
 ) LIMIT 1$$
 
 DROP PROCEDURE IF EXISTS `createCompany`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createCompany` (IN `company_name_in` VARCHAR(200) CHARSET utf8, IN `premise_county_id_in` INT(11), IN `premise_zip_code_in` INT(5), IN `premise_city_in` VARCHAR(255) CHARSET utf8, IN `premise_street_in` VARCHAR(255) CHARSET utf8, IN `premise_number_in` VARCHAR(30) CHARSET utf8, IN `premise_staircase_in` VARCHAR(30) CHARSET utf8, IN `premise_floor_in` INT(4), IN `premise_door_in` INT(8), IN `tax_number_in` VARCHAR(255) CHARSET utf8)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createCompany` (IN `company_name_in` VARCHAR(200) CHARSET utf8, IN `premise_county_id_in` INT(11), IN `premise_zip_code_in` INT(5), IN `premise_city_in` VARCHAR(255) CHARSET utf8, IN `premise_street_in` VARCHAR(255) CHARSET utf8, IN `premise_number_in` VARCHAR(30) CHARSET utf8, IN `premise_staircase_in` VARCHAR(30) CHARSET utf8, IN `premise_floor_in` INT(4), IN `premise_door_in` INT(8), IN `tax_number_in` VARCHAR(255) CHARSET utf8, IN `user_id_in` INT(11))  BEGIN
    DECLARE company_address_id INT(11);
     
    CALL `createAddress`(premise_county_id_in, premise_zip_code_in, premise_city_in, premise_street_in, premise_number_in, premise_staircase_in, premise_floor_in, premise_door_in);
@@ -246,6 +246,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createCompany` (IN `company_name_in
         company_address_id,
         tax_number_in
     );
+    
+    IF(user_id_in != -1)
+    	THEN
+        	UPDATE `users`
+            SET `users`.`company_id` = LAST_INSERT_ID()
+            WHERE `users`.`id` = user_id_in;
+ 	END IF;
 END$$
 
 DROP PROCEDURE IF EXISTS `createJob`$$
@@ -350,7 +357,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createUserWorker` (IN `first_name_i
     CALL `createAddress`(county_id_in, zip_code_in, city_in, street_in, number_in, staircase_in, floor_in, door_in);
     SELECT LAST_INSERT_ID() INTO address_id;
     
-    CALL `createCompany`(company_name_in, premise_county_id_in, premise_zip_code_in, premise_city_in, premise_street_in, premise_number_in, premise_staircase_in, premise_floor_in, premise_door_in, tax_number_in);
+    CALL `createCompany`(company_name_in, premise_county_id_in, premise_zip_code_in, premise_city_in, premise_street_in, premise_number_in, premise_staircase_in, premise_floor_in, premise_door_in, tax_number_in, -1);
     SELECT LAST_INSERT_ID() INTO company_id;
     
 	INSERT INTO `users`
@@ -813,7 +820,10 @@ INSERT INTO `addresses` (`id`, `county_id`, `zip_code`, `city`, `street`, `numbe
 (61, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
 (62, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
 (63, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(64, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL);
+(64, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
+(65, 4, 1111, 'Bp', 'AAAA utca', '56', NULL, NULL, NULL),
+(66, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
+(67, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -920,7 +930,9 @@ INSERT INTO `companies` (`id`, `name`, `address_id`, `tax_number`) VALUES
 (9, 'A kft.', 55, '2132165465'),
 (10, 'A kft.', 58, '2132165465'),
 (11, 'A kft.', 60, '2132165465'),
-(13, 'A kft.', 64, '2132165465');
+(13, 'A kft.', 64, '2132165465'),
+(14, 'Kis és társai Bt.', 65, '6542187486'),
+(15, 'A kft.', 67, '2132165465');
 
 -- --------------------------------------------------------
 
@@ -1175,11 +1187,12 @@ INSERT INTO `users` (`id`, `first_name`, `last_name`, `access_type`, `email`, `p
 (1, 'Teszt', 'Ferenc', 0, 'tesztf@teszt-user.com', '+36202567896', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 1, -1, NULL, NULL, NULL, '2023-01-05 15:57:39', NULL, '2023-04-13 15:53:33', 0),
 (2, 'Teszt', 'László', 1, 'tesztl@teszt-user.com', '+36202567894', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 1, 1, 0, NULL, NULL, '2023-02-16 16:16:19', '2023-01-05 15:57:39', '2023-01-05 15:48:18', '2023-04-13 15:53:34', 0),
 (3, 'Teszt', 'Izabella', 0, 'tesztiza@teszt-user.com', '+36302987764', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 1, 0, NULL, NULL, '2023-01-05 15:55:18', '2023-01-05 15:57:39', '2023-01-04 15:48:18', '2023-04-13 15:53:36', 0),
-(4, 'Teszt', 'Admin', 2, 'teszta@teszt-user.com', '+36702753456', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 1, 0, NULL, NULL, '2023-01-06 15:48:18', '2023-01-05 15:57:39', '2023-01-01 15:48:18', '2023-04-13 15:53:37', 0),
+(4, 'Teszt', 'Admin', 2, 'teszta@teszt-user.com', '+36702753456', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 14, 1, 0, NULL, NULL, '2023-01-06 15:48:18', '2023-01-05 15:57:39', '2023-01-01 15:48:18', '2023-04-14 13:45:39', 0),
 (8, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 3, 1, -1, NULL, NULL, NULL, '2023-01-28 15:00:51', NULL, '2023-04-13 15:53:30', 0),
 (9, 'TESZT', 'AA', 0, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 43, -1, NULL, NULL, NULL, '2023-02-16 16:16:26', NULL, '2023-02-24 12:08:19', 0),
 (10, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 5, 44, -1, NULL, NULL, NULL, '2023-02-16 16:16:31', NULL, '2023-02-24 12:08:16', 0),
-(19, 'TESZT', 'AA', 1, 'bkap100@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 61, 1, NULL, NULL, '2023-02-24 10:59:18', '2023-02-23 18:29:08', '2023-02-23 18:30:16', '2023-04-13 14:22:58', 0);
+(19, 'TESZT', 'AA', 1, 'bkap100@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 61, 1, NULL, NULL, '2023-02-24 10:59:18', '2023-02-23 18:29:08', '2023-02-23 18:30:16', '2023-04-13 14:22:58', 0),
+(21, 'TESZT', 'AA', 1, 'regteszt@teszt-user.hu', '+36123456789', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 15, 66, -1, 'CIcv8iedfXusSvJWFmxCvAk7qSJU0c3TsVrU5PNG', '2023-04-14 13:55:57', NULL, '2023-04-14 13:45:57', NULL, '2023-04-14 13:45:57', 0);
 
 -- --------------------------------------------------------
 
@@ -1298,7 +1311,7 @@ ALTER TABLE `users_jobs`
 -- AUTO_INCREMENT a táblához `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT a táblához `ads`
@@ -1322,7 +1335,7 @@ ALTER TABLE `chats`
 -- AUTO_INCREMENT a táblához `companies`
 --
 ALTER TABLE `companies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT a táblához `counties`
@@ -1370,7 +1383,7 @@ ALTER TABLE `ratings`
 -- AUTO_INCREMENT a táblához `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT a táblához `users_jobs`
