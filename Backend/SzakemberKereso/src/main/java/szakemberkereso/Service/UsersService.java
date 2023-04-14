@@ -9,6 +9,7 @@ import java.util.Objects;
 import javax.mail.AuthenticationFailedException;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
+import org.apache.commons.codec.digest.DigestUtils;
 import szakemberkereso.Configuration.Roles;
 import szakemberkereso.Exception.EmailException;
 import szakemberkereso.Exception.PasswordException;
@@ -202,6 +203,9 @@ public class UsersService {
             //a user-ek csak a saját jelszavukat módosíthatják
             if(!Objects.equals(user.getId(), user.getCurrentUserId())){
                 throw new ForbiddenException("Nincs jogosultsága ehhez a kéréshez.");
+            }
+            else if(!Objects.equals(Users.getUserById(user.getCurrentUserId()).getPassword(), DigestUtils.sha256Hex(user.getPassword()))){
+                throw new AuthenticationFailedException("Nem sikerült azonosítani.");
             }
             Users.changePassword(user);
         }

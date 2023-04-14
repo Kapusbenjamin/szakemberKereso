@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2023. Ápr 13. 16:20
+-- Létrehozás ideje: 2023. Ápr 13. 19:25
 -- Kiszolgáló verziója: 10.4.22-MariaDB
 -- PHP verzió: 8.0.13
 
@@ -125,6 +125,22 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `addNewJobToUser` (IN `user_id_in` I
                 job_tag_id_in
             );
  	END IF;
+END$$
+
+DROP PROCEDURE IF EXISTS `canWriteRating`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `canWriteRating` (IN `ratinged_user_id_in` INT(11), IN `ratinger_user_id_in` INT(11), OUT `result` INT(1))  BEGIN
+	IF((SELECT COUNT(*) FROM `ratings`
+            WHERE `ratings`.`ratinged_user_id` = ratinged_user_id_in
+            AND `ratings`.`ratinger_user_id` = ratinger_user_id_in) 
+       = 
+       (SELECT COUNT(*) FROM `jobs`
+            WHERE `jobs`.`worker_id` = ratinged_user_id_in
+            AND `jobs`.`customer_id` = ratinger_user_id_in))
+  		THEN
+        	SET result = 0;
+	ELSE
+		SET result = 1;
+    END IF;
 END$$
 
 DROP PROCEDURE IF EXISTS `changeAccess`$$
@@ -773,7 +789,7 @@ INSERT INTO `addresses` (`id`, `county_id`, `zip_code`, `city`, `street`, `numbe
 (3, 1, 4532, 'Budapest', 'A utca', '23/A', NULL, NULL, NULL),
 (4, 2, 7600, 'Pécs', 'Ág utca', '56', NULL, NULL, NULL),
 (6, 5, 4532, 'Pécs', 'Petőfi', '13/A', 'Első', 2, 12),
-(40, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
+(40, 1, 4532, 'Budapest', 'A utca', '23/A', 'Hátsó', 2, 11),
 (41, 4, 1111, 'Bp', 'AAAA utca', '56', NULL, NULL, NULL),
 (42, 4, 1111, 'Bp', 'AAAA utca', '56', NULL, NULL, NULL),
 (43, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
@@ -904,7 +920,6 @@ INSERT INTO `companies` (`id`, `name`, `address_id`, `tax_number`) VALUES
 (9, 'A kft.', 55, '2132165465'),
 (10, 'A kft.', 58, '2132165465'),
 (11, 'A kft.', 60, '2132165465'),
-(12, 'A kft.', 62, '2132165465'),
 (13, 'A kft.', 64, '2132165465');
 
 -- --------------------------------------------------------
@@ -1122,7 +1137,8 @@ INSERT INTO `ratings` (`id`, `ratinged_user_id`, `ratinger_user_id`, `descriptio
 (1, 2, 3, 'nem hozta az anyagot', 1, 1, '2023-02-09 09:57:36', 0),
 (3, 1, 2, 'kettő is', 2, 0, '2023-02-09 10:05:04', 1),
 (4, 2, 3, 'mindent megcsinált csak nem jól', 2, 0, '2023-02-09 09:59:50', 0),
-(5, 2, 3, 'nem hozta az anyagot', 1, 0, '2023-02-16 16:23:27', 0);
+(5, 2, 3, 'nem hozta az anyagot', 1, 0, '2023-02-16 16:23:27', 0),
+(6, 4, 2, 'asfddsgfs', 4, 0, '2023-04-13 17:13:52', 0);
 
 -- --------------------------------------------------------
 
@@ -1156,14 +1172,14 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `access_type`, `email`, `phone`, `password`, `company_id`, `address_id`, `status`, `token`, `token_expired_at`, `last_login_at`, `created_at`, `activated_at`, `updated_at`, `deleted`) VALUES
-(1, 'Teszt', 'Ferenc', 0, 'tesztf@teszt-user.com', '+36202567896', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 0, -1, NULL, NULL, NULL, '2023-01-05 15:57:39', NULL, '2023-02-24 12:08:31', 0),
-(2, 'Teszt', 'László', 1, 'tesztl@teszt-user.com', '+36202567894', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 1, 0, 0, NULL, NULL, '2023-02-16 16:16:19', '2023-01-05 15:57:39', '2023-01-05 15:48:18', '2023-02-24 12:08:29', 0),
-(3, 'Teszt', 'Izabella', 0, 'tesztiza@teszt-user.com', '+36302987764', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 0, 0, NULL, NULL, '2023-01-05 15:55:18', '2023-01-05 15:57:39', '2023-01-04 15:48:18', '2023-02-24 12:08:26', 0),
-(4, 'Teszt', 'Admin', 2, 'teszta@teszt-user.com', '+36702753456', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 0, 0, NULL, NULL, '2023-01-06 15:48:18', '2023-01-05 15:57:39', '2023-01-01 15:48:18', '2023-02-24 12:08:24', 0),
-(8, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 3, 39, -1, NULL, NULL, NULL, '2023-01-28 15:00:51', NULL, '2023-02-24 12:08:22', 0),
+(1, 'Teszt', 'Ferenc', 0, 'tesztf@teszt-user.com', '+36202567896', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 1, -1, NULL, NULL, NULL, '2023-01-05 15:57:39', NULL, '2023-04-13 15:53:33', 0),
+(2, 'Teszt', 'László', 1, 'tesztl@teszt-user.com', '+36202567894', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 1, 1, 0, NULL, NULL, '2023-02-16 16:16:19', '2023-01-05 15:57:39', '2023-01-05 15:48:18', '2023-04-13 15:53:34', 0),
+(3, 'Teszt', 'Izabella', 0, 'tesztiza@teszt-user.com', '+36302987764', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 1, 0, NULL, NULL, '2023-01-05 15:55:18', '2023-01-05 15:57:39', '2023-01-04 15:48:18', '2023-04-13 15:53:36', 0),
+(4, 'Teszt', 'Admin', 2, 'teszta@teszt-user.com', '+36702753456', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 1, 0, NULL, NULL, '2023-01-06 15:48:18', '2023-01-05 15:57:39', '2023-01-01 15:48:18', '2023-04-13 15:53:37', 0),
+(8, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 3, 1, -1, NULL, NULL, NULL, '2023-01-28 15:00:51', NULL, '2023-04-13 15:53:30', 0),
 (9, 'TESZT', 'AA', 0, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 43, -1, NULL, NULL, NULL, '2023-02-16 16:16:26', NULL, '2023-02-24 12:08:19', 0),
 (10, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 5, 44, -1, NULL, NULL, NULL, '2023-02-16 16:16:31', NULL, '2023-02-24 12:08:16', 0),
-(19, 'TESZT', 'AA', 1, 'bkap100@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 12, 61, 1, NULL, NULL, '2023-02-24 10:59:18', '2023-02-23 18:29:08', '2023-02-23 18:30:16', '2023-02-24 10:59:18', 0);
+(19, 'TESZT', 'AA', 1, 'bkap100@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 61, 1, NULL, NULL, '2023-02-24 10:59:18', '2023-02-23 18:29:08', '2023-02-23 18:30:16', '2023-04-13 14:22:58', 0);
 
 -- --------------------------------------------------------
 
@@ -1348,7 +1364,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT a táblához `ratings`
 --
 ALTER TABLE `ratings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT a táblához `users`

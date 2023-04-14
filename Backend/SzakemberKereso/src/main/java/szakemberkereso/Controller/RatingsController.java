@@ -203,4 +203,20 @@ public class RatingsController {
         }
     }
     
+    @POST
+    @Path("canWriteRating")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response canWriteRating(Ratings rating){        
+        JSONObject obj = new JSONObject();
+        try{
+            Boolean result = rs.canWriteRating(rating);
+            obj.put("result", JSONObject.wrap(result));
+            obj.put("message", "Sikeresen csekkolta, hogy írhat-e értékelést!");
+            return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
+        }
+        catch(Exception e){
+            return ResponseService.handleExceptions(e);
+        }
+    }
+    
 }

@@ -545,5 +545,37 @@ public class Ratings implements Serializable {
             emf.close();
         }
     }
+    
+    public static Boolean canWriteRating(Ratings rating) throws Exception{
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
+        EntityManager em = emf.createEntityManager();
+        
+        try {
+            StoredProcedureQuery spq = em.createStoredProcedureQuery("canWriteRating");
+            
+            spq.registerStoredProcedureParameter("ratinged_user_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("ratinger_user_id_in", Integer.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("result", Integer.class, ParameterMode.OUT);
+            
+            spq.setParameter("ratinged_user_id_in", Users.getIdIfUserValid(rating.getRatingedUserId()));
+            spq.setParameter("ratinger_user_id_in", rating.getCurrentUserId());
+           
+            spq.execute();
+            
+            Integer result = Integer.parseInt(spq.getOutputParameterValue("result").toString());
+            return result == 1;
+        }
+        catch(NotFoundException e){
+            throw new NotFoundException(e.getMessage());
+        }
+        catch(Exception e){
+            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
+        }
+        finally{
+            em.clear();
+            em.close();
+            emf.close();
+        }
+    }
 
 }
