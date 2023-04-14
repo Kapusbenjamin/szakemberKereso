@@ -8,6 +8,7 @@ import { EditUserAddressDialogComponent } from '../../dialogs/edit-user-address-
 import { EditUserCompanyDialogComponent } from '../../dialogs/edit-user-company-dialog/edit-user-company-dialog.component';
 import { EditUserDialogComponent } from '../../dialogs/edit-user-dialog/edit-user-dialog.component';
 import { EditUserProfessionsDialogComponent } from '../../dialogs/edit-user-professions-dialog/edit-user-professions-dialog.component';
+import { CreateCompanyDialogComponent } from '../../dialogs/create-company-dialog/create-company-dialog.component';
 
 
 @Component({
@@ -77,7 +78,8 @@ export class UserPageComponent implements OnInit {
   }
 
   createCompanyDialog() {
-    throw new Error('Method not implemented.');
+    const dialogRef = this.dialog.open(CreateCompanyDialogComponent, {
+    });
   }
     
   userType(){

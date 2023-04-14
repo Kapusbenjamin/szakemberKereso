@@ -38,7 +38,7 @@ export class RatingWorkerDialogComponent implements OnInit {
       ratingsStars: this.formG.controls['ratingsStars'].value!
     }
     this.ratingsService.createRating(rating).subscribe(res=>{
-      this.close();
+      window.location.reload();
     })
   }
 

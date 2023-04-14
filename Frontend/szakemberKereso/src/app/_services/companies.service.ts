@@ -15,6 +15,11 @@ export class CompaniesService {
   constructor(private http: HttpClient, private userService: UsersService) { }
 
   createCompany(company: Company):Observable<any>{
+    if(company.address!.staircase == null){
+      delete company.address!.staircase
+      delete company.address!.floor
+      delete company.address!.door
+    }
     return this.http.post(`${this.apiUrl}createCompany`,{
       name: company.name,
       taxNumber: company.taxNumber,

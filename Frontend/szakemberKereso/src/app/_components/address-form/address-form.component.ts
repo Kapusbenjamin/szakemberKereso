@@ -77,18 +77,20 @@ export class AddressFormComponent implements OnInit {
   }
 
   setValueIfHasAddress(){
-    let currentAddress = this.formGroup.controls['currentAddress'].value
-    if(currentAddress){
-      this.county.setValue(currentAddress.county.name);
-      this.address.controls['countyId'].setValue(currentAddress.countyId);
-      this.address.controls['zipCode'].setValue(currentAddress.zipCode);
-      this.address.controls['city'].setValue(currentAddress.city);
-      this.address.controls['street'].setValue(currentAddress.street);
-      this.address.controls['number'].setValue(currentAddress.number);
-      if(currentAddress.staircase){
-        this.address.controls['staircase'].setValue(currentAddress.staircase);
-        this.address.controls['floor'].setValue(currentAddress.floor);
-        this.address.controls['door'].setValue(currentAddress.door);
+    if(this.formGroup.controls['currentAddress']?.value){
+      let currentAddress = this.formGroup.controls['currentAddress'].value
+      if(currentAddress){
+        this.county.setValue(currentAddress.county.name);
+        this.address.controls['countyId'].setValue(currentAddress.countyId);
+        this.address.controls['zipCode'].setValue(currentAddress.zipCode);
+        this.address.controls['city'].setValue(currentAddress.city);
+        this.address.controls['street'].setValue(currentAddress.street);
+        this.address.controls['number'].setValue(currentAddress.number);
+        if(currentAddress.staircase){
+          this.address.controls['staircase'].setValue(currentAddress.staircase);
+          this.address.controls['floor'].setValue(currentAddress.floor);
+          this.address.controls['door'].setValue(currentAddress.door);
+        }
       }
     }
   }
