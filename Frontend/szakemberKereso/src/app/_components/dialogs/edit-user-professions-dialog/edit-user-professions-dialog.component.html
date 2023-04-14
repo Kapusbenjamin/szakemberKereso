@@ -1,1 +1,23 @@
-<p>edit-user-professions-dialog works!</p>
+<div>
+    <form [formGroup]="formG">
+        <div formArrayName="professions">
+          <div *ngFor="let profession of formG.controls['professions'].controls; let i=index">
+            <mat-form-field>
+              <mat-select placeholder="Foglalkozás" [formControlName]="i">
+                <mat-option *ngFor="let option of professionTags" [value]="option.id">
+                  {{ option.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <button mat-icon-button color="warn" *ngIf="formG.controls['professions'].controls.length > 1" (click)="removeProfession(i)">
+                Törlés
+            </button>
+          </div>
+        </div>
+        <button mat-icon-button color="primary" class="button" type="button" (click)="addProfession()">Új hozzáadása</button>
+      </form>
+      <div class="flex">
+        <button mat-raised-button color="warn" (click)="close()">Mégse</button>
+        <button mat-raised-button color="primary" (click)="updateUserProfessions()" [disabled]="formG.invalid">Szerkeszt</button>
+    </div>
+</div>
