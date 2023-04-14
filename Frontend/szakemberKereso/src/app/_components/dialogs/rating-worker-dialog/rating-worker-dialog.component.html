@@ -10,6 +10,8 @@
         </select>
         <textarea formControlName="description" cols="30" rows="10"></textarea>
     </form>
-    <button (click)="close()">Mégse</button>
-    <button (click)="ratingWorker()">Értékelés küldése</button>
+    <div class="flex">
+        <button mat-raised-button color="warn" (click)="close()">Mégse</button>
+        <button mat-raised-button color="primary" (click)="ratingWorker()">Értékelés küldése</button>
+    </div>
 </div>

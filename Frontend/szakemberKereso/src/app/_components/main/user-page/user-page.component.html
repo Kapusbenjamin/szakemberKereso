@@ -31,6 +31,9 @@
       </div>
       <p class="edit" (click)="editAddressDialog()">Szerkesztés</p>
     </div>
+    <div *ngIf="!user.company" class="company col-sm-12 col-md-6 col-lg-4">
+      <p class="edit" (click)="createCompanyDialog()">Cég létrehozása</p>
+    </div>
     <div *ngIf="user.company" class="company col-sm-12 col-md-6 col-lg-4">
       <h2>Cég információk</h2>
       <p>Cégnév: {{ user.company.name }}</p>
@@ -51,9 +54,6 @@
         <div class="edit" (click)="editCompanyAddressDialog()">Szerkesztés</div>
         <div class="warn" (click)="deleteCompany()">Cég törlése</div>
       </div>
-    </div>
-    <div *ngIf="user.accessType! > 0 && !user.company">
-      <p class="edit" (click)="editCompanyDialog()">Cég hozzáadása</p>
     </div>
   </div>
   <hr>

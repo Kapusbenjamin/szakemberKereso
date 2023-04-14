@@ -9,5 +9,5 @@
     <button mat-raised-button *ngIf="currentUser.userId == job.workerId" [disabled]="job.status == 1" (click)="editByWorkerDialog()">Szerkesztés szakemberként</button>
     <button mat-raised-button *ngIf="currentUser.userId == job.customerId" [disabled]="job.status == 1" (click)="editByCustomerDialog()">Szerkesztés megrendelőként</button>
     <button [disabled]="job.status == 1" (click)="jobClose()" mat-raised-button color="warn">Megrendelés lezárása</button>
-    <button mat-raised-button (click)="ratingWorkerDialog()" *ngIf="currentUser.userId == job.customerId" [disabled]="job.status == 0">Értékelés írása</button>
+    <button mat-raised-button (click)="ratingWorkerDialog()" *ngIf="currentUser.userId == job.customerId" [disabled]="!canWriteRating">Értékelés írása</button>
 </div>

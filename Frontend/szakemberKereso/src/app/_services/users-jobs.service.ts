@@ -14,10 +14,10 @@ export class UsersJobsService {
 
   constructor(private http: HttpClient, private userService: UsersService) { }
 
-  addNewJobToUser(userId: number, tagId: number,currentUserId:number ){
+  addNewJobToUser(userId: number, jobTagId: number,currentUserId:number ){
     return this.http.post(`${this.apiUrl}addNewJobToUser`,{
-      userId: userId,
-      jobTagId: tagId,
+      userId,
+      jobTagId,
       currentUserId,
     }).pipe(
       map((response: any)=> {
@@ -41,7 +41,7 @@ export class UsersJobsService {
   }
 
   deleteUserJob(userId: number, jobTagId: number){
-   return this.http.post(`${this.apiUrl}`,{
+   return this.http.post(`${this.apiUrl}deleteUserJob`,{
       userId,
       jobTagId,
       currentUserId: this.userService.userData.userId

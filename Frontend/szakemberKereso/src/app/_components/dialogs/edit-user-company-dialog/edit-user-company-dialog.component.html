@@ -1,1 +1,15 @@
-<p>edit-user-company-dialog works!</p>
+<div>
+    <form [formGroup]="formG">
+        <app-input [control]="formG.controls['name']" type="text" name="Cégnév"></app-input>
+        <mat-error *ngIf="formG.controls['name'].hasError('required') &&
+        formG.controls['name'].touched">Mező kitöltése kötelező</mat-error>
+        <app-input [control]="formG.controls['taxNumber']" type="text" name="Adószám"></app-input>
+        <mat-error *ngIf="formG.controls['taxNumber'].hasError('pattern')">Csak számokat tartalmazhat</mat-error>
+        <mat-error *ngIf="formG.controls['taxNumber'].hasError('required') &&
+        formG.controls['name'].touched">Mező kitöltése kötelező</mat-error>
+    </form>
+    <div class="flex">
+        <button mat-raised-button color="warn" (click)="close()">Mégse</button>
+        <button mat-raised-button color="primary" (click)="editCompany()" [disabled]="formG.invalid">Jóváhagy</button>
+    </div>
+</div>

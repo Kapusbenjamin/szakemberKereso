@@ -1,1 +1,30 @@
-<p>edit-user-dialog works!</p>
+<div>
+    <form [formGroup]="formG">
+        <div>
+            <app-input [control]="formG.controls['firstName']" type="text" name="Vezetéknév"></app-input>
+            <mat-error *ngIf="formG.controls['firstName'].hasError('required') &&
+            formG.controls['firstName'].touched">Mező kitöltése kötelező</mat-error>
+        </div>
+        <div>
+            <app-input [control]="formG.controls['lastName']" type="text" name="Keresztnév"></app-input>
+            <mat-error *ngIf="formG.controls['lastName'].hasError('required') &&
+            formG.controls['lastName'].touched">Mező kitöltése kötelező</mat-error>
+        </div>
+        <div>
+            <app-input [control]="formG.controls['email']" type="text" name="Email"></app-input>
+            <mat-error *ngIf="formG.controls['email'].hasError('email')">Emailt adjon meg</mat-error>
+            <mat-error *ngIf="formG.controls['email'].hasError('required') &&
+            formG.controls['email'].touched">Mező kitöltése kötelező</mat-error>
+        </div>
+        <div>
+            <app-input [control]="formG.controls['phone']" type="text" name="Phone"></app-input>
+            <mat-error *ngIf="formG.controls['phone'].value!.length > 12">Telefonszámot adjon meg max 12 karakter</mat-error>
+            <mat-error *ngIf="formG.controls['phone'].hasError('required') &&
+            formG.controls['phone'].touched">Mező kitöltése kötelező</mat-error>
+        </div>
+    </form>
+    <div class="flex">
+        <button mat-raised-button color="warn" (click)="close()">Mégse</button>
+        <button mat-raised-button color="primary" (click)="updateUser()" [disabled]="formG.invalid">Szerkeszt</button>
+    </div>
+</div>

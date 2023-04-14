@@ -6,6 +6,7 @@ import { JobsService } from 'src/app/_services/jobs.service';
 import { UsersService } from 'src/app/_services/users.service';
 import { EditJobDialogComponent } from '../dialogs/edit-job-dialog/edit-job-dialog.component';
 import { RatingWorkerDialogComponent } from '../dialogs/rating-worker-dialog/rating-worker-dialog.component';
+import { RatingsService } from 'src/app/_services/ratings.service';
 
 @Component({
   selector: 'app-job',
@@ -16,15 +17,24 @@ export class JobComponent implements OnInit {
 
   @Input() job!: Job;
   currentUser: UserData;
+  canWriteRating!: boolean;
 
   constructor(private jobService: JobsService,
-     private UserService: UsersService,
+     private UserService: UsersService, private ratingService: RatingsService,
      public dialog: MatDialog) { 
     this.currentUser = this.UserService.userData;
   }
 
   ngOnInit(): void {
+    if(this.currentUser.userId == this.job.customerId){
+      this.checkCanWriteRating();
+    }
+  }
 
+  checkCanWriteRating(){
+    this.ratingService.canWriteRating(this.job.workerId).subscribe(res=>{
+        this.canWriteRating = res;
+    })
   }
 
   acceptByWorker(){

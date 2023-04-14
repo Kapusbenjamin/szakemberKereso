@@ -1,5 +1,6 @@
 <div class="row">
-    <h2>{{ rating.ratinger!.firstName + " " + rating.ratinger!.lastName }}</h2>
+    <h2>Szakember: {{ rating.ratinged!.firstName + " " + rating.ratinged!.lastName }}</h2>
+    <h3>Értékelő: {{ rating.ratinger!.firstName + " " + rating.ratinger!.lastName }}</h3>
     <h3>{{ stars +  " - " +  rating.ratingsStars}}</h3>
     <p>{{ rating.description }}</p>
     <p>{{ rating.updatedAt }} </p>

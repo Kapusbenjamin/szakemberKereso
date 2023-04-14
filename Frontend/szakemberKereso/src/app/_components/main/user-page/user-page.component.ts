@@ -5,6 +5,10 @@ import { UserData } from 'src/app/_model/UserData';
 import { CompaniesService } from 'src/app/_services/companies.service';
 import { UsersService } from 'src/app/_services/users.service';
 import { EditUserAddressDialogComponent } from '../../dialogs/edit-user-address-dialog/edit-user-address-dialog.component';
+import { EditUserCompanyDialogComponent } from '../../dialogs/edit-user-company-dialog/edit-user-company-dialog.component';
+import { EditUserDialogComponent } from '../../dialogs/edit-user-dialog/edit-user-dialog.component';
+import { EditUserProfessionsDialogComponent } from '../../dialogs/edit-user-professions-dialog/edit-user-professions-dialog.component';
+import { CreateCompanyDialogComponent } from '../../dialogs/create-company-dialog/create-company-dialog.component';
 
 
 @Component({
@@ -13,6 +17,7 @@ import { EditUserAddressDialogComponent } from '../../dialogs/edit-user-address-
   styleUrls: ['./user-page.component.css']
 })
 export class UserPageComponent implements OnInit {
+
 
   constructor(private userService: UsersService,
     private companyService: CompaniesService,
@@ -49,7 +54,9 @@ export class UserPageComponent implements OnInit {
   }
 
   editCompanyDialog() {
-    throw new Error('Method not implemented.');
+    const dialogRef = this.dialog.open(EditUserCompanyDialogComponent, {
+      data: {company: this.user.company}
+    });
   }
 
   editAddressDialog() {
@@ -59,11 +66,20 @@ export class UserPageComponent implements OnInit {
   }
 
   editUserProfessionsDialog() {
-    throw new Error('Method not implemented.');
+    const dialogRef = this.dialog.open(EditUserProfessionsDialogComponent, {
+      data: {user: this.user}
+    });
   }
 
   editUserDialog() {
-    throw new Error('Method not implemented.');
+    const dialogRef = this.dialog.open(EditUserDialogComponent, {
+      data: {user: this.user}
+    });
+  }
+
+  createCompanyDialog() {
+    const dialogRef = this.dialog.open(CreateCompanyDialogComponent, {
+    });
   }
     
   userType(){

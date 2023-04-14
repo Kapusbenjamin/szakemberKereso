@@ -138,4 +138,18 @@ export class RatingsService {
     );
   }
 
+  canWriteRating(ratingedUserId: number): Observable<any>{
+    return this.http.post<any>(`${this.apiUrl}canWriteRating`,{
+      ratingedUserId, 
+      currentUserId: this.userService.userData.userId
+    }).pipe(
+      map((response: any)=> {
+        return response.result;
+      }),
+      catchError(error => {
+        return throwError(error);
+      })
+    );
+  }
+
 }
