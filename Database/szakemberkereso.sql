@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2023. Ápr 14. 15:49
+-- Létrehozás ideje: 2023. Ápr 15. 13:08
 -- Kiszolgáló verziója: 10.4.22-MariaDB
 -- PHP verzió: 8.0.13
 
@@ -42,11 +42,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptByWorker` (IN `id_in` INT(11)
 SET `jobs`.`worker_accepted` = 1
 WHERE `jobs`.`id` = id_in$$
 
-DROP PROCEDURE IF EXISTS `acceptImage`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptImage` (IN `id_in` INT(11))  UPDATE `images`
-SET `images`.`status` = 1
-WHERE `images`.`id` = id_in$$
-
 DROP PROCEDURE IF EXISTS `acceptRating`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptRating` (IN `id_in` INT(11))  UPDATE `ratings`
 SET `ratings`.`status` = 1
@@ -74,22 +69,6 @@ VALUES
 (
 	user_id_in,
     ad_id_in
-)$$
-
-DROP PROCEDURE IF EXISTS `addImage`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addImage` (IN `url_in` VARCHAR(255) CHARSET utf8, IN `title_in` VARCHAR(100) CHARSET utf8, IN `created_at_in` TIMESTAMP, IN `user_id_in` INT(11))  INSERT INTO `images`
-(
-	`images`.`url`,
-    `images`.`title`,
-    `images`.`created_at`,
-    `images`.`user_id`
-)
-VALUES
-(
-	url_in,
-    title_in,
-    created_at_in,
-    user_id_in
 )$$
 
 DROP PROCEDURE IF EXISTS `addNewCountyToAd`$$
@@ -417,10 +396,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteFavorite` (IN `user_id_in` IN
 WHERE `favorites`.`user_id` = user_id_in
 AND `favorites`.`ad_id` = ad_id_in$$
 
-DROP PROCEDURE IF EXISTS `deleteImage`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteImage` (IN `id_in` INT(11))  DELETE FROM `images`
-WHERE `images`.`id` = id_in$$
-
 DROP PROCEDURE IF EXISTS `deleteJob`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteJob` (IN `id_in` INT(11))  UPDATE `jobs`
 SET `jobs`.`deleted` = 1
@@ -467,11 +442,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllAcceptedAds` ()  SELECT * FRO
 WHERE `ads`.`deleted` != 1
 AND `ads`.`status` = 1$$
 
-DROP PROCEDURE IF EXISTS `getAllAcceptedImagesByUserId`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllAcceptedImagesByUserId` (IN `user_id_in` INT(11))  SELECT * FROM `images`
-WHERE `images`.`status` = 1
-AND `images`.`user_id` = user_id_in$$
-
 DROP PROCEDURE IF EXISTS `getAllAds`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllAds` ()  SELECT * FROM `ads`$$
 
@@ -498,9 +468,6 @@ WHERE `ads_counties`.`ad_id` = ad_id_in$$
 DROP PROCEDURE IF EXISTS `getAllFavoritesByUserId`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllFavoritesByUserId` (IN `user_id_in` INT)  SELECT * FROM `favorites`
 WHERE `favorites`.`user_id` = user_id_in$$
-
-DROP PROCEDURE IF EXISTS `getAllImages`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllImages` ()  SELECT * FROM `images`$$
 
 DROP PROCEDURE IF EXISTS `getAllJobs`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllJobs` ()  SELECT * FROM `jobs`$$
@@ -539,10 +506,6 @@ DROP PROCEDURE IF EXISTS `getAllNonAcceptedAds`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllNonAcceptedAds` ()  SELECT * FROM `ads`
 WHERE `ads`.`status` = 0
 AND `ads`.`deleted` != 1$$
-
-DROP PROCEDURE IF EXISTS `getAllNotAcceptedImages`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllNotAcceptedImages` ()  SELECT * FROM `images`
-WHERE `images`.`status` = 0$$
 
 DROP PROCEDURE IF EXISTS `getAllNotAcceptedRatings`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllNotAcceptedRatings` ()  SELECT * FROM `ratings`
@@ -597,14 +560,6 @@ WHERE `ads_counties`.`county_id` = county_id_in
 AND `ads`.`job_tag_id` = job_tag_id_in
 AND `ads`.`status` = 1
 AND `ads`.`deleted` != 1$$
-
-DROP PROCEDURE IF EXISTS `getImageById`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getImageById` (IN `id_in` INT(11))  SELECT * FROM `images`
-WHERE `images`.`id` = id_in$$
-
-DROP PROCEDURE IF EXISTS `getImagesByUserId`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getImagesByUserId` (IN `user_id_in` INT(11))  SELECT * FROM `images`
-WHERE `images`.`user_id` = user_id_in$$
 
 DROP PROCEDURE IF EXISTS `getJobById`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getJobById` (IN `id_in` INT(11))  SELECT * FROM `jobs`
@@ -996,36 +951,6 @@ INSERT INTO `favorites` (`id`, `user_id`, `ad_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `images`
---
-
-DROP TABLE IF EXISTS `images`;
-CREATE TABLE `images` (
-  `id` int(11) NOT NULL,
-  `url` varchar(255) NOT NULL,
-  `title` varchar(100) NOT NULL,
-  `status` int(1) NOT NULL DEFAULT 0,
-  `user_id` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- A tábla adatainak kiíratása `images`
---
-
-INSERT INTO `images` (`id`, `url`, `title`, `status`, `user_id`, `created_at`) VALUES
-(1, 'asd', 'b', 1, 1, '2023-02-08 20:20:56'),
-(2, 'asd', 'b', 1, 1, '2023-02-16 16:20:29'),
-(4, 'a', 'b', 0, 2, '2002-02-02 19:20:20'),
-(5, 'url', 'title', 0, 3, '2023-02-08 20:05:11'),
-(6, 'url', 'title', 0, 3, '2023-02-08 20:05:11'),
-(7, 'url', 'title', 0, 3, '2000-02-02 20:20:20'),
-(8, 'url', 'title', 0, 3, '2030-02-02 20:20:20'),
-(9, 'url', 'title', 0, 3, '2020-02-02 20:20:20');
-
--- --------------------------------------------------------
-
---
 -- Tábla szerkezet ehhez a táblához `jobs`
 --
 
@@ -1034,7 +959,7 @@ CREATE TABLE `jobs` (
   `id` int(11) NOT NULL,
   `description` text NOT NULL,
   `total` int(11) NOT NULL DEFAULT 0,
-  `status` int(11) NOT NULL DEFAULT 0,
+  `status` int(1) NOT NULL DEFAULT 0,
   `customer_id` int(11) NOT NULL,
   `worker_id` int(11) NOT NULL,
   `customer_accepted` int(1) NOT NULL DEFAULT 0,
@@ -1169,7 +1094,7 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `company_id` int(11) DEFAULT NULL,
   `address_id` int(11) NOT NULL,
-  `status` int(11) NOT NULL DEFAULT -1,
+  `status` int(1) NOT NULL DEFAULT -1,
   `token` varchar(255) DEFAULT NULL,
   `token_expired_at` timestamp NULL DEFAULT NULL,
   `last_login_at` timestamp NULL DEFAULT NULL,
@@ -1262,12 +1187,6 @@ ALTER TABLE `favorites`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `images`
---
-ALTER TABLE `images`
-  ADD PRIMARY KEY (`id`);
-
---
 -- A tábla indexei `jobs`
 --
 ALTER TABLE `jobs`
@@ -1348,12 +1267,6 @@ ALTER TABLE `counties`
 --
 ALTER TABLE `favorites`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT a táblához `images`
---
-ALTER TABLE `images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT a táblához `jobs`
