@@ -16,6 +16,7 @@
 .flex{
   display: flex;
   place-content: space-evenly;
+  margin-bottom: 10px;
 }
 
 .warn{
@@ -26,4 +27,8 @@
 .warn:hover{
   cursor: pointer;
   color: red;
+}
+
+.full{
+  width: 100%;
 }

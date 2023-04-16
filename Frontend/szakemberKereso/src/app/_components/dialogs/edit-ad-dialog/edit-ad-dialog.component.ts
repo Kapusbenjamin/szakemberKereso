@@ -22,7 +22,7 @@ export class EditAdDialogComponent implements OnInit {
     description: new FormControl(''),
   })
   countiesTags: Tag[] = [];
-  countiesChanged: boolean = false;
+  original: number[] = [];
 
   constructor(private userService: UsersService,
     private adService: AdsService,
@@ -49,6 +49,13 @@ export class EditAdDialogComponent implements OnInit {
   setValues(){
     this.setDescription();
     this.setFormArray();
+    this.setOriginal()
+  }
+
+  setOriginal(){
+    this.data.ad.counties.forEach((county :Tag)=>{
+      this.original.push(county.id);
+    })
   }
 
   setDescription(){
@@ -96,18 +103,19 @@ export class EditAdDialogComponent implements OnInit {
   }
 
   updateCounties(){
-    let original = this.data.ad.counties;
     let updated: number[] = this.counties.value;
     updated.forEach((countyId: number)=>{
-      this.addcountyToAd(this.data.ad.id, countyId);
+      if(!this.original.includes(countyId)){
+        this.addcountyToAd(this.data.ad.id, countyId);
+      }
     })
-    original.forEach((county: Tag)=>{
-        if(!updated.includes(county.id)){
-          this.adCountiesService.deleteCountyFromAd(this.data.ad.id,county.id).subscribe(res=>{
-            window.location.reload();
+    this.original.forEach((countyId: number)=>{
+        if(!updated.includes(countyId)){
+          this.adCountiesService.deleteCountyFromAd(this.data.ad.id,countyId).subscribe(res=>{
           });
         }
-    })
+    });
+    window.location.reload();
   }
 
   close():void{

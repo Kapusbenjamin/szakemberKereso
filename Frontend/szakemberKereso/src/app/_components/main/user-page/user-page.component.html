@@ -8,7 +8,9 @@
       <p>Jogosultság: {{ userType() }}</p>
       <p>Email: {{ user.email }}</p>
       <p>Telefon Szám: {{ user.phone }}</p>
-      <p class="edit" (click)="editUserDialog()" >Szerkesztés</p>
+      <div class="flex">
+        <p class="edit" (click)="editUserDialog()">Szerkesztés</p>
+      </div>
       <div class="jobs" *ngIf="user.accessType! > 0">
         <h2>Foglalkozás(ok):</h2>
         <ul>
@@ -57,4 +59,11 @@
     </div>
   </div>
   <hr>
+  <div class="flex">
+    <p *ngIf="!userDelete" class="warn" (click)="setDelete()">felhasználói fiók törlése</p>
+    <div *ngIf="userDelete" class="flex full">
+      <button mat-raised-button color="primary" (click)="cancel()">Mégse</button>
+      <button mat-raised-button color="warn" (click)="deleteUser()">Törlés</button>
+    </div>
+  </div>
 </div>

@@ -9,6 +9,7 @@ import { EditUserCompanyDialogComponent } from '../../dialogs/edit-user-company-
 import { EditUserDialogComponent } from '../../dialogs/edit-user-dialog/edit-user-dialog.component';
 import { EditUserProfessionsDialogComponent } from '../../dialogs/edit-user-professions-dialog/edit-user-professions-dialog.component';
 import { CreateCompanyDialogComponent } from '../../dialogs/create-company-dialog/create-company-dialog.component';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class UserPageComponent implements OnInit {
 
   constructor(private userService: UsersService,
     private companyService: CompaniesService,
+    private router: Router,
     public dialog: MatDialog
     ) {
       this.userData =  this.userService.userData
@@ -28,6 +30,7 @@ export class UserPageComponent implements OnInit {
     
   user!: User;
   userData!: UserData;
+  userDelete: boolean = false;
     
   ngOnInit(): void {
     this.getUserData();
@@ -39,10 +42,27 @@ export class UserPageComponent implements OnInit {
     });
   }
 
+  setDelete(){
+    this.userDelete = true;
+  }
+
+  cancel(){
+    this.userDelete = false;
+  }
+
   deleteCompany() {
     this.companyService.deleteCompanyById(this.user.company!.id).subscribe(res=>{
       if(res){
         delete this.user.company;
+      }
+    })
+  }
+
+  deleteUser(){
+    this.userService.deleteUser(this.userData.userId).subscribe(res=>{
+      if(res){
+        this.userService.clearUserData();
+        this.router.navigate(['']);
       }
     })
   }
