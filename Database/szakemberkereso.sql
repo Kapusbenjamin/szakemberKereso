@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2023. Ápr 15. 13:08
+-- Létrehozás ideje: 2023. Ápr 16. 22:06
 -- Kiszolgáló verziója: 10.4.22-MariaDB
 -- PHP verzió: 8.0.13
 
@@ -47,18 +47,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `acceptRating` (IN `id_in` INT(11)) 
 SET `ratings`.`status` = 1
 WHERE `ratings`.`id` = id_in$$
 
-DROP PROCEDURE IF EXISTS `addCountyToAd`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addCountyToAd` (IN `ad_id_in` INT(11), IN `county_id_in` INT(11))  INSERT INTO `ads_counties`
-(
-    `ads_counties`.`ad_id`,
-    `ads_counties`.`county_id`
-)
-VALUE
-(
-    ad_id_in,
-    county_id_in
-)$$
-
 DROP PROCEDURE IF EXISTS `addFavorite`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addFavorite` (IN `user_id_in` INT(11), IN `ad_id_in` INT(11))  INSERT INTO `favorites`
 (
@@ -72,16 +60,27 @@ VALUES
 )$$
 
 DROP PROCEDURE IF EXISTS `addNewCountyToAd`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addNewCountyToAd` (IN `ad_id_in` INT(11), IN `county_id_in` INT(11))  INSERT INTO `ads_counties`
-(
-    `ads_counties`.`ad_id`,
-    `ads_counties`.`county_id`
-)
-VALUE
-(
-    ad_id_in,
-    county_id_in
-)$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addNewCountyToAd` (IN `ad_id_in` INT(11), IN `county_id_in` INT(11))  BEGIN
+	DECLARE db int;
+
+	SELECT COUNT(*) INTO db FROM `ads_counties`
+    WHERE `ads_counties`.`ad_id` = ad_id_in
+    AND `ads_counties`.`county_id` = county_id_in;
+
+    IF(db = 0)
+    	THEN
+            INSERT INTO `ads_counties`
+            (
+                `ads_counties`.`ad_id`,
+                `ads_counties`.`county_id`
+            )
+            VALUE
+            (
+                ad_id_in,
+                county_id_in
+            );
+    END IF;
+END$$
 
 DROP PROCEDURE IF EXISTS `addNewJobToUser`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addNewJobToUser` (IN `user_id_in` INT(11), IN `job_tag_id_in` INT(11))  BEGIN
@@ -509,7 +508,8 @@ AND `ads`.`deleted` != 1$$
 
 DROP PROCEDURE IF EXISTS `getAllNotAcceptedRatings`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllNotAcceptedRatings` ()  SELECT * FROM `ratings`
-WHERE `ratings`.`status` = 0$$
+WHERE `ratings`.`status` = 0
+AND `ratings`.`deleted` = 0$$
 
 DROP PROCEDURE IF EXISTS `getAllRatings`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllRatings` ()  SELECT * FROM `ratings`$$
@@ -704,11 +704,6 @@ SET `users`.`first_name` = first_name_in,
 	`users`.`last_name` = last_name_in,
 	`users`.`email` = email_in,
 	`users`.`phone` = phone_in
-WHERE `users`.`id` = id_in$$
-
-DROP PROCEDURE IF EXISTS `validateEmail`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `validateEmail` (IN `id_in` INT(11))  UPDATE `users`
-SET `users`.`status` = 0
 WHERE `users`.`id` = id_in$$
 
 DROP PROCEDURE IF EXISTS `validateEmailByToken`$$
