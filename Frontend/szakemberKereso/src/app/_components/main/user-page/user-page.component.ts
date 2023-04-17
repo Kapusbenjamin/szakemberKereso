@@ -107,9 +107,19 @@ export class UserPageComponent implements OnInit {
     const dialogRef = this.dialog.open(CreateCompanyDialogComponent, {
     });
   }
+
+  changeUserType(){
+    this.userService.changeAccess(this.userData.userId).subscribe(res=>{
+      if(res){
+        this.userData.access_type = 1;
+        this.userService.setUserData(this.userData);
+        window.location.reload();
+      }
+    })
+  }
     
   userType(){
-    return this.user.accessType == 0 ? "Általános felhasználó" : this.user.accessType == 2 ? "Admin" : "Szakember"
+    return this.user.accessType == 0 ? "Megrendelő" : this.user.accessType == 2 ? "Admin" : "Szakember"
   }
     
 }

@@ -33,10 +33,11 @@
       </div>
       <p class="edit" (click)="editAddressDialog()">Szerkesztés</p>
     </div>
-    <div *ngIf="!user.company" class="company col-sm-12 col-md-6 col-lg-4">
-      <p class="edit" (click)="createCompanyDialog()">Cég létrehozása</p>
+    <div class="company col-sm-12 col-md-6 col-lg-4">
+      <p *ngIf="!user.company && user.accessType! > 0" class="edit" (click)="createCompanyDialog()">Cég létrehozása</p>
+      <p *ngIf="user.accessType! == 0" class="edit" (click)="changeUserType()">Legyé te is szakember</p>
     </div>
-    <div *ngIf="user.company" class="company col-sm-12 col-md-6 col-lg-4">
+    <div *ngIf="user.company && user.accessType! > 0" class="company col-sm-12 col-md-6 col-lg-4">
       <h2>Cég információk</h2>
       <p>Cégnév: {{ user.company.name }}</p>
       <p>Adószám: {{ user.company.taxNumber }}</p>
