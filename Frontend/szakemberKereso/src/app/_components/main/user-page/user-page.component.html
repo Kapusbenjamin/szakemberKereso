@@ -33,7 +33,7 @@
       </div>
       <p class="edit" (click)="editAddressDialog()">Szerkesztés</p>
     </div>
-    <div class="company col-sm-12 col-md-6 col-lg-4">
+    <div *ngIf="!user.company" class="company col-sm-12 col-md-6 col-lg-4">
       <p *ngIf="!user.company && user.accessType! > 0" class="edit" (click)="createCompanyDialog()">Cég létrehozása</p>
       <p *ngIf="user.accessType! == 0" class="edit" (click)="changeUserType()">Legyé te is szakember</p>
     </div>
