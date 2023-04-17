@@ -54,6 +54,7 @@ import { EditUserProfessionsDialogComponent } from './_components/dialogs/edit-u
 import { EditUserCompanyDialogComponent } from './_components/dialogs/edit-user-company-dialog/edit-user-company-dialog.component';
 import { EditUserAddressDialogComponent } from './_components/dialogs/edit-user-address-dialog/edit-user-address-dialog.component';
 import { CreateCompanyDialogComponent } from './_components/dialogs/create-company-dialog/create-company-dialog.component';
+import { SetNewPasswordDialogComponent } from './_components/dialogs/set-new-password-dialog/set-new-password-dialog.component';
 
 @NgModule({
   declarations: [
@@ -94,7 +95,8 @@ import { CreateCompanyDialogComponent } from './_components/dialogs/create-compa
     EditUserProfessionsDialogComponent,
     EditUserCompanyDialogComponent,
     EditUserAddressDialogComponent,
-    CreateCompanyDialogComponent
+    CreateCompanyDialogComponent,
+    SetNewPasswordDialogComponent
   ],
   imports: [
     BrowserModule,

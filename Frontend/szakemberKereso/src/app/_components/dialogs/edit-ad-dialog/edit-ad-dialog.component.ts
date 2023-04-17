@@ -37,7 +37,7 @@ export class EditAdDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCounties();
-    this.setValues();
+    this.setValues();   
   }
   
   getCounties(){
@@ -115,7 +115,9 @@ export class EditAdDialogComponent implements OnInit {
           });
         }
     });
-    window.location.reload();
+    setTimeout(()=>{
+      window.location.reload();
+    },1000)
   }
 
   close():void{

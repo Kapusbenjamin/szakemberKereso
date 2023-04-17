@@ -38,7 +38,7 @@ export class AdvestComponent implements OnInit {
 
   ngOnInit(): void {
     this.name = this.ad.user.firstName + " " + this.ad.user.lastName;
-    this.getRatingsByUserId();
+    this.getRatingsByUserId();    
   }
 
   getRatingsByUserId(){

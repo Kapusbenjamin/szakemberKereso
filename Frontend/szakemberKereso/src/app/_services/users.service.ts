@@ -134,16 +134,22 @@ export class UsersService {
     );
   }
 
-  changePassword(id:number, password: string){
+  changePassword(id:number, password: string,newPassword: string){
     return this.http.post(`${this.apiUrl}changePassword`,{
       id,
       password,
+      newPassword,
       currentUserId: this.userData.userId
     }).pipe(
       map((response: any)=> {
         return response.result;
       }),
       catchError(error => {
+        if(error.status == 401){
+          alert('jelszó változtatás sikertelen ok: Nem megfeleő a régi jelszó');
+        }else{
+          alert('jelszó változtatás sikertelen');
+        }
         return throwError(error);
       })
     );

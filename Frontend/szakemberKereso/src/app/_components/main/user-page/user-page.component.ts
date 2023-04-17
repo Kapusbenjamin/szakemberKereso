@@ -10,6 +10,7 @@ import { EditUserDialogComponent } from '../../dialogs/edit-user-dialog/edit-use
 import { EditUserProfessionsDialogComponent } from '../../dialogs/edit-user-professions-dialog/edit-user-professions-dialog.component';
 import { CreateCompanyDialogComponent } from '../../dialogs/create-company-dialog/create-company-dialog.component';
 import { Router } from '@angular/router';
+import { SetNewPasswordDialogComponent } from '../../dialogs/set-new-password-dialog/set-new-password-dialog.component';
 
 
 @Component({
@@ -65,6 +66,11 @@ export class UserPageComponent implements OnInit {
         this.router.navigate(['']);
       }
     })
+  }
+  setNewPasswordDialog(){
+    const dialogRef = this.dialog.open(SetNewPasswordDialogComponent, {
+      data: {userId: this.userData.userId}
+    });
   }
 
   editCompanyAddressDialog() {

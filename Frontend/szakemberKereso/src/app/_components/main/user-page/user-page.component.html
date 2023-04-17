@@ -60,6 +60,7 @@
   </div>
   <hr>
   <div class="flex">
+    <p *ngIf="!userDelete" class="edit" (click)="setNewPasswordDialog()">Új jelszó beállítása</p>
     <p *ngIf="!userDelete" class="warn" (click)="setDelete()">felhasználói fiók törlése</p>
     <div *ngIf="userDelete" class="flex full">
       <button mat-raised-button color="primary" (click)="cancel()">Mégse</button>
