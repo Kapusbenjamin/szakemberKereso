@@ -1,33 +1,38 @@
 <div class="container">
-  <div class="row">
-    <h2 class="col-sm-12 col-md-3" > {{ ad.user.firstName + " " + ad.user.lastName }} </h2>
-    <div class="rating col-sm-12 col-md-3" >
-      <h3 [ngClass]="rating != 0 ? 'link': '' "  (click)="setRatingedUser(ad.userId)" class="stars">{{ stars }}</h3>
-      <h4>{{ (rating == 0) ? " - nincs értékelve "  : rating | number}}</h4>
-    </div>
-    <div class="tags" >
-      <div class="tag">
-        {{ ad.jobTag.name }}
+  <div class="row text-center text-md-start">
+    <div class="d-lg-flex">
+      <h2 class="col-md-12 col-lg-6" > {{ ad.user.firstName + " " + ad.user.lastName }} </h2>
+      <div class="col-sm-12 col-lg-6 rating d-flex justify-content-center justify-content-lg-start" >
+        <p [ngClass]="rating != 0 ? 'link': '' "  (click)="setRatingedUser(ad.userId)" >értékelések   -</p>
+        <p class="stars">{{ stars }}</p>
+        <p> - {{ (rating == 0) ? "nincs"  : rating | number}}</p>
       </div>
-      <div class="tags" *ngFor="let county of ad.counties">
+    </div>
+    <div class="tags d-flex justify-content-center justify-content-lg-start text-center">
         <div class="tag">
-          {{ county.name }}
+          {{ ad.jobTag.name }}
         </div>
-      </div>
+        <div class="tags d-flex justify-content-center justify-content-lg-start text-center" *ngFor="let county of ad.counties">
+          <div class="tag">
+            {{ county.name }}
+          </div>
+        </div>
     </div>
-    <div class="discription">
-      <p>Leírás: {{ ad.description }}</p>
+    <div class="description">
+      <hr>
+      <h3>{{ ad.description }}</h3>
+      <hr>
     </div>
     <p>Dátum: {{ ad.updatedAt }} </p>
-    <div *ngIf="currentUser == ad.userId">
-      <button mat-raised-button (click)="openEditAd()">Hirdetés Szerkesztése</button>
-      <button mat-raised-button color="warn" (click)="deleteAd()">Hirdetés Törlése</button>
+    <div class="d-lg-flex justify-content-lg-around text-center" *ngIf="currentUser == ad.userId">
+      <button class="col-sm-12 col-md-6 col-lg-6" mat-raised-button color="primary" (click)="openEditAd()">Hirdetés Szerkesztése</button>
+      <button class="col-sm-12 col-md-6 col-lg-6" mat-raised-button color="warn" (click)="deleteAd()">Hirdetés Törlése</button>
     </div>
-    <div *ngIf="currentUser != ad.userId">
-      <button mat-raised-button *ngIf="!favorite" (click)="addAdToFavorite()">Hozzáadaás a kedvencekhez</button>
-      <button mat-raised-button *ngIf="favorite" (click)="removeAdFromFavorites()">Eltávolítás a kedvencek közül</button>
-      <button mat-raised-button (click)="goToMessage()">Üzenet a Feladónak</button>
-      <button mat-raised-button (click)="openCreateJob()">Megbízás Létrehozása</button>
+    <div class="d-lg-flex justify-content-lg-around text-sm-center text-md-start" *ngIf="currentUser != ad.userId">
+      <button class="col-sm-12 col-md-6 col-lg-6" mat-raised-button color="primary" *ngIf="!favorite" (click)="addAdToFavorite()">Hozzáadaás a kedvencekhez</button>
+      <button class="col-sm-12 col-md-6 col-lg-6" mat-raised-button color="warn" *ngIf="favorite" (click)="removeAdFromFavorites()">Eltávolítás a kedvencek közül</button>
+      <button class="col-sm-12 col-md-6 col-lg-6" mat-raised-button color="primary" (click)="goToMessage()">Üzenet a Feladónak</button>
+      <button class="col-sm-12 col-md-6 col-lg-6" mat-raised-button color="primary" (click)="openCreateJob()">Megbízás Létrehozása</button>
     </div>
   </div>
 </div>

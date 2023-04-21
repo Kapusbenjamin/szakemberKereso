@@ -1,45 +1,38 @@
 <div class="container">
-    <div *ngIf="users" class="row">
-        <mat-table [dataSource]="dataSource" matSort>
+  <div *ngIf="users" class="row">
+    <mat-table [dataSource]="dataSource">
 
-            <!-- Columns -->
-            <ng-container matColumnDef="id" >
-              <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
-              <mat-cell *matCellDef="let element" style="width:auto"> {{element.id}} </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef > ID </mat-header-cell>
+        <mat-cell *matCellDef="let element" > {{element.id}} </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="name">
-              <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.firstName + " " + element.lastName}} </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.firstName + " " + element.lastName}} </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="email">
-              <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
-            </ng-container>
+      <ng-container matColumnDef="email">
+        <mat-header-cell class="d-none d-md-block d-lg-block" *matHeaderCellDef> Email </mat-header-cell>
+        <mat-cell class="d-none d-md-block d-lg-block" *matCellDef="let element"> {{element.email}} </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="status">
-              <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.status == -1 ? "Inaktív" : element.status == 0 ? "Offline" :"Online"}} </mat-cell>
-            </ng-container>
+      <ng-container  matColumnDef="status">
+        <mat-header-cell class="d-none d-md-none d-lg-block" *matHeaderCellDef> Status </mat-header-cell>
+        <mat-cell class="d-none d-md-none d-lg-block" *matCellDef="let element"> {{element.status == -1 ? "Inaktív" : element.status == 0 ? "Offline"
+          :"Online"}} </mat-cell>
+      </ng-container>
 
-            <ng-container matColumnDef="muvelet">
-              <mat-header-cell *matHeaderCellDef> Művelet </mat-header-cell>
-              <mat-cell *matCellDef="let element"> 
-                <button mat-raised-button color="warn" (click)="deleteUser(element.id)">x</button> 
-            </mat-cell>
-            </ng-container>
-          
-            <!-- Column headers -->
-            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          
-            <!-- Rows -->
-            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-          
-          </mat-table>
+      <ng-container matColumnDef="muvelet">
+        <mat-header-cell *matHeaderCellDef> Művelet </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <button  mat-raised-button color="warn" (click)="deleteUser(element.id)">Törlés</button>
+        </mat-cell>
+      </ng-container>
 
-          <!-- Paginator -->
-          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-          
-    </div>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+    </mat-table>
+  </div>
 </div>

@@ -2,14 +2,9 @@ app-user-chat{
   overflow: auto;
   max-height: 600px;
   margin-top: 10px;
+  max-width: 320px;
 }
 
-.container{
-  margin-top: 20px;
-  padding-top: 10px;
-  background-color: aliceblue;
-  border-radius: 4px;
-  box-shadow: 10px 10px 29px 0px rgba(0,0,0,0.75);
-  -webkit-box-shadow: 10px 10px 29px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 10px 10px 29px 0px rgba(0,0,0,0.75);
+.border{
+  border-right: 1px rgb(114, 114, 114) solid;
 }

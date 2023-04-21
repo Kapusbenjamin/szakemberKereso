@@ -1,17 +1,25 @@
-<div>
+<div class="row">
     <h2>{{data.ratingedUserName}}</h2>
-    <form [formGroup]="formG">
-        <select formControlName="ratingsStars">
-            <option value="1">★☆☆☆☆</option>
-            <option value="2">★★☆☆☆</option>
-            <option value="3">★★★☆☆</option>
-            <option value="4">★★★★☆</option>
-            <option value="5">★★★★★</option>
-        </select>
-        <textarea formControlName="description" cols="30" rows="10"></textarea>
-    </form>
-    <div class="flex">
-        <button mat-raised-button color="warn" (click)="close()">Mégse</button>
-        <button mat-raised-button color="primary" (click)="ratingWorker()">Értékelés küldése</button>
+    <div>
+        <form [formGroup]="formG">
+            <hr>
+            <div class="d-flex">
+                <p class="title">Értékelés:</p>
+                <mat-select formControlName="ratingsStars" placeholder="Értékelés">
+                    <mat-option value="1">★☆☆☆☆ - 1</mat-option>
+                    <mat-option value="2">★★☆☆☆ - 2</mat-option>
+                    <mat-option value="3">★★★☆☆ - 3</mat-option>
+                    <mat-option value="4">★★★★☆ - 4</mat-option>
+                    <mat-option value="5">★★★★★ - 5</mat-option>
+                </mat-select>
+            </div>
+            <hr>
+            <h3>Leírás</h3>
+            <textarea formControlName="description" cols="30" rows="10"></textarea>
+        </form>
+        <div class="flex">
+            <button mat-raised-button color="warn" (click)="close()">Mégse</button>
+            <button mat-raised-button color="primary" (click)="ratingWorker()">Értékelés küldése</button>
+        </div>
     </div>
 </div>

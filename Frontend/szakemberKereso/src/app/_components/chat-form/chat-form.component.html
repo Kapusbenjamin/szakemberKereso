@@ -1,6 +1,8 @@
-<mat-form-field class="example-full-width">
-  <mat-label>Üzenet</mat-label>
-  <textarea [formControl]="chatControl" matInput></textarea>
-</mat-form-field>
-<button mat-raised-button color="primary" (click)="sendMessage()"
- [disabled]="hasSelectedChat == false || chatControl.value === '' ">Küldés</button>
+<div class="row">
+  <mat-form-field class="example-full-width">
+    <mat-label>Üzenet</mat-label>
+    <textarea [formControl]="chatControl" matInput></textarea>
+  </mat-form-field>
+  <button class="col-12" mat-raised-button color="primary" (click)="sendMessage()"
+  [disabled]="hasSelectedChat == false || chatControl.value === '' ">Küldés</button>
+</div>

@@ -1,4 +1,16 @@
-div{
-    border: 1px solid black;
+.row{
+    background-color: white;
+    border: 1px solid gray;
     border-radius: 5px;
+    box-shadow: 10px 10px 29px 0px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 10px 10px 29px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 10px 29px 0px rgba(0,0,0,0.75);
+}
+
+.padding-l-10{
+    padding-left: 10px;
+}
+
+.yellow{
+    color: rgb(177, 177, 0);
 }

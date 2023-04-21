@@ -3,8 +3,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { User } from 'src/app/_model/User';
 import { UserData } from 'src/app/_model/UserData';
 import { UsersService } from 'src/app/_services/users.service';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-users-admin-page',
@@ -14,10 +12,7 @@ import { MatSort } from '@angular/material/sort';
 export class UsersAdminPageComponent implements OnInit {
   displayedColumns: string[] = ['id','name','email','status','muvelet'];
 
-  dataSource: MatTableDataSource<User> = new MatTableDataSource<User>
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  dataSource: MatTableDataSource<User> = new MatTableDataSource<User>;
   userData: UserData;
   users!:User[];
 
@@ -33,8 +28,6 @@ export class UsersAdminPageComponent implements OnInit {
     this.userService.getAllUsers().subscribe((users: User[])=>{
       this.users = users
       this.dataSource.data = this.users;
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
     })
   }
 

@@ -28,10 +28,13 @@ export class FavoritesPageComponent implements OnInit {
   getAllFavorites(){
     this.loaded = false;
     this.favoriteService.getAllfavoritesByUserId(this.userId).subscribe((favorites: any[])=>{
+      if(favorites.length == 0){
+        this.loaded = true;
+      }
       favorites.forEach((favorite)=>{
         this.adsService.getAdById(favorite.adId).subscribe((ad: Ad)=>{
           this.ads.push(ad);
-            this.loaded = true;
+          this.loaded = true;
         })
       })
     })

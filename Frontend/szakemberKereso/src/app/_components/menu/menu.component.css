@@ -15,13 +15,7 @@
 .menu-item {
   padding: 10px;
   cursor: pointer;
-}
-
-.nav input[type="text"] {
-  padding: 10px;
-  margin-right: 10px;
-  border: none;
-  border-radius: 5px;
+  margin-left: 5px;
 }
 
 .nav button {
@@ -31,4 +25,9 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.end{
+  margin-right: 5px;
+  margin-left: 5px;
 }

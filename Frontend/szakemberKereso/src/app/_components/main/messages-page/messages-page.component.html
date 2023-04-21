@@ -1,7 +1,7 @@
 <div class="container">
     <div *ngIf="chats" class="row">
-      <div class="col-lg-2 col-md-3 col-sm-12">
-        <app-user-chat [chats]="chats" [activeChat]="activeChat"></app-user-chat>
+      <div class="col-lg-2 col-md-3 col-sm-12 border">
+        <app-user-chat class="d-flex d-lg-block d-md-block" [chats]="chats" [activeChat]="activeChat"></app-user-chat>
       </div>
       <div class="chat col-lg-10 col-md-9 col-sm-12">
         <app-chat [chat]="activeChat"></app-chat>

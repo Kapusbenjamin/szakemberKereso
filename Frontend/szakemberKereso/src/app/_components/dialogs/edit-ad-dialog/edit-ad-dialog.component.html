@@ -1,18 +1,22 @@
 <div class="row col-12">
     <h2>{{data.ad.user.firstName + " " + data.ad.user.lastName}}</h2>
-    <div class="tag">{{ data.ad.jobTag.name}}</div>
+    <div class="tag">Foglalkozás: {{ data.ad.jobTag.name}}</div>
     <form [formGroup]="formG">
+        <h3>Terület</h3>
         <div *ngFor="let countyC of counties.controls; let i = index" formArrayName="counties">
             {{ countyC.value.name }}
-            <select [formControlName]="i">
-                <option [value]="county.id" *ngFor="let county of countiesTags">
-                    {{ county.name }}
-                </option>
-            </select>
-            <button mat-raised-button color="warn" class="button" *ngIf="i != 0" type="button"
-                (click)="deleteCounty(i)">-</button>
+            <div class="d-flex">
+                <mat-select placeholder="Terület" [formControlName]="i">
+                    <mat-option [value]="county.id" *ngFor="let county of countiesTags">
+                        {{ county.name }}
+                    </mat-option>
+                </mat-select>
+                <button mat-icon-button color="warn" class="button" *ngIf="i != 0" type="button"
+                (click)="deleteCounty(i)">Törlés</button>
+            </div>
+            <hr>
         </div>
-        <button mat-raised-button color="primary" class="button" (click)="addCounty()">+</button>
+        <button mat-icon-button color="primary" class="button" (click)="addCounty()">Hozzáadás</button>
         <div>
             <textarea formControlName="description" name="" id="" cols="30" rows="10"></textarea>
         </div>

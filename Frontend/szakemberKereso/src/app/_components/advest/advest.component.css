@@ -1,24 +1,18 @@
 .container{
-  background-color: aquamarine;
+  background-color: rgb(255, 255, 255);
   border-radius: 5px;
-  border: 1px solid aqua;
+  border: 1px solid rgb(158, 158, 158);
   margin: 20px auto;
   padding-top: 10px;
   padding-bottom: 10px;
 }
 
-.tags{
-  display: flex;
-  font-weight: 500;
-}
-
 .tag{
-  background-color: blue;
+  background-color: #3f51b5;
   color: aliceblue;
   border-radius: 4px;
   padding: 2px 5px;
   margin: 3px;
-  border: 1px solid rgb(255, 255, 255);
 }
 
 .link{
@@ -37,5 +31,16 @@
 
 .stars{
   font-size: xx-large;
+  color:rgb(190, 190, 0)
+}
+
+button{
+  width: 300px;
+  margin: 3px auto;
+}
+
+.discription{
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 

@@ -52,8 +52,8 @@ a{
   width: 90%;
   margin: auto;
   height: auto;
+  margin-left: 5px;
 }
-
 .flex{
   display: flex;
   place-content: space-evenly;
@@ -68,4 +68,20 @@ a{
 .edit:hover{
   color: rgb(59, 59, 255);
   cursor: pointer;
+}
+
+.mid{
+  text-align: center;
+}
+
+.navbar-brand{
+  margin-left: 5px;
+}
+
+.nav-link{
+  margin-left: 5px;
+}
+
+.description{
+  white-space: pre-line
 }

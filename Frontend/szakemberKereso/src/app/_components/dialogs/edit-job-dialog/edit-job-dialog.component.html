@@ -1,4 +1,4 @@
-<div>
+<div class="text-center">
     <h2>Szakember: {{ data.job.worker?.firstName + " " +  data.job.worker?.lastName}}</h2>
     <h2>Megrendelő: {{ data.job.customer?.firstName + " " +  data.job.customer?.lastName}}</h2>
     <p *ngIf="this.userData.userId == this.data.job.workerId">Leírás: {{ data.job.description }}</p>
@@ -9,6 +9,6 @@
     <p *ngIf="this.userData.userId == this.data.job.customerId">Összeg: {{ data.job.total }}</p>
     <div class="flex">
         <button mat-raised-button color="warn" (click)="close()">Mégse</button>
-        <button mat-raised-button color="primary" (click)="editJob()">Szerkesztés jóváhagyása</button>
+        <button mat-raised-button color="primary" (click)="editJob()">Szerkesztés</button>
     </div>
 </div>

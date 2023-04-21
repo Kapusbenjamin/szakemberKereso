@@ -1,14 +1,13 @@
 button{
-  width: 10%;
+  width: 100%;
 }
 
 mat-form-field{
-  width: 50%;
+  width: 100%;
 }
 
 textarea {
   height: 50px;
-  width: 100%;
   min-height: 100px;
   max-height: 250px;
   overflow-y: hidden;

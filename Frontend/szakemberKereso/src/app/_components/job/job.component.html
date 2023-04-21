@@ -1,13 +1,33 @@
-<div class="job">
-    <h2 [ngClass]="job.customerAccepted? 'green' : 'red' ">Megrendelő: {{job.customer!.firstName + " " + job.customer!.lastName}}</h2>
-    <h2 [ngClass]="job.workerAccepted? 'green' : 'red' ">Szakember: {{job.worker!.firstName + " " + job.worker!.lastName}}</h2>
-    <p>Leírás: {{job.description}}</p>
-    <p>Összeg: {{job.total}} FT</p>
-    <p>Állapot: {{ job.status ? "Kész" : "Folyamatban"}}</p>
-    <button mat-raised-button *ngIf="currentUser.userId == job.workerId" [disabled]="job.workerAccepted == 1" (click)="acceptByWorker()">Elfogadás szakemberként</button>
-    <button mat-raised-button *ngIf="currentUser.userId == job.customerId" [disabled]="job.customerAccepted == 1" (click)="acceptByCustomer()">Elfogadás megrendelőként</button>
-    <button mat-raised-button *ngIf="currentUser.userId == job.workerId" [disabled]="job.status == 1" (click)="editByWorkerDialog()">Szerkesztés szakemberként</button>
-    <button mat-raised-button *ngIf="currentUser.userId == job.customerId" [disabled]="job.status == 1" (click)="editByCustomerDialog()">Szerkesztés megrendelőként</button>
-    <button [disabled]="job.status == 1" (click)="jobClose()" mat-raised-button color="warn">Megrendelés lezárása</button>
-    <button mat-raised-button (click)="ratingWorkerDialog()" *ngIf="currentUser.userId == job.customerId" [disabled]="!canWriteRating">Értékelés írása</button>
+<div class="job text-center text-md-start">
+    <div>
+        <h2 [ngClass]="job.customerAccepted? 'green' : 'red' ">Megrendelő: {{job.customer!.firstName + " " +
+            job.customer!.lastName}}</h2>
+        <h2 [ngClass]="job.workerAccepted? 'green' : 'red' ">Szakember: {{job.worker!.firstName + " " +
+            job.worker!.lastName}}</h2>
+        <h3 class="description text-center text-md-start">
+            <hr>
+            {{job.description}}
+            <hr>
+        </h3>
+        <p>Összeg: {{job.total}} FT</p>
+        <p>Állapot: {{ job.status ? "Kész" : "Folyamatban"}}</p>
+    </div>
+    <div>
+        <!-- worker -->
+        <button class="col-sm-12 col-md-6 col-lg-4" mat-raised-button color="primary" *ngIf="currentUser.userId == job.workerId"
+            [disabled]="job.workerAccepted == 1" (click)="acceptByWorker()">Elfogadás szakemberként</button>
+        <button class="col-sm-12 col-md-6 col-lg-4" mat-raised-button color="primary" *ngIf="currentUser.userId == job.workerId"
+            [disabled]="job.status == 1" (click)="editByWorkerDialog()">Szerkesztés szakemberként</button>
+        <!-- customer -->
+        <button class="col-sm-12 col-md-6 col-lg-4" mat-raised-button color="primary" *ngIf="currentUser.userId == job.customerId"
+            [disabled]="job.customerAccepted == 1" (click)="acceptByCustomer()">Elfogadás megrendelőként</button>
+        <button class="col-sm-12 col-md-6 col-lg-4" mat-raised-button color="primary" *ngIf="currentUser.userId == job.customerId"
+            [disabled]="job.status == 1" (click)="editByCustomerDialog()">Szerkesztés megrendelőként</button>
+        <button class="col-sm-12 col-md-6 col-lg-4" mat-raised-button color="primary" (click)="ratingWorkerDialog()"
+            *ngIf="currentUser.userId == job.customerId" [disabled]="!canWriteRating">Értékelés írása</button>
+        <!-- Both -->
+        <button class="col-sm-12 col-md-6 col-lg-4" [disabled]="job.status == 1" (click)="jobClose()" mat-raised-button
+            color="warn">Megrendelés
+            lezárása</button>
+    </div>
 </div>
