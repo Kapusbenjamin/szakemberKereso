@@ -7,11 +7,11 @@
                 <button mat-raised-button color="primary" (click)="acceptAd(ad)" >Elfogad</button>
                 <button mat-raised-button color="warn" (click)="deleteAd(ad)" >Elutasít</button>
             </div>
-            <hr>
         </div>
         <div *ngIf="ads.length == 0">
             Nincs elfogadásra váró hirdetés
         </div>
     </div>
+    <hr>
 </div>
 <app-loader *ngIf="!loaded"></app-loader>

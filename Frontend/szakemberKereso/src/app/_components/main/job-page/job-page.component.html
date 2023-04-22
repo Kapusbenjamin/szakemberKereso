@@ -1,7 +1,6 @@
 <div class="container">
     <div class="row">
         <div *ngIf="currentUser.access_type > 0" class="works">
-            <hr>
             <h2>Munkák</h2>
             <div *ngFor="let work of works"  class="work">
                 <app-job [job]="work"></app-job>

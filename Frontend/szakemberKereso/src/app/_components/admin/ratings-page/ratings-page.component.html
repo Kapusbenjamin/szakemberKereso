@@ -7,9 +7,9 @@
                 <button mat-raised-button color="primary" (click)="acceptRating(rating)">Elfogad</button>
                 <button mat-raised-button color="warn" (click)="deleteRating(rating)">Elutasít</button>
             </div>
-            <hr>
         </div>
     </div>
     <div *ngIf="ratings.length == 0">Nincs elfogadásra váró értékelés</div>
+    <hr>
 </div>
 <app-loader *ngIf="!loaded"></app-loader>

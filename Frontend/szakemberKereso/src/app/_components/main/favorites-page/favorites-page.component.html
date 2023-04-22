@@ -1,14 +1,14 @@
 <div class="container">
+    <hr>
     <div class="row">
         <h2>Kedvencek</h2>
-        <hr>
     </div>
     <div class="row ads">
         <div *ngFor="let ad of ads">
             <app-advest [ad]="ad" [favorite]="true"></app-advest>
         </div>
         <div *ngIf="ads.length == 0">Nincs Hirdetés a kedvencek között</div>
-        <hr>
     </div>
+    <hr>
 </div>
 <app-loader *ngIf="!loaded"></app-loader>

@@ -32,7 +32,9 @@ export class UsersAdminPageComponent implements OnInit {
   }
 
   deleteUser(id:number){
-    this.userService.deleteUser(id).subscribe();
+    this.userService.deleteUser(id).subscribe(res=>{
+      this.dataSource.data = this.users.filter(user => user.id !== id);
+    });
   }
 
 }
