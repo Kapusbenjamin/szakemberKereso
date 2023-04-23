@@ -12,5 +12,6 @@ export interface User{
   address?: Address,
   jobTags?: Tag[],
   company?: Company,
-  accessType?: number
+  accessType?: number,
+  deleted?: boolean
 }

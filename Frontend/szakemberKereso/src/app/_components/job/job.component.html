@@ -12,7 +12,7 @@
         <p>Összeg: {{job.total}} FT</p>
         <p>Állapot: {{ job.status ? "Kész" : "Folyamatban"}}</p>
     </div>
-    <div>
+    <div class="d-lg-flex justify-content-lg-around text-sm-center text-md-start">
         <!-- worker -->
         <button class="col-sm-12 col-md-6 col-lg-4" mat-raised-button color="primary" *ngIf="currentUser.userId == job.workerId"
             [disabled]="job.workerAccepted == 1" (click)="acceptByWorker()">Elfogadás szakemberként</button>

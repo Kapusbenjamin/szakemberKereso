@@ -26,7 +26,7 @@
       <ng-container matColumnDef="muvelet">
         <mat-header-cell *matHeaderCellDef> Művelet </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <button  mat-raised-button color="warn" (click)="deleteUser(element.id)">Törlés</button>
+          <button  mat-raised-button color="warn" (click)="deleteUser(element)" [disabled]="element.deleted == 1"> {{ element.deleted == 0 ? "Törlés" : "Törölt"}}</button>
         </mat-cell>
       </ng-container>
 
