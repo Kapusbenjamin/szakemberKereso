@@ -94,11 +94,15 @@ export class RegistFormComponent implements OnInit {
         this.userService.createUserWorker(formValue).subscribe((res)=>{
           let userId = res;
           let tagId = this.jobTagId.value!
-          this.userJobs.addNewJobToUser(userId,tagId,userId).subscribe()
+          this.userJobs.addNewJobToUser(userId,tagId,userId).subscribe(res=>{
+            alert("Sikeres regisztráció, nézd meg az e-mail címed");
+            this.router.navigateByUrl('login');
+          })
         });
       }else{
         this.userService.createUser(formValue).subscribe((res)=>{
           if(res > 0){
+            alert("Sikeres regisztráció, nézd meg az e-mail címed");
             this.router.navigateByUrl('login');
           }
         });
@@ -109,7 +113,6 @@ export class RegistFormComponent implements OnInit {
           top: 0,
           behavior: 'smooth'
         });
-      console.log("Not Valid");
     }
   }
 
