@@ -197,8 +197,6 @@ public class Users implements Serializable {
             this.accessType = accessType;
         }
         
-        //Email ellenőrzés
-        UsersService.validateEmail(email);
         this.email = email;
         
         //max 12 k
@@ -206,12 +204,10 @@ public class Users implements Serializable {
             this.phone = phone;
         }
         
-        //Jelszó ellenőrzés
-        UsersService.validatePassword(password);
         this.password = password;
         
         //max 11 karakter
-        if(companyId.toString().length() <= 11 && companyId.toString().length() > 0){
+        if(companyId != null && companyId.toString().length() <= 11 && companyId.toString().length() > 0){
             this.companyId = companyId;
         }
         
@@ -225,11 +221,7 @@ public class Users implements Serializable {
             this.status = status;
         }
         
-        //max 255 k
-        if(token.length() <= 255 && token.length() > 0){
-            this.token = token;
-        }
-        
+        this.token = token;
         this.tokenExpiredAt = tokenExpiredAt;
         this.lastLoginAt = lastLoginAt;
         this.createdAt = createdAt;

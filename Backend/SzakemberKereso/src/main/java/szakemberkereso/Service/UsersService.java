@@ -138,6 +138,12 @@ public class UsersService {
             user.getAddress().setDoor(-1);
         }
         
+        //Email ellenőrzés
+        UsersService.validateEmail(user.getEmail());
+        
+        //Jelszó ellenőrzés
+        UsersService.validatePassword(user.getPassword());
+        
         Integer result = Users.createUser(user);
         return result;
     }
@@ -174,6 +180,12 @@ public class UsersService {
             c.setAddress(a);
             user.setCompany(c);
         }
+        
+        //Email ellenőrzés
+        UsersService.validateEmail(user.getEmail());
+        
+        //Jelszó ellenőrzés
+        UsersService.validatePassword(user.getPassword());
         
         Integer result = Users.createUserWorker(user);
         return result;

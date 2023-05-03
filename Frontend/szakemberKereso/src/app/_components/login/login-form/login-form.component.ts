@@ -36,9 +36,9 @@ export class LoginFormComponent implements OnInit {
       }
       let password = this.loginForm.controls['password'].value!;
       this.usersService.loginUser(email,phone,password)
-      .subscribe((response: any)=>{   
+      .subscribe((response: any)=>{
         User = response.result;
-        if(User.id! > 0){          
+        if(User.id! > 0){
           let userData: UserData ={
             name: User.firstName + " " + User.lastName,
             userId: User.id!,
@@ -51,6 +51,20 @@ export class LoginFormComponent implements OnInit {
         }
       });
      }
+  }
+
+  forgotPassword(){
+    if(this.loginForm.controls['emailNumber'].valid){
+      let emailNumber = this.loginForm.controls['emailNumber'].value!;
+      this.usersService.forgotPassword(emailNumber)
+      .subscribe((response: any)=>{
+        if(response.result){
+          alert(response.message);
+        }else{
+          alert(emailNumber+'Nincs ilyen E-mail cím!'+response);
+        }
+      });
+    }
   }
 
 }

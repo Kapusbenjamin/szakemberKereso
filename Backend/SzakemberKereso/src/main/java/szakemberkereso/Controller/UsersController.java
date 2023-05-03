@@ -240,10 +240,10 @@ public class UsersController {
         }
     }
     
-    @POST
+    @GET
     @Path("forgotPassword")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response forgotPassword(String email){ 
+    public Response forgotPassword(@QueryParam("email") String email){ 
         JSONObject obj = new JSONObject();
         try{
             us.forgotPassword(email);

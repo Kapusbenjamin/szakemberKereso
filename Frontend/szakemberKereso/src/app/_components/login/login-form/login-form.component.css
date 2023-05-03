@@ -19,4 +19,13 @@ button{
   width: 80%;
 }
 
+#fgPsw{
+  color: rgb(0, 46, 90);
+}
+
+#fgPsw:hover{
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 
