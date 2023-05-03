@@ -46,6 +46,8 @@ import szakemberkereso.Configuration.Email;
 import szakemberkereso.Configuration.Email.EmailConfig;
 import szakemberkereso.Exception.EmailException;
 import szakemberkereso.Exception.PasswordException;
+import szakemberkereso.Service.UsersService;
+import static szakemberkereso.Service.UsersService.validateEmail;
 
 /**
  *
@@ -173,24 +175,71 @@ public class Users implements Serializable {
         this.id = id;
     }
 
-    public Users(Integer id, String firstName, String lastName, Integer accessType, String email, String phone, String password, Integer companyId, Integer addressId, Integer status, String token, Date tokenExpiredAt, Date lastLoginAt, Date createdAt, Date activatedAt, Date updatedAt, Integer deleted) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.accessType = accessType;
+    public Users(Integer id, String firstName, String lastName, Integer accessType, String email, String phone, String password, Integer companyId, Integer addressId, Integer status, String token, Date tokenExpiredAt, Date lastLoginAt, Date createdAt, Date activatedAt, Date updatedAt, Integer deleted) throws Exception {
+        //adatok ellenőrzése
+        //max 11 karakter
+        if(id.toString().length() <= 11 && id.toString().length() > 0){
+            this.id = id;
+        }
+        
+        //max 100 k
+        if(firstName.length() <= 100 && firstName.length() > 0){
+            this.firstName = firstName;
+        }
+        
+        //max 100 k
+        if(lastName.length() <= 100 && lastName.length() > 0){
+            this.lastName = lastName;
+        }
+        
+        //0 - 1 - 2
+        if(accessType == 0 || accessType == 1 || accessType == 2){
+            this.accessType = accessType;
+        }
+        
+        //Email ellenőrzés
+        UsersService.validateEmail(email);
         this.email = email;
-        this.phone = phone;
+        
+        //max 12 k
+        if(phone.length() <= 12 && phone.length() > 0){
+            this.phone = phone;
+        }
+        
+        //Jelszó ellenőrzés
+        UsersService.validatePassword(password);
         this.password = password;
-        this.companyId = companyId;
-        this.addressId = addressId;
-        this.status = status;
-        this.token = token;
+        
+        //max 11 karakter
+        if(companyId.toString().length() <= 11 && companyId.toString().length() > 0){
+            this.companyId = companyId;
+        }
+        
+        //max 11 karakter
+        if(addressId.toString().length() <= 11 && addressId.toString().length() > 0){
+            this.addressId = addressId;
+        }
+        
+        //-1 - 0 - 1
+        if(status == -1 || status == 0 || status == 1){
+            this.status = status;
+        }
+        
+        //max 255 k
+        if(token.length() <= 255 && token.length() > 0){
+            this.token = token;
+        }
+        
         this.tokenExpiredAt = tokenExpiredAt;
         this.lastLoginAt = lastLoginAt;
         this.createdAt = createdAt;
         this.activatedAt = activatedAt;
         this.updatedAt = updatedAt;
-        this.deleted = deleted;
+        
+        //0 - 1
+        if(deleted == 0 || deleted == 1){
+            this.deleted = deleted;
+        }
     }
 
     public Integer getId() {
