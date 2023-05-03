@@ -892,69 +892,34 @@ public class Users implements Serializable {
         }
     }
     
-    public static void resetPassword(String email, String password, String pwtoken) throws Exception{
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
-        EntityManager em = emf.createEntityManager();
-
-        password = DigestUtils.sha256Hex(password);
-        
-        try{
-            StoredProcedureQuery spq = em.createStoredProcedureQuery("resetPassword");
-
-            spq.registerStoredProcedureParameter("email_in", String.class, ParameterMode.IN);
-            spq.registerStoredProcedureParameter("token_in", String.class, ParameterMode.IN);
-            spq.registerStoredProcedureParameter("psw_in", String.class, ParameterMode.IN);
-
-            spq.setParameter("email_in", email);
-            spq.setParameter("token_in", pwtoken);
-            spq.setParameter("psw_in", password);
-            
-            spq.execute();
-
-            if(spq.getUpdateCount() < 1){
-                throw new NotFoundException("Nincs ilyen felhasználó!");
-            }
-        } 
-        catch(NotFoundException e){
-            throw new NotFoundException(e.getMessage());
-        }
-        catch(Exception e){
-            throw new Exception("Valami hiba történt! (" + e.getMessage() + ")");
-        }
-        finally{
-            //clean up metods, and close connections
-            em.clear();
-            em.close();
-            emf.close();
-        }
-    }
-    
     public static void forgotPassword(String email) throws Exception{
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(Database.getPuName());
         EntityManager em = emf.createEntityManager();
 
-        //Generate a random token
+        //Generate a random psw
         int length = 40;
         boolean useLetters = true;
         boolean useNumbers = true;
-        String token = RandomStringUtils.random(length, useLetters, useNumbers);
+        String psw = RandomStringUtils.random(length, useLetters, useNumbers);
+        //hash psw
+        String h_psw = DigestUtils.sha256Hex(psw);
         
         try{
             StoredProcedureQuery spq = em.createStoredProcedureQuery("forgotPassword");
 
             spq.registerStoredProcedureParameter("email_in", String.class, ParameterMode.IN);
-            spq.registerStoredProcedureParameter("token_in", String.class, ParameterMode.IN);
+            spq.registerStoredProcedureParameter("psw_in", String.class, ParameterMode.IN);
 
             spq.setParameter("email_in", email);
-            spq.setParameter("token_in", token);
+            spq.setParameter("psw_in", h_psw);
             
             spq.execute();
             
             if(spq.getUpdateCount() > 0){
-                forgotPasswordEmail(email, token);
+                forgotPasswordEmail(email, psw);
             }
             else{
-                throw new NotFoundException("Nincs ilyen felhasználó!");
+                throw new NotFoundException("Nincs ilyen felhasználó!" + email);
             }
         } 
         catch(NotFoundException e){
@@ -971,7 +936,7 @@ public class Users implements Serializable {
         }
     }
     
-    public static void forgotPasswordEmail(String email, String token) throws Exception{
+    public static void forgotPasswordEmail(String email, String psw) throws Exception{
         try{
             //who will get the email
             String to = email;
@@ -979,8 +944,8 @@ public class Users implements Serializable {
             String from = Email.EmailConfig.EMAIL.get();
             
             //Confirmation link
-            System.err.println("Token: " + token);
-            String link = EmailConfig.PWLINK.get() + token;
+            System.err.println("Password: " + psw);
+            String link = EmailConfig.PWLINK.get();
             
             Properties properties = System.getProperties();
             //setup mail server to properties
@@ -1003,7 +968,7 @@ public class Users implements Serializable {
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             
             message.setSubject("Password replacement");
-            message.setText("Your new password link is: " + link);
+            message.setText("Your new password is randomly generated, you can login and then change the password for a new one.\nHere is the page: " + link + "\nThe password: " + psw);
             
             //Send the email
             Transport.send(message);

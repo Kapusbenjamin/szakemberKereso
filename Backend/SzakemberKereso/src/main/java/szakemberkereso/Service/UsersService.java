@@ -221,9 +221,5 @@ public class UsersService {
     public void forgotPassword(String email) throws Exception{
         Users.forgotPassword(email);
     }
-        
-    public void resetPassword(String email, String password, String pwtoken) throws Exception{
-        Users.resetPassword(email,password,pwtoken);
-    }
     
 }

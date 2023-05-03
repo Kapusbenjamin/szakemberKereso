@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2023. Ápr 22. 19:13
+-- Létrehozás ideje: 2023. Máj 03. 12:34
 -- Kiszolgáló verziója: 10.4.22-MariaDB
 -- PHP verzió: 8.0.13
 
@@ -425,9 +425,8 @@ WHERE `users_jobs`.`user_id` = user_id_in
 AND `users_jobs`.`job_tag_id` = job_tag_id_in$$
 
 DROP PROCEDURE IF EXISTS `forgotPassword`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `forgotPassword` (IN `email_in` VARCHAR(200) CHARSET utf8, IN `token_in` VARCHAR(255) CHARSET utf8)  UPDATE `users`
-SET `users`.`token` = token_in,
-	`users`.`token_expired_at` = DATE_ADD(NOW(), INTERVAL 10 MINUTE)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `forgotPassword` (IN `email_in` VARCHAR(200) CHARSET utf8, IN `psw_in` VARCHAR(255) CHARSET utf8)  UPDATE `users`
+SET `users`.`password` = psw_in
 WHERE `users`.`email` = email_in$$
 
 DROP PROCEDURE IF EXISTS `getAdById`$$
@@ -630,15 +629,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `logoutUser` (IN `id_in` INT(11))  U
 SET `users`.`status` = 0
 WHERE `users`.`id` = id_in$$
 
-DROP PROCEDURE IF EXISTS `resetPassword`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `resetPassword` (IN `email_in` VARCHAR(200) CHARSET utf8, IN `token_in` VARCHAR(255) CHARSET utf8, IN `psw_in` VARCHAR(255) CHARSET utf8)  UPDATE `users`
-SET `users`.`password` = psw_in,
-	`users`.`token` = null,
-    `users`.`token_expired_at` = null
-WHERE `users`.`email` = email_in
-AND `users`.`token` = token_in
-AND `users`.`token_expired_at` > NOW()$$
-
 DROP PROCEDURE IF EXISTS `stringToNull`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `stringToNull` (INOUT `str_in` VARCHAR(255) CHARSET utf8)  IF(str_in = "")
 	THEN SET str_in = null;
@@ -775,7 +765,9 @@ INSERT INTO `addresses` (`id`, `county_id`, `zip_code`, `city`, `street`, `numbe
 (64, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
 (65, 4, 1111, 'Bp', 'AAAA utca', '56', NULL, NULL, NULL),
 (66, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(67, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL);
+(67, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
+(68, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
+(69, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1115,12 +1107,14 @@ INSERT INTO `users` (`id`, `first_name`, `last_name`, `access_type`, `email`, `p
 (1, 'Teszt', 'Ferenc', 0, 'tesztf@teszt-user.com', '+36202567896', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 1, -1, NULL, NULL, NULL, '2023-01-05 15:57:39', NULL, '2023-04-13 15:53:33', 0),
 (2, 'Teszt', 'László', 1, 'tesztl@teszt-user.com', '+36202567894', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 1, 1, 0, NULL, NULL, '2023-02-16 16:16:19', '2023-01-05 15:57:39', '2023-01-05 15:48:18', '2023-04-13 15:53:34', 0),
 (3, 'Teszt', 'Izabella', 0, 'tesztiza@teszt-user.com', '+36302987764', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 1, 0, NULL, NULL, '2023-01-05 15:55:18', '2023-01-05 15:57:39', '2023-01-04 15:48:18', '2023-04-13 15:53:36', 0),
-(4, 'Teszt', 'Admin', 2, 'teszta@teszt-user.com', '+36702753456', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 14, 1, 1, NULL, NULL, '2023-04-22 17:10:52', '2023-01-05 15:57:39', '2023-01-01 15:48:18', '2023-04-22 17:10:52', 0),
+(4, 'Teszt', 'Admin', 2, 'teszta@teszt-user.com', '+36702753456', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 14, 1, 0, NULL, NULL, '2023-04-22 17:10:52', '2023-01-05 15:57:39', '2023-01-01 15:48:18', '2023-05-03 10:15:59', 0),
 (8, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 3, 1, -1, NULL, NULL, NULL, '2023-01-28 15:00:51', NULL, '2023-04-13 15:53:30', 0),
 (9, 'TESZT', 'AA', 0, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 43, -1, NULL, NULL, NULL, '2023-02-16 16:16:26', NULL, '2023-02-24 12:08:19', 0),
 (10, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 5, 44, -1, NULL, NULL, NULL, '2023-02-16 16:16:31', NULL, '2023-02-24 12:08:16', 0),
 (19, 'TESZT', 'AA', 1, 'bkap100@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 61, 1, NULL, NULL, '2023-02-24 10:59:18', '2023-02-23 18:29:08', '2023-02-23 18:30:16', '2023-04-22 16:52:30', 1),
-(21, 'TESZT', 'AA', 1, 'regteszt@teszt-user.hu', '+36123456789', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 15, 66, -1, 'CIcv8iedfXusSvJWFmxCvAk7qSJU0c3TsVrU5PNG', '2023-04-14 13:55:57', NULL, '2023-04-14 13:45:57', NULL, '2023-04-22 16:51:56', 1);
+(21, 'TESZT', 'AA', 1, 'regteszt@teszt-user.hu', '+36123456789', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 15, 66, -1, 'CIcv8iedfXusSvJWFmxCvAk7qSJU0c3TsVrU5PNG', '2023-04-14 13:55:57', NULL, '2023-04-14 13:45:57', NULL, '2023-04-22 16:51:56', 1),
+(22, 'TESZT', 'AA', 0, 'tdsft@teszt-user.hu', '+36123456789', '74926c3e1d068ee0d655bf9248da00994c0fe2d474ce2337e6024e439c5f7081', NULL, 68, 1, NULL, NULL, '2023-05-03 10:30:19', '2023-05-03 09:49:33', '2023-05-03 09:55:11', '2023-05-03 10:30:19', 0),
+(23, 'TESZT', 'AA', 0, 'regSteszt@teszt-user.hu', '+36123456789', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', NULL, 69, 0, NULL, NULL, NULL, '2023-05-03 09:55:43', '2023-05-03 09:55:53', '2023-05-03 09:55:53', 0);
 
 -- --------------------------------------------------------
 
@@ -1233,7 +1227,7 @@ ALTER TABLE `users_jobs`
 -- AUTO_INCREMENT a táblához `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT a táblához `ads`
@@ -1299,7 +1293,7 @@ ALTER TABLE `ratings`
 -- AUTO_INCREMENT a táblához `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT a táblához `users_jobs`

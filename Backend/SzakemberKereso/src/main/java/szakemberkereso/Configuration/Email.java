@@ -15,7 +15,7 @@ public class Email {
         HOST("smtp.gmail.com"),
         PORT("465"),
         CONFIRMLINK("http://127.0.0.1:8080/SzakemberKereso-1.0-SNAPSHOT/webresources/Users/validateEmailByToken?t="),
-        PWLINK("http://127.0.0.1:8080/SzakemberKereso-1.0-SNAPSHOT/webresources/Users/");
+        PWLINK("http://localhost:4200/login");
         
         private String value;
         EmailConfig(String value){

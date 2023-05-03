@@ -256,24 +256,4 @@ public class UsersController {
         }
     }
     
-    @POST
-    @Path("resetPassword")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response resetPassword(Users u){        
-        JSONObject obj = new JSONObject();
-        try{
-            String email = u.getEmail();
-            String password = u.getPassword();
-            String pwtoken = u.getToken();
-
-            us.resetPassword(email, password, pwtoken);
-            obj.put("result", JSONObject.wrap(true));
-            obj.put("message", "Sikeresen beállította az új jelszót!");
-            return Response.status(Response.Status.OK).entity(obj.toString()).type(MediaType.APPLICATION_JSON).build();
-        }
-        catch(Exception e){
-            return ResponseService.handleExceptions(e);
-        }
-    }
-    
 }
