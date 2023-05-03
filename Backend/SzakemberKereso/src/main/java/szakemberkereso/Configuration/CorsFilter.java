@@ -19,6 +19,7 @@ public class CorsFilter implements ContainerResponseFilter {
             ContainerResponseContext responseContext) throws IOException {
         ArrayList<String> urls = new ArrayList();
         urls.add("http://localhost:4200");
+        urls.add("http://127.0.0.1:8080/SzakemberKereso-1.0-SNAPSHOT/webresources/Users/");
 //          responseContext.getHeaders().add(
 //            "Access-Control-Allow-Origin", "*");
         String url = requestContext.getHeaderString("Origin");

@@ -224,7 +224,7 @@ public class UsersController {
         }
     }
     
-    @POST
+    @GET
     @Path("validateEmailByToken")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response validateEmailByToken(@QueryParam("t") String token){        
