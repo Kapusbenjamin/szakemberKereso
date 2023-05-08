@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2023. Máj 03. 12:34
+-- Létrehozás ideje: 2023. Máj 08. 14:46
 -- Kiszolgáló verziója: 10.4.22-MariaDB
 -- PHP verzió: 8.0.13
 
@@ -729,45 +729,23 @@ CREATE TABLE `addresses` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Tábla csonkolása beszúrás előtt `addresses`
+--
+
+TRUNCATE TABLE `addresses`;
+--
 -- A tábla adatainak kiíratása `addresses`
 --
 
 INSERT INTO `addresses` (`id`, `county_id`, `zip_code`, `city`, `street`, `number`, `staircase`, `floor`, `door`) VALUES
-(1, 2, 7600, 'Pécs', '48-as tér', '12', NULL, NULL, NULL),
-(2, 2, 7600, 'Pécs', 'Apafi utca', '23', '1', 2, 3),
-(3, 1, 4532, 'Budapest', 'A utca', '23/A', NULL, NULL, NULL),
-(4, 2, 7600, 'Pécs', 'Ág utca', '56', NULL, NULL, NULL),
-(6, 5, 4532, 'Pécs', 'Petőfi', '13/A', 'Első', 2, 12),
-(40, 1, 4532, 'Budapest', 'A utca', '23/A', 'Hátsó', 2, 11),
-(41, 4, 1111, 'Bp', 'AAAA utca', '56', NULL, NULL, NULL),
-(42, 4, 1111, 'Bp', 'AAAA utca', '56', NULL, NULL, NULL),
-(43, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(44, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(45, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
-(46, 4, 1111, 'Bp', 'AAAA utca', '56', NULL, NULL, NULL),
-(47, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(48, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(49, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(50, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
-(51, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(52, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
-(53, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(54, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(55, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
-(56, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(57, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(58, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
-(59, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(60, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
-(61, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(62, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
-(63, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(64, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
-(65, 4, 1111, 'Bp', 'AAAA utca', '56', NULL, NULL, NULL),
-(66, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(67, 10, 2222, 'Teszt', 'Cég utca', '42', NULL, NULL, NULL),
-(68, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL),
-(69, 10, 2222, 'Teszt', 'ATesztAAA utca', '474/C', NULL, NULL, NULL);
+(1, 2, 7600, 'Pécs', 'Ács utca', '11', NULL, NULL, NULL),
+(2, 2, 7635, 'Pécs', 'Árnyas út', '42', NULL, NULL, NULL),
+(3, 14, 2092, 'Budakeszi', 'Kalmár utca', '84/C', NULL, NULL, NULL),
+(4, 14, 2092, 'Budakeszi', 'Meggyes utca', '23', NULL, NULL, NULL),
+(5, 14, 7700, 'Mohács', 'Hóvirág utca', '11', NULL, NULL, NULL),
+(6, 2, 7700, 'Mohács', 'Tavasz utca', '48', 'Déli oldal', 2, 11),
+(7, 2, 7632, 'Pécs', 'Berek utca', '35', NULL, NULL, NULL),
+(8, 2, 7629, 'Pécs', 'Feketegyémánt tér', '28/D', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -787,20 +765,10 @@ CREATE TABLE `ads` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `ads`
+-- Tábla csonkolása beszúrás előtt `ads`
 --
 
-INSERT INTO `ads` (`id`, `user_id`, `job_tag_id`, `description`, `updated_at`, `status`, `deleted`) VALUES
-(1, 2, 1, 'Valami', '2023-01-17 15:24:57', 1, 0),
-(2, 2, 3, 'aaaaaaaaaaaaa', '2023-02-16 16:18:17', 0, 0),
-(3, 2, 5, 'asfddsgfs', '2023-01-29 16:10:55', 1, 0),
-(4, 2, 5, 'Semmi', '2023-04-22 16:59:52', 1, 0),
-(5, 4, 1, 'a', '2023-04-22 16:59:58', 1, 0),
-(6, 2, 5, 'Semmi', '2023-02-16 16:18:20', 1, 1),
-(7, 2, 5, 'aaaaaaaaaaaaa', '2023-01-29 15:42:30', 1, 1),
-(10, 2, 5, 'Semmi', '2023-04-22 17:00:00', 0, 1),
-(11, 4, 5, 'aaaqqqq', '2023-04-22 17:04:47', 1, 0);
-
+TRUNCATE TABLE `ads`;
 -- --------------------------------------------------------
 
 --
@@ -815,16 +783,10 @@ CREATE TABLE `ads_counties` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `ads_counties`
+-- Tábla csonkolása beszúrás előtt `ads_counties`
 --
 
-INSERT INTO `ads_counties` (`id`, `ad_id`, `county_id`) VALUES
-(1, 1, 2),
-(2, 1, 3),
-(5, 2, 5),
-(6, 2, 5),
-(7, 11, 4);
-
+TRUNCATE TABLE `ads_counties`;
 -- --------------------------------------------------------
 
 --
@@ -839,16 +801,10 @@ CREATE TABLE `chats` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `chats`
+-- Tábla csonkolása beszúrás előtt `chats`
 --
 
-INSERT INTO `chats` (`id`, `sender_id`, `receiver_id`) VALUES
-(1, 2, 3),
-(2, 3, 1),
-(3, 2, 1),
-(4, 4, 3),
-(5, 4, 2);
-
+TRUNCATE TABLE `chats`;
 -- --------------------------------------------------------
 
 --
@@ -864,22 +820,18 @@ CREATE TABLE `companies` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Tábla csonkolása beszúrás előtt `companies`
+--
+
+TRUNCATE TABLE `companies`;
+--
 -- A tábla adatainak kiíratása `companies`
 --
 
 INSERT INTO `companies` (`id`, `name`, `address_id`, `tax_number`) VALUES
-(1, 'ABC Kft.', 6, '123423543'),
-(3, 'A kft.', 40, '2132165465'),
-(5, 'A kft.', 45, '2132165465'),
-(6, 'Kis és társai Bt.', 46, '6542187486'),
-(7, 'A kft.', 50, '2132165465'),
-(8, 'A kft.', 52, '2132165465'),
-(9, 'A kft.', 55, '2132165465'),
-(10, 'A kft.', 58, '2132165465'),
-(11, 'A kft.', 60, '2132165465'),
-(13, 'A kft.', 64, '2132165465'),
-(14, 'Kis és társai Bt.', 65, '6542187486'),
-(15, 'A kft.', 67, '2132165465');
+(1, 'Nagy és társa kft.', 2, '2132165465'),
+(2, 'Kovacs-Burkoló bt.', 4, '6623446672'),
+(3, 'Molnár Építészet kft.', 6, '642844244');
 
 -- --------------------------------------------------------
 
@@ -893,6 +845,11 @@ CREATE TABLE `counties` (
   `name` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Tábla csonkolása beszúrás előtt `counties`
+--
+
+TRUNCATE TABLE `counties`;
 --
 -- A tábla adatainak kiíratása `counties`
 --
@@ -933,13 +890,10 @@ CREATE TABLE `favorites` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `favorites`
+-- Tábla csonkolása beszúrás előtt `favorites`
 --
 
-INSERT INTO `favorites` (`id`, `user_id`, `ad_id`) VALUES
-(1, 1, 1),
-(4, 4, 2);
-
+TRUNCATE TABLE `favorites`;
 -- --------------------------------------------------------
 
 --
@@ -961,15 +915,10 @@ CREATE TABLE `jobs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `jobs`
+-- Tábla csonkolása beszúrás előtt `jobs`
 --
 
-INSERT INTO `jobs` (`id`, `description`, `total`, `status`, `customer_id`, `worker_id`, `customer_accepted`, `worker_accepted`, `updated_at`, `deleted`) VALUES
-(1, 'Alma', 200000, 1, 2, 4, 1, 1, '2023-03-21 14:52:00', 0),
-(2, 'Leírás', 0, 0, 1, 2, 1, 0, '2023-02-02 14:44:09', 0),
-(3, 'Leírás', 0, 0, 1, 2, 1, 0, '2023-02-16 16:24:17', 0),
-(4, 'asd fg d', 0, 1, 4, 2, 1, 0, '2023-04-22 16:49:07', 0);
-
+TRUNCATE TABLE `jobs`;
 -- --------------------------------------------------------
 
 --
@@ -982,6 +931,11 @@ CREATE TABLE `job_tags` (
   `name` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Tábla csonkolása beszúrás előtt `job_tags`
+--
+
+TRUNCATE TABLE `job_tags`;
 --
 -- A tábla adatainak kiíratása `job_tags`
 --
@@ -1028,20 +982,10 @@ CREATE TABLE `messages` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `messages`
+-- Tábla csonkolása beszúrás előtt `messages`
 --
 
-INSERT INTO `messages` (`id`, `chat_id`, `sender_id`, `receiver_id`, `message`, `checked`, `sended_at`) VALUES
-(1, 3, 1, 2, 'Alma', 0, '2023-01-24 13:33:26'),
-(2, 4, 3, 2, 'Nem', 1, '2023-02-08 15:50:49'),
-(3, 1, 5, 6, 'Kettő is', 0, '2023-02-08 15:50:49'),
-(4, 4, 2, 3, 'De', 1, '2023-02-08 15:51:39'),
-(5, 4, 3, 2, 'Nemssssssss', 1, '2023-02-08 16:34:38'),
-(6, 3, 2, 3, 'Uzi', 0, '2023-02-08 16:35:51'),
-(7, 3, 2, 3, 'Uzi', 0, '2023-02-16 16:19:34'),
-(8, 3, 4, 3, 'Uzi', 0, '2023-03-21 20:16:07'),
-(9, 5, 4, 2, 'asdasdd', 0, '2023-04-22 17:03:14');
-
+TRUNCATE TABLE `messages`;
 -- --------------------------------------------------------
 
 --
@@ -1061,17 +1005,10 @@ CREATE TABLE `ratings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- A tábla adatainak kiíratása `ratings`
+-- Tábla csonkolása beszúrás előtt `ratings`
 --
 
-INSERT INTO `ratings` (`id`, `ratinged_user_id`, `ratinger_user_id`, `description`, `ratings_stars`, `status`, `updated_at`, `deleted`) VALUES
-(1, 2, 3, 'nem hozta az anyagot', 1, 1, '2023-02-09 09:57:36', 0),
-(3, 1, 2, 'kettő is', 2, 0, '2023-02-09 10:05:04', 1),
-(4, 2, 3, 'mindent megcsinált csak nem jól', 2, 0, '2023-02-09 09:59:50', 0),
-(5, 2, 3, 'nem hozta az anyagot', 1, 0, '2023-02-16 16:23:27', 0),
-(6, 4, 2, 'asfddsgfs', 4, 1, '2023-04-22 17:01:18', 0),
-(7, 2, 4, 'mnenm', 3, 0, '2023-04-22 16:48:56', 0);
-
+TRUNCATE TABLE `ratings`;
 -- --------------------------------------------------------
 
 --
@@ -1100,21 +1037,20 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Tábla csonkolása beszúrás előtt `users`
+--
+
+TRUNCATE TABLE `users`;
+--
 -- A tábla adatainak kiíratása `users`
 --
 
 INSERT INTO `users` (`id`, `first_name`, `last_name`, `access_type`, `email`, `phone`, `password`, `company_id`, `address_id`, `status`, `token`, `token_expired_at`, `last_login_at`, `created_at`, `activated_at`, `updated_at`, `deleted`) VALUES
-(1, 'Teszt', 'Ferenc', 0, 'tesztf@teszt-user.com', '+36202567896', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 1, -1, NULL, NULL, NULL, '2023-01-05 15:57:39', NULL, '2023-04-13 15:53:33', 0),
-(2, 'Teszt', 'László', 1, 'tesztl@teszt-user.com', '+36202567894', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 1, 1, 0, NULL, NULL, '2023-02-16 16:16:19', '2023-01-05 15:57:39', '2023-01-05 15:48:18', '2023-04-13 15:53:34', 0),
-(3, 'Teszt', 'Izabella', 0, 'tesztiza@teszt-user.com', '+36302987764', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 1, 0, NULL, NULL, '2023-01-05 15:55:18', '2023-01-05 15:57:39', '2023-01-04 15:48:18', '2023-04-13 15:53:36', 0),
-(4, 'Teszt', 'Admin', 2, 'teszta@teszt-user.com', '+36702753456', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 14, 1, 0, NULL, NULL, '2023-04-22 17:10:52', '2023-01-05 15:57:39', '2023-01-01 15:48:18', '2023-05-03 10:15:59', 0),
-(8, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 3, 1, -1, NULL, NULL, NULL, '2023-01-28 15:00:51', NULL, '2023-04-13 15:53:30', 0),
-(9, 'TESZT', 'AA', 0, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 43, -1, NULL, NULL, NULL, '2023-02-16 16:16:26', NULL, '2023-02-24 12:08:19', 0),
-(10, 'TESZT', 'AA', 1, 'A@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', 5, 44, -1, NULL, NULL, NULL, '2023-02-16 16:16:31', NULL, '2023-02-24 12:08:16', 0),
-(19, 'TESZT', 'AA', 1, 'bkap100@gmail.com', '+36123456789', '26687a2ec1ab0d4ba2a0fc990ca1ec5621501db7b457884f9764ca7e6213955a', NULL, 61, 1, NULL, NULL, '2023-02-24 10:59:18', '2023-02-23 18:29:08', '2023-02-23 18:30:16', '2023-04-22 16:52:30', 1),
-(21, 'TESZT', 'AA', 1, 'regteszt@teszt-user.hu', '+36123456789', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 15, 66, -1, 'CIcv8iedfXusSvJWFmxCvAk7qSJU0c3TsVrU5PNG', '2023-04-14 13:55:57', NULL, '2023-04-14 13:45:57', NULL, '2023-04-22 16:51:56', 1),
-(22, 'TESZT', 'AA', 0, 'tdsft@teszt-user.hu', '+36123456789', '74926c3e1d068ee0d655bf9248da00994c0fe2d474ce2337e6024e439c5f7081', NULL, 68, 1, NULL, NULL, '2023-05-03 10:30:19', '2023-05-03 09:49:33', '2023-05-03 09:55:11', '2023-05-03 10:30:19', 0),
-(23, 'TESZT', 'AA', 0, 'regSteszt@teszt-user.hu', '+36123456789', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', NULL, 69, 0, NULL, NULL, NULL, '2023-05-03 09:55:43', '2023-05-03 09:55:53', '2023-05-03 09:55:53', 0);
+(1, 'Admin', 'Admin', 2, 'admin@teszt-user.hu', '+36123456789', '0c40d6baacfc32d0ea6145381058cc41227dd79a59a8bf4e58e3f47c40de524c', 1, 1, 0, NULL, NULL, NULL, '2023-05-08 12:23:52', '2023-05-08 12:24:05', '2023-05-08 12:24:20', 0),
+(2, 'Kovács', 'János', 1, 'kovJanos@teszt-user.hu', '+36701234567', '0c40d6baacfc32d0ea6145381058cc41227dd79a59a8bf4e58e3f47c40de524c', 2, 3, 0, NULL, NULL, NULL, '2023-05-08 12:31:11', '2023-05-08 12:35:23', '2023-05-08 12:35:23', 0),
+(3, 'Molnár', 'Árpád', 1, 'arpad1974@teszt-user.hu', '+36205551234', '0c40d6baacfc32d0ea6145381058cc41227dd79a59a8bf4e58e3f47c40de524c', 3, 5, 0, NULL, NULL, NULL, '2023-05-08 12:35:10', '2023-05-08 12:35:28', '2023-05-08 12:35:28', 0),
+(4, 'Horváth', 'Emese', 0, 'emese.horvath@teszt-user.hu', '+36309991239', '0c40d6baacfc32d0ea6145381058cc41227dd79a59a8bf4e58e3f47c40de524c', NULL, 7, 0, NULL, NULL, NULL, '2023-05-08 12:37:26', '2023-05-08 12:39:01', '2023-05-08 12:39:01', 0),
+(5, 'Márton', 'Réka', 0, 'mreka@teszt-user.hu', '+36301586825', '0c40d6baacfc32d0ea6145381058cc41227dd79a59a8bf4e58e3f47c40de524c', NULL, 8, 0, NULL, NULL, NULL, '2023-05-08 12:38:54', '2023-05-08 12:39:30', '2023-05-08 12:39:30', 0);
 
 -- --------------------------------------------------------
 
@@ -1130,12 +1066,19 @@ CREATE TABLE `users_jobs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Tábla csonkolása beszúrás előtt `users_jobs`
+--
+
+TRUNCATE TABLE `users_jobs`;
+--
 -- A tábla adatainak kiíratása `users_jobs`
 --
 
 INSERT INTO `users_jobs` (`id`, `user_id`, `job_tag_id`) VALUES
-(2, 4, 1),
-(3, 4, 5);
+(1, 1, 5),
+(2, 1, 8),
+(3, 2, 6),
+(4, 3, 19);
 
 --
 -- Indexek a kiírt táblákhoz
@@ -1227,31 +1170,31 @@ ALTER TABLE `users_jobs`
 -- AUTO_INCREMENT a táblához `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT a táblához `ads`
 --
 ALTER TABLE `ads`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT a táblához `ads_counties`
 --
 ALTER TABLE `ads_counties`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT a táblához `chats`
 --
 ALTER TABLE `chats`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT a táblához `companies`
 --
 ALTER TABLE `companies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT a táblához `counties`
@@ -1263,13 +1206,13 @@ ALTER TABLE `counties`
 -- AUTO_INCREMENT a táblához `favorites`
 --
 ALTER TABLE `favorites`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT a táblához `jobs`
 --
 ALTER TABLE `jobs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT a táblához `job_tags`
@@ -1281,19 +1224,19 @@ ALTER TABLE `job_tags`
 -- AUTO_INCREMENT a táblához `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT a táblához `ratings`
 --
 ALTER TABLE `ratings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT a táblához `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT a táblához `users_jobs`
